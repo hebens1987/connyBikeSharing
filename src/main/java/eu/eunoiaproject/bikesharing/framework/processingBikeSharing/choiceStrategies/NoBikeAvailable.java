@@ -17,12 +17,14 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.utils.geometry.CoordUtils;
+import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.ActivityFacility;
 import org.matsim.facilities.ActivityFacilityImpl;
 import org.matsim.facilities.Facility;
@@ -82,7 +84,8 @@ public class NoBikeAvailable
 		// 1:1 chance for wait and change legMode
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
-		int planIndex = basicAgentDelegate.getCurrentPlanElementIndex();
+//		int planIndex = basicAgentDelegate.getCurrentPlanElementIndex();
+		int planIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) ;
 		List<PlanElement> planElements = basicAgentDelegate.getCurrentPlan().getPlanElements();
 		//PlanElement peX = planElements.get(planIndex);
 		String modeChangeOrWait = "wait";
@@ -137,7 +140,9 @@ public class NoBikeAvailable
 		{
 			System.out.println("NoBikeAvailable - hier toFac Coord NULL");
 		}
-		ActivityFacility actFac = new ActivityFacilityImpl(nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
+//		ActivityFacility actFac = new ActivityFacilityImpl(nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
+		ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
+		ActivityFacility actFac = ff.createActivityFacility( nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId() ) ;
 		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius, 
 				maxSearchRadius, basicAgentDelegate.getPerson(), now);
 		StationAndType newChoiceStart;
@@ -332,11 +337,13 @@ public class NoBikeAvailable
 			//bsInteractWait5.setEndTime(now + 15*60+1);
 			bsInteractWait5.setType(EBConstants.WAIT);
 			bsInteractWait.setFacilityId(bsInteractPe.getFacilityId());
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait5);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait4);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait3);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait2);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait);
+//			final int currentPlanElementIndex = basicAgentDelegate.getCurrentPlanElementIndex();
+			final int currentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) ;
+			list.add( currentPlanElementIndex +1, bsInteractWait5 );
+			list.add( currentPlanElementIndex +1, bsInteractWait4 );
+			list.add( currentPlanElementIndex +1, bsInteractWait3 );
+			list.add( currentPlanElementIndex +1, bsInteractWait2 );
+			list.add( currentPlanElementIndex +1, bsInteractWait );
 			WaitingListHandling.addAgentToWaitingListOfStation(scenario, station, basicAgentDelegate, true, now);
 			waitingTime = 15*60;
 		}

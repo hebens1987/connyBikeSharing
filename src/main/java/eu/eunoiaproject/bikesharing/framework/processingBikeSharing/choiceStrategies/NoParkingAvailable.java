@@ -15,12 +15,13 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
+import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.ActivityFacility;
-import org.matsim.facilities.ActivityFacilityImpl;
 import org.matsim.facilities.Facility;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
@@ -88,8 +89,10 @@ public class NoParkingAvailable {
 		{
 			System.out.println("NoParkingAvailable - hier toFac Coord NULL");
 		}
-		ActivityFacility actFac = new ActivityFacilityImpl (nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
-		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius, 
+		ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
+//		ActivityFacility actFac = new ActivityFacilityImpl (nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
+		ActivityFacility actFac = ff.createActivityFacility( nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
+		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius,
 				maxSearchRadius, basicAgentDelegate.getPerson(), now);
 
 		StationAndType newChoiceEnd = null;
@@ -169,11 +172,11 @@ public class NoParkingAvailable {
 			bsInteractWait5.setType("wait");
 			bsInteractWait5.setStartTime(now + 12*60);
 			bsInteractWait.setFacilityId(bsInteractPe.getFacilityId());
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait5);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait4);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait3);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait2);
-			list.add(basicAgentDelegate.getCurrentPlanElementIndex()+1, bsInteractWait);
+			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait5 );
+			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait4 );
+			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait3 );
+			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait2 );
+			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait );
 			WaitingListHandling.addAgentToWaitingListOfStation(scenario, station, basicAgentDelegate, false, now);
 		}
 		

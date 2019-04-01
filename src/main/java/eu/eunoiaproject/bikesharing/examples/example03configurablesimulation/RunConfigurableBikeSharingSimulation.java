@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.Config;
 import org.matsim.core.controler.Controler;
+import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
 import org.matsim.core.utils.io.UncheckedIOException;
 import org.matsim.pt.transitSchedule.api.TransitScheduleReader;
@@ -49,9 +50,10 @@ public class RunConfigurableBikeSharingSimulation {
 	public static void main(final String... args) 
 	/***************************************************************************/
 	{
-		final String configFile = args[ 0 ];
+//		String configFile = args[ 0 ];
 		//final String configFile = "E:/MATCHSIM_ECLIPSE/matsim-master/playgrounds/thibautd/examples\BikeRouting\haus\config.xml";
 		//E:\MATCHSIM_ECLIPSE\matsim-master\playgrounds\thibautd\test\output\eu\eunoiaproject\bikesharing\framework\examples\TestRegressionConfigurableExample\testRunDoesNotFailMultimodal
+		String configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
 		
 		OutputDirectoryLogging.catchLogEntries();
 		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
@@ -61,6 +63,8 @@ public class RunConfigurableBikeSharingSimulation {
 		final Config config = BikeAndEBikeSharingScenarioUtils.loadConfig( configFile );
 		//config.addCoreModules();
 		config.addModule( new BicycleConfigGroup());
+
+		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
 
 		failIfExists( config.controler().getOutputDirectory() );
 

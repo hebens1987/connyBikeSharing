@@ -11,6 +11,7 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.population.routes.RouteFactoryImpl;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.router.util.LeastCostPathCalculator;
@@ -204,16 +205,18 @@ public class TakingReturningMethodology {
 				//String personId = agentInterim1.getId().toString();
 				agentInterim1.getEvents().processEvent(new AgentStopsWaitingForFreeBikeSlotEvent(
 				now, agentInterim1.getId(), Id.create(station.getId().toString(), ActivityFacility.class)));
-				if (agentInterim1.getCurrentPlan().getPlanElements().get(agentInterim1.getCurrentPlanElementIndex()) instanceof Leg)
+//				final int agentInterim1CurrentPlanElementIndex = agentInterim1.getCurrentPlanElementIndex();
+				final int agentInterim1CurrentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim1 ) ;
+				if (agentInterim1.getCurrentPlan().getPlanElements().get( agentInterim1CurrentPlanElementIndex ) instanceof Leg)
 				{
 					System.out.println("TODO: Hebenstreit  ....  TakingReturningMethodology 189");
 				}
-				Activity act = (Activity)agentInterim1.getCurrentPlan().getPlanElements().get(agentInterim1.getCurrentPlanElementIndex());
+				Activity act = (Activity)agentInterim1.getCurrentPlan().getPlanElements().get( agentInterim1CurrentPlanElementIndex );
 				act.setEndTime(now);
 
 				List<PlanElement> list = agentInterim1.getCurrentPlan().getPlanElements();
 				
-				int index = agentInterim1.getCurrentPlanElementIndex();
+				int index = agentInterim1CurrentPlanElementIndex;
 				while (list.get(index+1) instanceof Activity)
 				{					
 					list.remove(list.get(index+1));
@@ -271,16 +274,18 @@ public class TakingReturningMethodology {
 					//String personId = agentInterim1.getId().toString();
 					agentInterim1.getEvents().processEvent(new AgentStopsWaitingForBikeEvent(
 					now, agentInterim1.getId(), Id.create(station.getId().toString(), ActivityFacility.class)));
-					if (agentInterim1.getCurrentPlan().getPlanElements().get(agentInterim1.getCurrentPlanElementIndex()) instanceof Leg)
+//					final int agentInterim1CurrentPlanElementIndex = agentInterim1.getCurrentPlanElementIndex();
+					final int agentInterim1CurrentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim1 ) ;
+					if (agentInterim1.getCurrentPlan().getPlanElements().get( agentInterim1CurrentPlanElementIndex ) instanceof Leg)
 							{
 								System.out.println("ERROR: TODO: HEBENSTREIT");
 							}
-					Activity act = (Activity)agentInterim1.getCurrentPlan().getPlanElements().get(agentInterim1.getCurrentPlanElementIndex());
+					Activity act = (Activity)agentInterim1.getCurrentPlan().getPlanElements().get( agentInterim1CurrentPlanElementIndex );
 					act.setEndTime(now);
 
 					List<PlanElement> list = agentInterim1.getCurrentPlan().getPlanElements();
 					
-					int index = agentInterim1.getCurrentPlanElementIndex();
+					int index = agentInterim1CurrentPlanElementIndex;
 					while (list.get(index+1) instanceof Activity)
 					{					
 						list.remove(list.get(index+1));

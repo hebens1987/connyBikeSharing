@@ -22,6 +22,7 @@ import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.LegImpl;
@@ -38,6 +39,7 @@ import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
+import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.ActivityFacility;
 import org.matsim.facilities.ActivityFacilityImpl;
 import org.matsim.facilities.Facility;
@@ -116,9 +118,11 @@ public class BSRunner {
 		{
 			Activity nextAct = null;
 
-			if (basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1 - basicAgentDelegate.getCurrentPlanElementIndex() != 0)//Hebenstreit: changed from != 1
+//			final int currentPlanElementIndex = basicAgentDelegate.getCurrentPlanElementIndex();
+			final int currentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) ;
+			if (basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1 - currentPlanElementIndex != 0)//Hebenstreit: changed from != 1
 			{
-				int s = basicAgentDelegate.getCurrentPlanElementIndex();
+				final int s = currentPlanElementIndex;
 				for (int i = s+1; i <= basicAgentDelegate.getCurrentPlan().getPlanElements().size(); i++)
 				{
 					if (basicAgentDelegate.getCurrentPlan().getPlanElements().get(i) instanceof Leg)
@@ -154,20 +158,22 @@ public class BSRunner {
 			//System.out.println(toFac.getType());
 			StationAndType[] sat = new StationAndType[2];
 			BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
+			ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();;
 			if (toFac.getCoord() != null)
 			{
 				BSAtt att = BSAttribsAgent.getPersonAttributes(basicAgentDelegate.getPerson(), scenario);
-				Facility fromFacF = new ActivityFacilityImpl(fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
-				Facility toFacF = new ActivityFacilityImpl(toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
-				sat = bsChoice.getStationsDuringSim(fromFacF,toFacF, 
+//				Facility fromFacF = new ActivityFacilityImpl(fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
+				Facility fromFacF = ff.createActivityFacility( fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
+				Facility toFacF = ff.createActivityFacility( toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
+				sat = bsChoice.getStationsDuringSim(fromFacF,toFacF,
 						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now);
 				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate ,trImpl, pathF, cal, agentsC, agentsE, sat);
 				List<PlanElement> actualPlanElem = planElementAndType.peList;
 				int bikeSharingType = planElementAndType.type;
-				basicAgentDelegate.getCurrentPlan().getPlanElements().addAll(basicAgentDelegate.getCurrentPlanElementIndex()+1,actualPlanElem);
+				basicAgentDelegate.getCurrentPlan().getPlanElements().addAll( currentPlanElementIndex +1,actualPlanElem );
 				//Hier soll der bs-plan von Act (ohne interaction) zu Act(ohne interaction) auf gültigkeit geprüft werden!
 	
-				int actIndex = basicAgentDelegate.getCurrentPlanElementIndex();
+				int actIndex = currentPlanElementIndex;
 				planComparison(basicAgentDelegate);
 	
 						
@@ -255,7 +261,7 @@ public class BSRunner {
 				//TODO: Hebenstreit - hier wird nur nach typischen BS-Stationen gesucht - also Start- und End-Station --> nicht nach ptStations
 				planComparison(basicAgentDelegate);
 				List<PlanElement> trip = basicAgentDelegate.getCurrentPlan().getPlanElements();
-				int index = basicAgentDelegate.getCurrentPlanElementIndex();
+				int index = currentPlanElementIndex;
 				
 				for (int i = index; i < trip.size(); i++)
 				{
@@ -455,7 +461,9 @@ public class BSRunner {
 		List<PlanElement>pe1 = basicAgentDelegate.getCurrentPlan().getPlanElements(); 
 		List<PlanElement> pe2 = basicAgentDelegate.getPerson().getSelectedPlan().getPlanElements();//this will be replaced by pe1;
 		//basicAgentDelegate.setAllPlanElement(pe1); //Hebenstreit
-		basicAgentDelegate.setCurrentPlanElementIndex(basicAgentDelegate.getCurrentPlanElementIndex());
+
+//		basicAgentDelegate.setCurrentPlanElementIndex(basicAgentDelegate.getCurrentPlanElementIndex());
+		// yyyyyy the above is not possible.  But the way it is programmed it also will not do anything.  kai, apr'19
 	} 
 	
 	
@@ -726,8 +734,9 @@ public class BSRunner {
 			BasicPlanAgentImpl basicAgentDelegate2)
 	/***************************************************************************/
 	{
-		int actIndex = basicAgentDelegate2.getCurrentPlanElementIndex();
-		
+//		int actIndex = basicAgentDelegate2.getCurrentPlanElementIndex();
+		int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate2 ) ;
+
 		for (int i = actIndex + 1; i < basicAgentDelegate2.getCurrentPlan().getPlanElements().size(); i++)
 		{
 			PlanElement pe = basicAgentDelegate2.getCurrentPlan().getPlanElements().get(i);

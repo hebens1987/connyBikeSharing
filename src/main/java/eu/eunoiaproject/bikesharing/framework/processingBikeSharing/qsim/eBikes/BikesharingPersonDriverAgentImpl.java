@@ -21,10 +21,10 @@ import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.PersonDriverAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.mobsim.qsim.pt.MobsimDriverPassengerAgent;
-import org.matsim.core.mobsim.qsim.pt.PTPassengerAgent;
 import org.matsim.core.mobsim.qsim.pt.TransitVehicle;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
@@ -34,7 +34,6 @@ import org.matsim.pt.transitSchedule.api.TransitLine;
 import org.matsim.pt.transitSchedule.api.TransitRoute;
 import org.matsim.pt.transitSchedule.api.TransitRouteStop;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
-import org.matsim.vehicles.Vehicle;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.eBikeHandling.ReturnBike;
@@ -175,7 +174,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		String actPlanMode = this.basicAgentDelegate.getCurrentPlan().getType();
 		
 		Activity thisElemX = (Activity)this.basicAgentDelegate.getCurrentPlanElement();
-		if (this.basicAgentDelegate.getCurrentPlanElementIndex() != this.basicAgentDelegate.getCurrentPlan().getPlanElements().size())
+		if ( WithinDayAgentUtils.getCurrentPlanElementIndex( this.basicAgentDelegate ) != this.basicAgentDelegate.getCurrentPlan().getPlanElements().size())
 		{
 			thisElemX.setEndTime(now);
 		}
@@ -208,7 +207,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 				else //actual activity is plan activity
 				{
 					List<PlanElement> peList = this.basicAgentDelegate.getCurrentPlan().getPlanElements();
-					int actIndex = this.basicAgentDelegate.getCurrentPlanElementIndex();
+					int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( this.basicAgentDelegate );
 					
 					if (actIndex < this.basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1) //Hebenstreit changed from size()-2
 					for (int i = 1; i < this.basicAgentDelegate.getCurrentPlan().getPlanElements().size(); i++) //remove the 4 elements walk-interaction-bsff-interaction
@@ -413,7 +412,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					BSRunner runner =  new BSRunner();
 					runner.planComparison(agentInterim);
 					Activity nextAct = null;
-					int index = agentInterim.getCurrentPlanElementIndex();
+					int index = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
 
 
 					BikeSharingFacility thisFac = waitingList.get(0).bsFac;
@@ -539,8 +538,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 							now, agentInterim.getId(), Id.create(thisFac.getLinkId().toString(), ActivityFacility.class)));
 						
 						Id<Link> walksFrom = startLink.getId();
-						
-						int actIndex = agentInterim.getCurrentPlanElementIndex();
+
+						int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
 						List<PlanElement> agentInterimsPlan = agentInterim.getCurrentPlan().getPlanElements();
 						
 						Id<Link> walksTo = null;

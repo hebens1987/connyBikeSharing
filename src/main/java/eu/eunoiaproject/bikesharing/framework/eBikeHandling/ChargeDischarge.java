@@ -5,6 +5,7 @@ import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikesE;
+import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 
 public class ChargeDischarge {
 	
@@ -63,7 +64,7 @@ public class ChargeDischarge {
 			soc = (soc  - (duration/dur_full_empty_h)); //reduce soc in a linear way
 			if ((soc < 0) && (agent != null))
 			{
-				int index = agent.getCurrentPlanElementIndex(); 
+				int index = WithinDayAgentUtils.getCurrentPlanElementIndex( agent );
 				Leg legTest = (Leg)agent.getNextPlanElement(); // XXXXX Hebenstreit: ist das beides das Gleiche?
 				Leg leg = (Leg)agent.getCurrentPlan().getPlanElements().get(index+1);
 				System.out.println("No battery support for " + agent.getPerson().getId() + " since: " + (-soc * dur_full_empty_h) + " hours (dur_full_empty: " + dur_full_empty_h + ") (leg travelTime: " + leg.getTravelTime());
