@@ -120,6 +120,11 @@ public class TUG_BikeTravelTime implements TravelTime
     	}
 
 		double traveltime = lenOfLink / v;
+
+    	if( traveltime<=0. ){
+		traveltime = 1. ;
+	}
+
 		return traveltime;
 	}
 }

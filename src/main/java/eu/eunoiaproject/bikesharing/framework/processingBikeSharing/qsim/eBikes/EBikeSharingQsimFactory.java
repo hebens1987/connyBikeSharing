@@ -2,6 +2,8 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes
 
 
 import java.util.Map;
+
+import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.api.experimental.events.EventsManager;
@@ -72,12 +74,20 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		ActivityEngine activityEngine = new ActivityEngine(eventsManager, qSim.getAgentCounter());
 		qSim.addMobsimEngine(activityEngine);
 		qSim.addActivityHandler(activityEngine);
-		
-		TransitQSimEngine transitEngine = new TransitQSimEngine(qSim);
-		qSim.addMobsimEngine(transitEngine);
-		qSim.addDepartureHandler(transitEngine);
-		qSim.addAgentSource(transitEngine);
-		
+
+		switch( RunConfigurableBikeSharingSimulation.runType ) {
+			case standard:
+				TransitQSimEngine transitEngine = new TransitQSimEngine(qSim);
+				qSim.addMobsimEngine(transitEngine);
+				qSim.addDepartureHandler(transitEngine);
+				qSim.addAgentSource(transitEngine);
+				break;
+			case kaidebug:
+				break;
+			default:
+				throw new RuntimeException( "not implemented" ) ;
+		}
+
 		//TeleportationEngine tp = new TeleportationEngine(sc, eventsManager);
 		//qSim.addMobsimEngine(tp);
 		//qSim.addDepartureHandler(tp);

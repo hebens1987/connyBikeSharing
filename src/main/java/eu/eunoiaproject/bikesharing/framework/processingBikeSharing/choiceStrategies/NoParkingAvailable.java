@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -184,9 +185,9 @@ public class NoParkingAvailable {
 		{
 			basicAgentDelegate.getEvents().processEvent(new AgentChoseNewStationEvent(
 					now, basicAgentDelegate.getId(), station.getId()));
-			List<PlanElement> planElements = 
-					basicAgentDelegate.getCurrentPlan().getPlanElements();
-			int indexOfInsertion = 
+//			List<PlanElement> planElements = basicAgentDelegate.getCurrentPlan().getPlanElements();
+			List<PlanElement> planElements = basicAgentDelegate.getCurrentPlan().getPlanElements();
+			int indexOfInsertion =
 					planElements.indexOf(basicAgentDelegate.getCurrentPlanElement()) + 1;
 			
 			//route = (LinkNetworkRouteImpl) 
@@ -250,11 +251,20 @@ public class NoParkingAvailable {
 			planElements.addAll(indexOfInsertion, trip);
 			
 			//create new Plan
-			for (int i = 0; i < planElements.size(); i++ )
-			{	
-				basicAgentDelegate.setPlanElement(i, planElements.get(i));
+			switch( RunConfigurableBikeSharingSimulation.runType ) {
+				case standard:
+					//			for (int i = 0; i < planElements.size(); i++ )
+					//			{
+					//				basicAgentDelegate.setPlanElement(i, planElements.get(i));
+					//			}
+					throw new RuntimeException("this is not possible.  But I also do not see why it should be needed, since the code already operates on the agent's " +
+										     "planElements. kai, apr'19") ;
+				case kaidebug:
+					break;
+				default:
+					throw new RuntimeException("not implemented") ;
 			}
-			
+
 			Id<Person> pers = basicAgentDelegate.getPerson().getId();
 			log.info("Agent with ID:;" + basicAgentDelegate.getPerson().getId()+ ";did not get a Parking Spot and choose -->;" + whatToChoose);
 			runner.planComparison(basicAgentDelegate);

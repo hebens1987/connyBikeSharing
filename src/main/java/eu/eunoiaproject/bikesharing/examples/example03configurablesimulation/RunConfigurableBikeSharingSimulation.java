@@ -26,15 +26,21 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAndEBikeS
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.config.Config;
+import org.matsim.core.config.groups.ControlerConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
+import org.matsim.core.gbl.MatsimRandom;
 import org.matsim.core.utils.io.UncheckedIOException;
 import org.matsim.pt.transitSchedule.api.TransitScheduleReader;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 
 import java.io.File;
+import java.util.Map;
+import java.util.function.Predicate;
 
+import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.RunType.kaidebug;
+import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.RunType.standard;
 
 
 /**
@@ -46,15 +52,28 @@ public class RunConfigurableBikeSharingSimulation {
 	private static final Logger log =
 		Logger.getLogger(RunConfigurableBikeSharingSimulation.class);
 
+	public enum RunType { standard, kaidebug }
+	public static final RunType runType = kaidebug ;
+
 	/***************************************************************************/
 	public static void main(final String... args) 
 	/***************************************************************************/
 	{
-//		String configFile = args[ 0 ];
-		//final String configFile = "E:/MATCHSIM_ECLIPSE/matsim-master/playgrounds/thibautd/examples\BikeRouting\haus\config.xml";
-		//E:\MATCHSIM_ECLIPSE\matsim-master\playgrounds\thibautd\test\output\eu\eunoiaproject\bikesharing\framework\examples\TestRegressionConfigurableExample\testRunDoesNotFailMultimodal
-		String configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
-		
+		String configFile ;
+		switch( runType ) {
+			case standard:
+//				configFile = args[0] ;
+				//final String configFile = "E:/MATCHSIM_ECLIPSE/matsim-master/playgrounds/thibautd/examples\BikeRouting\haus\config.xml";
+				//E:\MATCHSIM_ECLIPSE\matsim-master\playgrounds\thibautd\test\output\eu\eunoiaproject\bikesharing\framework\examples\TestRegressionConfigurableExample\testRunDoesNotFailMultimodal
+				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
+				break;
+			case kaidebug:
+				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
+				break;
+			default:
+				throw new RuntimeException("not implemented") ;
+		}
+
 		OutputDirectoryLogging.catchLogEntries();
 		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
 		
@@ -68,8 +87,35 @@ public class RunConfigurableBikeSharingSimulation {
 
 		failIfExists( config.controler().getOutputDirectory() );
 
+		// ---
+
+		switch( runType ) {
+			case standard:
+				break;
+			case kaidebug:
+				config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
+				config.transit().setUseTransit( false );
+				config.transit().setTransitScheduleFile( null );
+				config.transit().setVehiclesFile( null );
+				break;
+			default:
+				throw new RuntimeException( "not implemented" ) ;
+		}
+
 		final Scenario sc = BikeAndEBikeSharingScenarioUtils.loadScenario( config );
-		loadTransitInScenario( sc );
+		switch( runType ) {
+			case standard:
+				loadTransitInScenario( sc );
+				break;
+			case kaidebug:
+				sc.getPopulation().getPersons().entrySet().removeIf( entry -> MatsimRandom.getRandom().nextDouble() < 0.9 ) ;
+				break;
+			default:
+				throw new RuntimeException( "not implemented" ) ;
+		}
+
+		// ---
+
 		final Controler controler = new Controler( sc );
 
 		//////////////////////////////////////////////////////////

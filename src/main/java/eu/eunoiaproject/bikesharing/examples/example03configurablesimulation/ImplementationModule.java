@@ -49,7 +49,15 @@ public class ImplementationModule extends AbstractModule {
 		 { 
 			this.bind(MainModeIdentifier.class).to(MainModeIdentifierImpl.class);
 		    this.install(new LeastCostPathCalculatorModule());
-		    this.install(new TransitRouterModule());
+		    switch( RunConfigurableBikeSharingSimulation.runType ) {
+			    case standard:
+				    this.install(new TransitRouterModule());
+				    break;
+			    case kaidebug:
+				    break;
+			    default:
+			    	throw new RuntimeException( "not implemented" ) ;
+		    }
 		    this.bind(SingleModeNetworksCache.class).asEagerSingleton();
 		    this.addTravelDisutilityFactoryBinding(TransportMode.pt).to(TUG_WalkTravelDisutilityFactory.class);
 		    PlanCalcScoreConfigGroup plansCalc = (PlanCalcScoreConfigGroup) config.getModule(PlanCalcScoreConfigGroup.GROUP_NAME);
