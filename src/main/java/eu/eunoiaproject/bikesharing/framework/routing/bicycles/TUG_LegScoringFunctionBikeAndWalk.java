@@ -1,0 +1,579 @@
+package eu.eunoiaproject.bikesharing.framework.routing.bicycles;
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.log4j.Logger;
+import org.matsim.api.core.v01.Coord;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.TransportMode;
+import org.matsim.api.core.v01.network.Network;
+import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.population.Leg;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigGroup;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
+import org.matsim.core.gbl.Gbl;
+import org.matsim.core.population.LegImpl;
+import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
+import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
+import org.matsim.core.scoring.functions.CharyparNagelScoringParametersForPerson;
+import org.matsim.core.scoring.functions.ModeUtilityParameters;
+import org.matsim.core.utils.geometry.CoordUtils;
+
+import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+
+
+public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring 
+{	
+	@Inject
+	BicycleConfigGroup bikeConfigGroup;
+	
+	//private Config config;
+	Person person;
+	Scenario scenario; 
+	Config config;
+	ModeParams ModeParams;
+	PlanCalcScoreConfigGroup cn;
+	CharyparNagelScoringParameters cnParams;
+	
+	//TODO: Verknüpfen von LegScoringFunctionBikeAndWalk mit IKK_WalkTravelDisutility und IKK_BikeTravelDisutility
+	//oder Verbessern von LegScoringFunctionBikeAndWalk --> einarbeiten von IKK_WalkTravelDisutility und IKK_BikeTravelDisutility
+	
+	/***************************************************************************/
+	public TUG_LegScoringFunctionBikeAndWalk(
+			CharyparNagelScoringParameters params, 
+			Config config,
+			Network network, 
+			Person person, 
+			BicycleConfigGroup bikeConfigGroup,
+			Scenario scenario)
+	/***************************************************************************/
+	{
+		super(params, network);
+		this.person = person;
+		this.config = config;
+		this.network = network;
+		this.bikeConfigGroup = bikeConfigGroup;
+		this.scenario = scenario;
+		this.cn = (PlanCalcScoreConfigGroup) config.getModule("planCalcScore");
+		this.cnParams = params;
+		
+	}
+	
+	/***************************************************************************/	
+	double [] getLegDist(Leg newLegX, double travelTime)
+	/***************************************************************************/
+	{
+		double[] firstDistThenTime = new double[2];
+		double dist = 0;
+		double feltTravelTime = 0;
+		String legXStart = null;
+    	String legXEnd = null;
+    	Leg legTemp = null;
+    	double distance = 0;
+ 	
+    	if (newLegX.getMode()== "car" || newLegX.getMode() == "pt") //hier sollte es sowieso nie hineinlaufen - sonst Aufruf Fehlerhaft
+    	{
+    		firstDistThenTime[0] = newLegX.getRoute().getDistance();
+    		firstDistThenTime[1] = newLegX.getRoute().getTravelTime();
+    		return firstDistThenTime;
+    	}
+    	
+    	else if (newLegX.getRoute().getStartLinkId().equals(newLegX.getRoute().getEndLinkId()))
+    	{
+    		dist = 0;
+    		feltTravelTime = 0;
+    	}
+
+    	else
+    	{
+	    	String routeD = newLegX.getRoute().getRouteDescription();
+	    	if (routeD == null)
+	    	{
+	    		int i = 0;
+	    		List<PlanElement> pe = new ArrayList<PlanElement>(this.person.getSelectedPlan().getPlanElements());
+				//System.out.println("-----------------> Person: " + this.person.getId().toString() + " handling Mode: " + legX.getMode());
+				int size = pe.size()-1;
+				legXStart = newLegX.getRoute().getStartLinkId().toString();
+				legXEnd= newLegX.getRoute().getEndLinkId().toString();
+
+				//for (int i = 0; i < pe.size()-1; i++)
+	    		while ((i < size)) //-1 as the last Leg should not be handled!
+	    		{
+	    			//System.out.println(pe);
+	    			if (pe.get(i) instanceof Leg)
+	    			{
+	    				Leg legPlan = (Leg)pe.get(i);
+	    				if (legPlan == null)
+	    				{
+	    					System.out.println("Hebenstreit TODO:");
+	    				}
+	    				else if (legPlan.getRoute().getStartLinkId() == null || legPlan.getRoute().getStartLinkId() == null)
+	    				{
+	    					dist = legPlan.getRoute().getDistance();
+	    					feltTravelTime = legPlan.getTravelTime();
+	    			    	firstDistThenTime[0] = dist;
+	    			    	firstDistThenTime[1] = feltTravelTime;
+	    			    	return firstDistThenTime;
+	    				}
+	    				if (legPlan.getRoute().getStartLinkId() == null)
+	    				{
+	    					System.out.println("Hebenstreit TODO:");
+	    				}
+	    				String startLinkPlan = legPlan.getRoute().getStartLinkId().toString();
+	    				String endLinkPlan = legPlan.getRoute().getEndLinkId().toString();
+	    				
+	    				if (legXStart.equals(startLinkPlan))
+						{
+							if (legXEnd.equals(endLinkPlan))
+							{
+								legTemp = new LegImpl(newLegX.getMode());
+								legTemp = legPlan;
+								break; 
+							}
+						}
+	    			}
+	    			i++;
+	    		}
+	    	}
+	    	if (!(legTemp == null))
+	    	{
+	    		routeD = legTemp.getRoute().getRouteDescription();
+	    	}
+	    	else
+	    	{
+	    		routeD = null;
+	    		String mode = newLegX.getMode();
+	    		if (!(mode.equals("bs_walk")))
+	    		{
+	    			System.out.println("^No Route found");
+	    		}
+	    		else
+	    		{
+	    			double d = newLegX.getRoute().getDistance();
+	    			if (d == 0)
+	    			{
+	    				d = newLegX.getTravelTime()/1.1;
+	    			}
+			    	firstDistThenTime[0] = d;
+			    	firstDistThenTime[1] = newLegX.getTravelTime();
+			    	return firstDistThenTime;
+	    		}
+	    	}
+
+			if ((!(newLegX.getMode().contains(TransportMode.bike)))|| (!(newLegX.getMode().contains("bs"))))
+	    	{
+	    		if (routeD!=null)
+	    		{
+	    			String[] linksOfRoute;
+	    			if (routeD.contains(" "))
+	    			{
+	    				linksOfRoute = routeD.split("\\s+");
+	        	
+	    				for (int i = 0; i < linksOfRoute.length; i++)
+	    				{
+	        			//link array
+	        				Id<Link> act = null;
+	        				String linkIdToCompare = linksOfRoute[i];
+	        				act = Id.createLinkId(linkIdToCompare);
+	        				Link link= network.getLinks().get(act);
+	        				//System.out.println(link.getId());
+	        				distance = distance + link.getLength();
+	    				}
+	    			}
+	    		} 
+	    	}
+			else if ((newLegX.getMode().contains(TransportMode.bike))||(newLegX.getMode().contains("bs")))
+	    	{
+	    		if (routeD!=null)
+	    		{
+	    			TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
+	    			String[] linksOfRoute;
+	    			if (routeD.contains(" "))
+	    			{
+	    				linksOfRoute = routeD.split("\\s+");
+	        	
+	    				for (int i = 0; i < linksOfRoute.length; i++)
+	    				{
+	        			//link array
+	        				Id<Link> act = null;
+	        				String linkIdToCompare = linksOfRoute[i];
+	        				act = Id.createLinkId(linkIdToCompare);
+	        				Link link= network.getLinks().get(act);
+	        				//System.out.println(link.getId());
+	        				double[] timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null);
+	        				feltTravelTime = feltTravelTime + timeDist[0];
+	        				distance = distance + timeDist[1];
+	    				}
+	    				double kmProH = (distance/1000)/(feltTravelTime/3600);
+	    				//if (kmProH > 25)
+	    				//{
+	    				//	System.out.println("Warum nur? Hebenstreit");
+	    				//}
+	    			}
+	    			else 
+	    			{
+	    				//single link
+	    				Id<Link> act = null;
+	    				act = Id.createLinkId(routeD);
+	    				Link link= network.getLinks().get(act);
+	    				//System.out.println(link.getId());
+	    				double[] timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null);
+        				feltTravelTime = timeDist[0];
+        				distance = timeDist[1];
+	    			}
+	    		} 
+	    	}
+
+			dist = distance;
+
+			if (dist == 0)
+			{
+				if (newLegX.getMode().contains(TransportMode.walk))
+				{
+					dist = newLegX.getTravelTime()/1.1;
+				}
+				
+				if (newLegX.getMode().contains(TransportMode.bike))
+				{
+					dist = newLegX.getTravelTime()/4.1;
+				}
+			}
+    	}
+
+    	firstDistThenTime[0] = dist;
+    	if (feltTravelTime == 0)
+    	{
+    		feltTravelTime = travelTime;
+    	}
+
+    	firstDistThenTime[1] = feltTravelTime;
+    	return firstDistThenTime;
+	}
+	
+	/***************************************************************************/
+	@Override
+	public void handleLeg(Leg leg) 
+	/***************************************************************************/
+	{
+    	this.score = 0;
+    	double dist = 0;
+    	double feltTravelTime = 0;
+    	
+		if (leg.getMode()== EBConstants.MODE_FF 
+				|| leg.getMode()== EBConstants.BS_WALK 
+						|| leg.getMode()== EBConstants.BS_BIKE 
+								|| leg.getMode()== EBConstants.BS_E_BIKE 
+										|| leg.getMode()== EBConstants.MODE 
+												|| leg.getMode()== TransportMode.bike 
+														|| leg.getMode()== TransportMode.walk
+														|| leg.getMode()== TransportMode.egress_walk
+														|| leg.getMode() == TransportMode.access_walk) //only pt,transit_walk and car shall not run into
+		{
+			double[] arr = getLegDist(leg, leg.getTravelTime());
+			
+	    	if (arr != null)
+	    	{
+	    		dist = arr[0];
+	    		feltTravelTime = arr[1];
+	    		leg.getRoute().setDistance(dist);
+	    	}
+		}
+		
+		else
+		{
+			feltTravelTime = leg.getTravelTime();
+			dist = leg.getRoute().getDistance();
+		}
+		
+    	double legScore = 0;
+    	if (feltTravelTime == 0)
+    	{
+    		legScore = calcLegScore(leg.getDepartureTime(), leg.getDepartureTime()+leg.getTravelTime(), leg);
+    	}
+    	else
+    	{
+    		legScore = calcLegScore(leg.getDepartureTime(), leg.getDepartureTime() + feltTravelTime, leg);
+    	}
+    	if (legScore == 0 || legScore == Double.POSITIVE_INFINITY)
+    	{
+    		System.out.println("warum? Hebenstreit");
+    	}
+		this.score += legScore;
+	}
+
+    //TODO: EBike-Nutzen ergaenzen (Hebenstreit)  
+	///***************************************************************************/
+	@Override
+	protected double calcLegScore(
+			double departureTime, double arrivalTime, Leg legX)
+	/***************************************************************************/
+	{	
+    	double tmpScore = 0.0D;
+    	double travelTime = arrivalTime-departureTime;
+    	double dist = legX.getRoute().getDistance();
+		
+    	if ((legX.getMode().equals(TransportMode.egress_walk))||(legX.getMode().equals(TransportMode.access_walk)))
+    	{   
+    		tmpScore += getWalkScore(dist, travelTime);
+    		//System.out.println("#####################################  WalkScore = " + tmpScore);
+    		//System.out.println("Pause - press Key to continue!");
+        	//new java.util.Scanner(System.in).nextLine();
+    	}    
+		
+    	if (legX.getMode().equals(TransportMode.walk))
+    	{   
+    		tmpScore += getWalkScore(dist, travelTime);
+    		//System.out.println("#####################################  WalkScore = " + tmpScore);
+    		//System.out.println("Pause - press Key to continue!");
+        	//new java.util.Scanner(System.in).nextLine();
+    	}           		         		
+    	else if (legX.getMode().equals(TransportMode.bike))
+    	{   
+    		tmpScore += getBikeScoreExp(dist, legX.getTravelTime(), legX);
+    		//if (dist / travelTime > 8)
+    		//{
+    		//	System.out.println("Warum nur? Hebenstreit");
+    		//}
+    	}
+    	
+    	else if ((EBConstants.BS_BIKE).equals(legX.getMode())) //Hebenstreit
+    	{				           			
+    		tmpScore += getBSScore(dist, travelTime);
+     
+    	}
+    	
+    	else if ((EBConstants.BS_E_BIKE).equals(legX.getMode())) //Hebenstreit
+    	{				           			
+    		tmpScore += getEBSScore(dist, travelTime);
+     
+    	}
+    	else if ((EBConstants.BS_WALK).equals(legX.getMode())) //Hebenstreit
+    	{				           			
+    		tmpScore += getWalkScore(dist, travelTime);
+     
+    	}
+    	
+    	else if ((TransportMode.transit_walk).equals(legX.getMode())) //Hebenstreit
+    	{	
+    		tmpScore += getWalkScorePt(travelTime);
+    	}
+    	
+    	else if ((TransportMode.pt).equals(legX.getMode())) //Hebenstreit
+    	{	
+      	
+    		tmpScore += getPTScore(dist, travelTime);
+    	}
+    	
+    	else if ((TransportMode.car).equals(legX.getMode())) //Hebenstreit
+    	{				           			
+    		tmpScore += getCarScore(dist, travelTime);
+    	}
+    	return tmpScore;
+	}
+	
+	/***************************************************************************/
+	private double getPTScore(double distance, double travelTime)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.pt);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMarginalUtilityOfDistance();
+		double constant = modeParams.getConstant();
+		
+		score += travelTime * utilTrav + distance * utilDist + constant;
+		return score;
+	}
+	
+	/***************************************************************************/
+	private double getCarScore(double distance, double travelTime)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.car);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMonetaryDistanceRate();
+		double constant = modeParams.getConstant();
+		
+		score += (travelTime * utilTrav)*2/(1+Math.exp(-distance/12+2)) + distance * utilDist + constant;
+		return score;
+	}
+	
+
+
+	/***************************************************************************/
+	private double getWalkScore(double distance, double travelTime)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.walk);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMonetaryDistanceRate();
+		double constant = modeParams.getConstant();
+		double factor = 0;
+		double weighting = ((travelTime/3600) *(travelTime/3600))*12.5; //Hebenstreit Parameter
+		if (distance < 0.001)
+		{
+			distance = travelTime /(0.9/1.41) ; //4 km/h
+		}
+		
+		score += (travelTime * utilTrav) * weighting + (distance * utilDist) + constant;
+		
+		if (distance > 3500)
+		{
+			factor = (distance - 3500)/3500*5;
+			if (factor < 0) {factor = 0;}
+		}
+		if (score < constant)
+		{
+			score = constant;
+		}
+		return score * (1+factor);
+	}
+	
+	/***************************************************************************/
+	private double getWalkScorePt(double travelTime)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.transit_walk);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMarginalUtilityOfDistance();
+		double constant = modeParams.getConstant();
+		double factor = 0;
+		double weighting = ((travelTime/3600) *(travelTime/3600))*12.5; //Hebenstreit Parameter
+		
+		score += (travelTime * utilTrav) * weighting + constant;
+		
+		if (travelTime > 900)
+		{
+			factor = (travelTime - 900)/900;
+		}
+		return score * (1+factor);
+	}
+
+	
+	/***************************************************************************/            	
+	private double getEBSScore(double distance, double travelTime)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
+		double scorePercentage = 1;
+		ModeParams modeParams = cn.getOrCreateModeParams(EBConstants.BS_BIKE);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600)*0.8;
+		double utilDist = modeParams.getMarginalUtilityOfDistance()*0.8;
+		double constant = modeParams.getConstant();
+
+		double time = 3600 - travelTime;
+
+		if (time >= 0)
+		{
+			scorePercentage = 1; //unter 1h Mietzeit
+		}
+		
+		if (time < -1800)
+		{
+			scorePercentage = 4; //Über 1h30 Mietzeit
+		}
+		
+		else
+		{
+			scorePercentage = 8; //>1h und <1h30 Mietzeit
+		}
+    	
+    	score += (travelTime * utilTrav + distance * utilDist)*scorePercentage + constant;
+
+    	return score;
+	}
+
+	/***************************************************************************/            	
+	private double getBSScore(double distance, double travelTime)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
+		double scorePercentage = 1;
+		ModeParams modeParams = cn.getOrCreateModeParams(EBConstants.BS_BIKE);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMarginalUtilityOfDistance();
+		double constant = modeParams.getConstant();
+
+		double time = 3600 - travelTime;
+
+		if (time >= 0)
+		{
+			scorePercentage = 1; //unter 1h Mietzeit
+		}
+		
+		if (time < -1800)
+		{
+			scorePercentage = 10; //Über 1h30 Mietzeit
+		}
+		
+		else
+		{
+			scorePercentage = 5; //>1h und <1h30 Mietzeit
+		}
+    	
+    	score += (travelTime * utilTrav + distance * utilDist)*scorePercentage + constant;
+
+    	return score;
+	}
+	
+	/***************************************************************************/            	
+	private double getBikeScoreExp(double distance, double travelTime, Leg leg)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.bike);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMarginalUtilityOfDistance();
+		double constant = modeParams.getConstant();
+		double factor = 0;
+		
+		double weighting = (travelTime/3600) *(travelTime/3600)*2.5; //Hebenstreit: Parameter
+		
+		score += (travelTime * utilTrav)  + ((distance * utilDist)*weighting) + constant;
+		
+		if (distance > 10000)
+		{
+			factor = (distance - 10000)/1000/2;
+		}
+		
+		score = score * (1+factor);
+		return score;
+	}
+	
+	/***************************************************************************/            	
+	private double getBikeSharingScore(double distance, double travelTime)
+	/***************************************************************************/
+	{
+		ModeParams modeParams = cn.getOrCreateModeParams(EBConstants.BS_BIKE);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMarginalUtilityOfDistance();
+		double constant = modeParams.getConstant();
+		double score = 0.0D;
+    	score += travelTime * utilTrav + distance + utilDist + constant;
+    	return score;
+	}
+ 
+	/***************************************************************************/
+	private class Stats
+	/***************************************************************************/
+	{
+		private double startTime;
+		private double endTime;
+		private double distance;		
+	}        	
+}
+

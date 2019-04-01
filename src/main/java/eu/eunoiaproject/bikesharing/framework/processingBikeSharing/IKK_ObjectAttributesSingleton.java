@@ -1,0 +1,132 @@
+package eu.eunoiaproject.bikesharing.framework.processingBikeSharing;
+
+import org.matsim.utils.objectattributes.ObjectAttributes;
+import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
+import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+
+/**
+* Autors: IKK - Aspaeck, Luger
+*/
+public class IKK_ObjectAttributesSingleton {
+
+	private static IKK_ObjectAttributesSingleton instance = null;
+	
+	
+	ObjectAttributes bikeLinkAttributes;
+	ObjectAttributes usergroupAttributes;
+	ObjectAttributes personAttributes;
+	ObjectAttributes intermodalSpeedValues;
+	ObjectAttributes intermodalSpeedBoundary;
+	ObjectAttributes intermodalSpeedGroupNumber;
+	
+	/***************************************************************************/
+	private IKK_ObjectAttributesSingleton()
+	/***************************************************************************/
+	{
+		
+	}
+
+	/***************************************************************************/
+	private IKK_ObjectAttributesSingleton(BicycleConfigGroup bikeConfigGroup)
+	/***************************************************************************/
+	{
+		bikeLinkAttributes = new ObjectAttributes();
+		new ObjectAttributesXmlReader(bikeLinkAttributes).parse(bikeConfigGroup.getNetworkAttFile());
+		
+		personAttributes = new ObjectAttributes();
+		new ObjectAttributesXmlReader(personAttributes).parse(bikeConfigGroup.getPersonFile());
+
+	}
+	
+	/***************************************************************************/
+	public static IKK_ObjectAttributesSingleton getInstance(
+			BicycleConfigGroup bikeConfigGroup)
+	/***************************************************************************/
+	{
+		if (instance == null){
+			instance = new IKK_ObjectAttributesSingleton(bikeConfigGroup);
+		}
+		
+		return instance;
+	}
+
+	/***************************************************************************/
+	public ObjectAttributes getBikeLinkAttributes() 
+	/***************************************************************************/
+	{
+		return bikeLinkAttributes;
+	}
+
+	/***************************************************************************/
+	public void setBikeLinkAttributes(ObjectAttributes bikeLinkAttributes) 
+	/***************************************************************************/{
+		this.bikeLinkAttributes = bikeLinkAttributes;
+	}
+
+	/***************************************************************************/
+	public ObjectAttributes getUsergroupAttributes() 
+	/***************************************************************************/{
+		return usergroupAttributes;
+	}
+
+	/***************************************************************************/
+	public void setUsergroupAttributes(ObjectAttributes usergroupAttributes) 
+	/***************************************************************************/{
+		this.usergroupAttributes = usergroupAttributes;
+	}
+
+	/***************************************************************************/
+	public ObjectAttributes getPersonAttributes() 
+	/***************************************************************************/{
+		return personAttributes;
+	}
+
+	/***************************************************************************/
+	public void setPersonAttributes(ObjectAttributes personAttributes) 
+	/***************************************************************************/{
+		this.personAttributes = personAttributes;
+	}
+	
+	/***************************************************************************/
+	public ObjectAttributes getSpeedValue() 
+	/***************************************************************************/{
+		return intermodalSpeedValues;
+	}
+
+	/***************************************************************************/
+	public void setSpeedValue(ObjectAttributes intermodalSpeedValues) 
+	/***************************************************************************/
+	{
+		this.intermodalSpeedValues = intermodalSpeedValues;
+	}
+	
+	/***************************************************************************/
+	public ObjectAttributes getSpeedGroupNumber() 
+	/***************************************************************************/
+	{
+		return intermodalSpeedGroupNumber;
+	}
+
+	/***************************************************************************/
+	public void setSpeedGroupNumber(ObjectAttributes intermodalSpeedGroupNumber) 
+	/***************************************************************************/
+	{
+		this.intermodalSpeedGroupNumber = intermodalSpeedGroupNumber;
+	}
+	
+	/***************************************************************************/
+	public ObjectAttributes getSpeedBoundary() 
+	/***************************************************************************/
+	{
+		return intermodalSpeedBoundary;
+	}
+
+	/***************************************************************************/
+	public void setSpeedBoundary(ObjectAttributes intermodalSpeedBoundary) 
+	/***************************************************************************/
+	{
+		this.intermodalSpeedBoundary = intermodalSpeedBoundary;
+	}
+
+}
+
