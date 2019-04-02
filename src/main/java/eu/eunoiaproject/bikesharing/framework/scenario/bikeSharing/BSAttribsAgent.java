@@ -35,7 +35,7 @@ public class BSAttribsAgent
 	}
 	
 
-	public static BSAtt getPersonAttributes(Person person, Scenario scenario) 
+	public static synchronized BSAtt getPersonAttributes(Person person, Scenario scenario)
 	{
 		final BicycleConfigGroup bikeConfigGroup= (BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
 		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup);

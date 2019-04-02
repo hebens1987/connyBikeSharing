@@ -94,11 +94,11 @@
 			<version>${matsim.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.matsim.contrib</groupId>
-			<artifactId>socnetsim</artifactId>
-			<version>${matsim.version}</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.matsim.contrib</groupId>-->
+			<!--<artifactId>socnetsim</artifactId>-->
+			<!--<version>${matsim.version}</version>-->
+		<!--</dependency>-->
 
 	      <!--The following is here since there was an upstream-->
 	      <!--problem, and we did not want to wait until that was resolved.  The-->

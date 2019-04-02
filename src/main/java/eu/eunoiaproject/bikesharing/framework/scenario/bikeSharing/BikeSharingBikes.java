@@ -1,20 +1,16 @@
 package eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing;
 
 
+import eu.eunoiaproject.freeFloatingBS.BikeFFImpl;
+import eu.eunoiaproject.freeFloatingBS.BikesFF;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.contrib.socnetsim.utils.QuadTreeRebuilder;
 import org.matsim.core.api.internal.MatsimToplevelContainer;
-import org.matsim.core.utils.collections.QuadTree;
 import org.matsim.pt.router.TransitRouterConfig;
 import org.matsim.pt.router.TransitRouterImpl;
-import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.vehicles.Vehicle;
-
-import eu.eunoiaproject.freeFloatingBS.BikeFFImpl;
-import eu.eunoiaproject.freeFloatingBS.BikesFF;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -76,10 +76,10 @@ public class BikeSharingStationChoice
 			StationAndType[] startAndEndStation = new StationAndType[2];
 			//this array stores the start [0] and end [1] station
 			
-			this.ebikeSharingFacilitiesPt2 = new BikeSharingFacilities();
-			this.bikeSharingFacilitiesPt2 = new BikeSharingFacilities();
-			this.ebikeSharingFacilities2 = new BikeSharingFacilities();
-			this.bikeSharingFacilities2 = new BikeSharingFacilities();
+//			this.ebikeSharingFacilitiesPt2 = new BikeSharingFacilities();
+//			this.bikeSharingFacilitiesPt2 = new BikeSharingFacilities();
+//			this.ebikeSharingFacilities2 = new BikeSharingFacilities();
+//			this.bikeSharingFacilities2 = new BikeSharingFacilities();
 			
 			BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
 					scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
@@ -102,6 +102,8 @@ public class BikeSharingStationChoice
 //			}
 
 			this.b_pt_qt = bikeSharingFacilitiesPt2.getCurrentQuadTree();
+
+			log.warn("quadTree=" + this.b_pt_qt ) ;
 			
 			//final double directDistance = CoordUtils.calcEuclideanDistance( fromFacility , toFacility );
 
