@@ -50,7 +50,7 @@ public class RunConfigurableBikeSharingSimulation {
 		Logger.getLogger(RunConfigurableBikeSharingSimulation.class);
 
 	enum User { conny, kai, raster }
-	static final User user = User.kai ;
+	static final User user = User.raster ;
 
 	public enum RunType { standard, debug }
 	public static final RunType runType = debug;
@@ -59,6 +59,50 @@ public class RunConfigurableBikeSharingSimulation {
 	public static void main(final String... args) 
 	/***************************************************************************/
 	{
+		final Config config = prepareConfig( args );
+
+		final Scenario sc = prepareScenario( config );
+
+		final Controler controler = prepareControler( sc );
+
+		controler.run();
+	}
+
+	static Controler prepareControler( Scenario sc ){
+		final Controler controler = new Controler( sc );
+
+		//////////////////////////////////////////////////////////
+		//installBikes(controler);
+		//controler.addOverridingModule( new EBikeSharingTripRouterModule() );
+		//controler.setModules(new EBikeSharingTripRouterModule());
+		//controler.setModules(new TripRouterModule());
+		//controler.setModules(new ImplementationModule());
+
+		//controler.addOverridingModule(new TripRouterModule());
+		//controler.addOverridingModule(new TransitRouterModule());
+
+		controler.addOverridingModule(new ImplementationModule(sc.getConfig()) );
+		return controler;
+	}
+
+	static Scenario prepareScenario( Config config ){
+		final Scenario sc = BikeAndEBikeSharingScenarioUtils.loadScenario( config );
+		switch( runType ) {
+			case standard:
+				loadTransitInScenario( sc );
+				break;
+			case debug:
+				sc.getPopulation().getPersons().entrySet().removeIf( entry -> MatsimRandom.getRandom().nextDouble() < 0.9 ) ;
+				break;
+			default:
+				throw new RuntimeException( "not implemented" ) ;
+		}
+
+		// ---
+		return sc;
+	}
+
+	static Config prepareConfig( String... args ){
 		String configFile ;
 		switch( user ) {
 			case conny:
@@ -78,14 +122,16 @@ public class RunConfigurableBikeSharingSimulation {
 
 		OutputDirectoryLogging.catchLogEntries();
 		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
-		
-		
-		BikeScenarioUtils.loadConfig(configFile);
+
+
+		BikeScenarioUtils.loadConfig(configFile );
 		final Config config = BikeAndEBikeSharingScenarioUtils.loadConfig( configFile );
 		//config.addCoreModules();
-		config.addModule( new BicycleConfigGroup());
+		config.addModule( new BicycleConfigGroup() );
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
+
+		config.global().setNumberOfThreads( 1 );
 
 		failIfExists( config.controler().getOutputDirectory() );
 
@@ -105,41 +151,9 @@ public class RunConfigurableBikeSharingSimulation {
 			default:
 				throw new RuntimeException( "not implemented" ) ;
 		}
-
-		final Scenario sc = BikeAndEBikeSharingScenarioUtils.loadScenario( config );
-		switch( runType ) {
-			case standard:
-				loadTransitInScenario( sc );
-				break;
-			case debug:
-				sc.getPopulation().getPersons().entrySet().removeIf( entry -> MatsimRandom.getRandom().nextDouble() < 0.9 ) ;
-				break;
-			default:
-				throw new RuntimeException( "not implemented" ) ;
-		}
-
-		// ---
-
-		final Controler controler = new Controler( sc );
-
-		//////////////////////////////////////////////////////////
-		//installBikes(controler);
-		//controler.addOverridingModule( new EBikeSharingTripRouterModule() );
-		//controler.setModules(new EBikeSharingTripRouterModule());
-		//controler.setModules(new TripRouterModule());
-		//controler.setModules(new ImplementationModule());
-		
-		//controler.addOverridingModule(new TripRouterModule());
-		//controler.addOverridingModule(new TransitRouterModule());
-		
-		controler.addOverridingModule(new ImplementationModule(config));
-
-
-		controler.run();
+		return config;
 	}
-	
 
-	
 
 	/***************************************************************************/
 	private static void failIfExists(final String outdir) 

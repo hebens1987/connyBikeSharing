@@ -43,32 +43,32 @@ public class BikeSharingBikes implements MatsimToplevelContainer {
 	public  Map<Id<Vehicle>, BikesE> ebikeOrig =
 			new LinkedHashMap< >();
 	
-	public  Map<Id<Vehicle>, BikesE> ptRouter =
-			new LinkedHashMap< >();
+//	public  Map<Id<Vehicle>, BikesE> ptRouter =
+//			new LinkedHashMap< >();
 	
 	public TransitRouterImpl trImpl = null;
 
-	private ObjectAttributes EAttributes = new ObjectAttributes();
-	private  ObjectAttributes Attributes = new ObjectAttributes();
-	private  ObjectAttributes AttributesFF = new ObjectAttributes();
-
-	private QuadTreeRebuilder<BikesE> quadTreeBuilderE = new QuadTreeRebuilder< >();
-	private QuadTreeRebuilder<Bikes> quadTreeBuilderC = new QuadTreeRebuilder< >();
-	private QuadTreeRebuilder<BikesFF> quadTreeBuilderFF = new QuadTreeRebuilder< >();
+//	private ObjectAttributes EAttributes = new ObjectAttributes();
+//	private  ObjectAttributes Attributes = new ObjectAttributes();
+//	private  ObjectAttributes AttributesFF = new ObjectAttributes();
+//
+//	private QuadTreeRebuilder<BikesE> quadTreeBuilderE = new QuadTreeRebuilder< >();
+//	private QuadTreeRebuilder<Bikes> quadTreeBuilderC = new QuadTreeRebuilder< >();
+//	private QuadTreeRebuilder<BikesFF> quadTreeBuilderFF = new QuadTreeRebuilder< >();
 
 	private Map<String, String> metadata = new LinkedHashMap< >();
 	
-	public void addFacility( final BikesE ebike ) {
+	void addFacility( final BikesE ebike ) {
 		ebikes.put(ebike.getBikeId() , ebike);
 		ebikeOrig.put(ebike.getBikeId(), ebike);
 	}
 	
-	public void addFacility( final Bikes bike ) {
+	void addFacility( final Bikes bike ) {
 		bikes.put(bike.getBikeId() , bike);
 		bikesOrig.put(bike.getBikeId() , bike);
 	}
 	
-	public void addFacility( final BikesFF ffbike ) {
+	void addFacility( final BikesFF ffbike ) {
 		bikesFF.put(ffbike.getBikeId() , ffbike);
 		bikesFFOrig.put(ffbike.getBikeId() , ffbike);
 	}
@@ -78,24 +78,23 @@ public class BikeSharingBikes implements MatsimToplevelContainer {
 		if (this.trImpl == null)
 		{
 			TransitRouterConfig ctr = new TransitRouterConfig(sc.getConfig());
-			TransitRouterImpl trImpl = new TransitRouterImpl(ctr, sc.getTransitSchedule());
-			this.trImpl = trImpl;
+			this.trImpl = new TransitRouterImpl(ctr, sc.getTransitSchedule());
 		}
 		
 		return this.trImpl;
 	}
 
-	public Map<Id<Vehicle>, BikesE> getOrigEFacilities() {
-		return ebikeOrig;
-	}
-	
-	public Map<Id<Vehicle>, Bikes> getOrigFacilities() {
-		return bikesOrig;
-	}
-	
-	public Map<Id<Vehicle>, BikesFF> getOrigFFFacilities() {
-		return bikesFFOrig;
-	}
+//	public Map<Id<Vehicle>, BikesE> getOrigEFacilities() {
+//		return ebikeOrig;
+//	}
+//
+//	public Map<Id<Vehicle>, Bikes> getOrigFacilities() {
+//		return bikesOrig;
+//	}
+//
+//	public Map<Id<Vehicle>, BikesFF> getOrigFFFacilities() {
+//		return bikesFFOrig;
+//	}
 	
 	public Map<Id<Vehicle>, BikesE> getEFacilities() {
 		return ebikes;
@@ -105,24 +104,24 @@ public class BikeSharingBikes implements MatsimToplevelContainer {
 		return bikes;
 	}
 	
-	public Map<Id<Vehicle>, BikesFF> getFFFacilities() {
+	Map<Id<Vehicle>, BikesFF> getFFFacilities() {
 		return bikesFF;
 	}
 	
-	/**
-	 * may not always return the same instance!
-	 */
-	public QuadTree<BikesE> getCurrentQuadTreeE() {
-		return quadTreeBuilderE.getQuadTree();
-	}
-	
-	public QuadTree<Bikes> getCurrentQuadTreeC() {
-		return quadTreeBuilderC.getQuadTree();
-	}
-	
-	public QuadTree<BikesFF> getCurrentQuadTreeFF() {
-		return quadTreeBuilderFF.getQuadTree();
-	}
+//	/**
+//	 * may not always return the same instance!
+//	 */
+//	public QuadTree<BikesE> getCurrentQuadTreeE() {
+//		return quadTreeBuilderE.getQuadTree();
+//	}
+//
+//	public QuadTree<Bikes> getCurrentQuadTreeC() {
+//		return quadTreeBuilderC.getQuadTree();
+//	}
+//
+//	public QuadTree<BikesFF> getCurrentQuadTreeFF() {
+//		return quadTreeBuilderFF.getQuadTree();
+//	}
 
 	@Override
 	public BikeSharingBikesFactory getFactory() {
@@ -174,17 +173,17 @@ public class BikeSharingBikes implements MatsimToplevelContainer {
 		};
 	}
 
-	public ObjectAttributes getEFacilitiesAttributes() {
-		return EAttributes;
-	}
-	
-	public ObjectAttributes getFacilitiesAttributes() {
-		return Attributes;
-	}
-	
-	public ObjectAttributes getFFFacilitiesAttributes() {
-		return AttributesFF;
-	}
+//	public ObjectAttributes getEFacilitiesAttributes() {
+//		return EAttributes;
+//	}
+//
+//	public ObjectAttributes getFacilitiesAttributes() {
+//		return Attributes;
+//	}
+//
+//	public ObjectAttributes getFFFacilitiesAttributes() {
+//		return AttributesFF;
+//	}
 
 	/**
 	 * retrieve the metadata

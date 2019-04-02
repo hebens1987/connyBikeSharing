@@ -1,10 +1,7 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -94,6 +91,16 @@ public class BikeSharingStationChoice
 			this.e_qt = ebikeSharingFacilities2.getCurrentQuadTree();
 			this.e_pt_qt = ebikeSharingFacilitiesPt2.getCurrentQuadTree();
 			this.b_qt = bikeSharingFacilities2.getCurrentQuadTree();
+
+			log.warn("printing ...");
+			for( Map.Entry<Id<BikeSharingFacility>, BikeSharingFacility> entry : bikeSharingFacilitiesPt2.facilities.entrySet() ){
+				log.warn( "entry=" + entry.getValue() ) ;
+			}
+
+//			if ( true ){
+//				throw new RuntimeException( "stop" );
+//			}
+
 			this.b_pt_qt = bikeSharingFacilitiesPt2.getCurrentQuadTree();
 			
 			//final double directDistance = CoordUtils.calcEuclideanDistance( fromFacility , toFacility );

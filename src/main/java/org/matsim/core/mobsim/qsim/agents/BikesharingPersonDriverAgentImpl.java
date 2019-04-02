@@ -75,17 +75,17 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	
 	BikeSharingBikes bSharingVehicles;
 
-	public Plan getModifiablePlan(){
-		return basicAgentDelegate.getModifiablePlan();
-	}
-
-	public Activity getNextActivity(){
-		return basicAgentDelegate.getNextActivity();
-	}
-
-	public Activity getPreviousActivity(){
-		return basicAgentDelegate.getPreviousActivity();
-	}
+//	public Plan getModifiablePlan(){
+//		return basicAgentDelegate.getModifiablePlan();
+//	}
+//
+//	public Activity getNextActivity(){
+//		return basicAgentDelegate.getNextActivity();
+//	}
+//
+//	public Activity getPreviousActivity(){
+//		return basicAgentDelegate.getPreviousActivity();
+//	}
 
 	public Scenario getScenario(){
 		return basicAgentDelegate.getScenario();

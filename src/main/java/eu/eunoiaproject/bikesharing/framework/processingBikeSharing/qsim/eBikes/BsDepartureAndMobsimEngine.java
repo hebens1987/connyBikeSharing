@@ -253,18 +253,18 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 					return ret;
 				}
 			});
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_car_p = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_acc_walk = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_egr_walk = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bs = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bs_walk = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_walk = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_car = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bike = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_pt = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_ptWalk = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_walkFF = new LinkedHashMap<>();
-			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bikeFF = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_car_p = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_acc_walk = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_egr_walk = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bs = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bs_walk = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_walk = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_car = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bike = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_pt = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_ptWalk = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_walkFF = new LinkedHashMap<>();
+//			private final LinkedHashMap<Id<Person>, TeleportationVisData> teleportationData_bikeFF = new LinkedHashMap<>();
 			private InternalInterface internalInterface;
 			private Scenario scenario;
 			private final boolean withTravelTimeCheck;
@@ -349,7 +349,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_pt.put(agentId, agentInfo);
+//			this.teleportationData_pt.put(agentId, agentInfo);
 			returnType = true;
 		}
 
@@ -363,7 +363,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_acc_walk.put(agentId, agentInfo);
+//			this.teleportationData_acc_walk.put(agentId, agentInfo);
 		}
 		
 		else if (agent.getMode().equals(TransportMode.egress_walk))
@@ -376,7 +376,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_egr_walk.put(agentId, agentInfo);
+//			this.teleportationData_egr_walk.put(agentId, agentInfo);
 		}
 		
 		else if (agent.getMode().equals("car_p"))
@@ -388,7 +388,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_car_p.put(agentId, agentInfo);
+//			this.teleportationData_car_p.put(agentId, agentInfo);
 			returnType = true;
 		}
 		
@@ -401,7 +401,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_bs.put(agentId, agentInfo);
+//			this.teleportationData_bs.put(agentId, agentInfo);
 			returnType = true;
 		}
 
@@ -415,7 +415,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_ptWalk.put(agentId, agentInfo);
+//			this.teleportationData_ptWalk.put(agentId, agentInfo);
 		}
 		
 		else if (agent.getMode().equals(EBConstants.BS_WALK))
@@ -427,7 +427,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_bs_walk.put(agentId, agentInfo);
+//			this.teleportationData_bs_walk.put(agentId, agentInfo);
 			returnType = true;
 		}
 		
@@ -440,7 +440,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_walk.put(agentId, agentInfo);
+//			this.teleportationData_walk.put(agentId, agentInfo);
 			returnType = true;
 		}
 		
@@ -453,7 +453,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_bike.put(agentId, agentInfo);
+//			this.teleportationData_bike.put(agentId, agentInfo);
 			returnType = true;
 		}
 		
@@ -466,7 +466,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_car.put(agentId, agentInfo);
+//			this.teleportationData_car.put(agentId, agentInfo);
 			returnType = true;
 		}
 		
@@ -479,7 +479,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_bikeFF.put(agentId, agentInfo);
+//			this.teleportationData_bikeFF.put(agentId, agentInfo);
 			returnType = true;
 		}
 		
@@ -492,7 +492,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Coord fromCoord = currLink.getToNode().getCoord();
 			Coord toCoord = destLink.getToNode().getCoord();
 			TeleportationVisData agentInfo = new TeleportationVisData(now, agentId, fromCoord, toCoord, travelTime);
-			this.teleportationData_walkFF.put(agentId, agentInfo);
+//			this.teleportationData_walkFF.put(agentId, agentInfo);
 			returnType = true;
 		}
 		return returnType;
@@ -530,7 +530,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new BsArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_bs.remove(personAgent.getId());
+//				this.teleportationData_bs.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -547,7 +547,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new WalkArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_walkFF.remove(personAgent.getId());
+//				this.teleportationData_walkFF.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -562,7 +562,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new FfBsArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_bikeFF.remove(personAgent.getId());
+//				this.teleportationData_bikeFF.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -578,7 +578,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new TransitWalkArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_ptWalk.remove(personAgent.getId());
+//				this.teleportationData_ptWalk.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -595,7 +595,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new BsWalkArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_bs_walk.remove(personAgent.getId());
+//				this.teleportationData_bs_walk.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -611,7 +611,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new PTArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_pt.remove(personAgent.getId());
+//				this.teleportationData_pt.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -627,7 +627,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new WalkArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_walk.remove(personAgent.getId());
+//				this.teleportationData_walk.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -644,7 +644,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new BikeArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_bike.remove(personAgent.getId());
+//				this.teleportationData_bike.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;
@@ -660,7 +660,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 				double distance = personAgent.getExpectedTravelDistance();
 				this.eventsManager.processEvent(new CarArrivalEvent(now, personAgent.getId(), distance));
 				personAgent.endLegAndComputeNextState(now);
-				this.teleportationData_car.remove(personAgent.getId());
+//				this.teleportationData_car.remove(personAgent.getId());
 				internalInterface.arrangeNextAgentState(personAgent);
 			} else {
 				break;

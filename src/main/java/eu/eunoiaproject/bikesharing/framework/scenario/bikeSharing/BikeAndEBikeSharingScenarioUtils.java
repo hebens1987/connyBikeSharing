@@ -31,8 +31,8 @@ import java.util.Map;
  * @author thibautd
  */
 public class BikeAndEBikeSharingScenarioUtils {
-	public static final String LINK_SLOPES_ELEMENT_NAME = "linkSlopes";
-	static BikeSharingFacilities fac;
+//	public static final String LINK_SLOPES_ELEMENT_NAME = "linkSlopes";
+//	static BikeSharingFacilities fac;
 
 	public static Config loadConfig( final String fileName , final ConfigGroup... additionalModules ) {
 		final ConfigGroup[] modules = Arrays.copyOf( additionalModules , additionalModules.length + 1 );
@@ -101,7 +101,7 @@ public class BikeAndEBikeSharingScenarioUtils {
 		// to make sure log entries are writen in log file
 		OutputDirectoryLogging.catchLogEntries();
 		final Scenario sc = ScenarioUtils.createScenario( config );
-		configurePopulationFactory( sc );
+//		configurePopulationFactory( sc );
 		ScenarioUtils.loadScenario( sc );
 		loadBikeSharingPart( sc );
 		return sc;
@@ -109,7 +109,7 @@ public class BikeAndEBikeSharingScenarioUtils {
 	
 	
 
-	public static void loadBikeSharingPart( final Scenario sc ) {
+	private static void loadBikeSharingPart( final Scenario sc ) {
 		final Config config = sc.getConfig();
 		
 		final EBikeSharingConfigGroup confGroup = (EBikeSharingConfigGroup)
@@ -157,24 +157,24 @@ public class BikeAndEBikeSharingScenarioUtils {
 
 	}
 
-	public static boolean intersects ( //origin thibaudth (CollectionUtils in socnetsim)(
-			final Collection<?> c1,
-			final Collection<?> c2) {
+	private static boolean intersects( //origin thibaudth (CollectionUtils in socnetsim)(
+						     final Collection<?> c1,
+						     final Collection<?> c2 ) {
 		for ( Object o : c1 ) {
 			if ( c2.contains( o ) ) return true;
 		}
 		return false;
 	}
 	
-	public static Scenario loadScenario( final String configFile , final ConfigGroup... modules ) {
-		return loadScenario( loadConfig( configFile , modules) );
-	}
+//	public static Scenario loadScenario( final String configFile , final ConfigGroup... modules ) {
+//		return loadScenario( loadConfig( configFile , modules) );
+//	}
 
-	public static void configurePopulationFactory( final Scenario scenario ) {
-
-		((PopulationFactoryImpl) scenario.getPopulation().getFactory()).setRouteFactory( LinkNetworkRouteImpl.class , new BikeSharingRouteFactory() );
-		//((PopulationFactoryImpl) scenario.getPopulation().getFactory()).setRouteFactory( LinkNetworkRouteImpl.class , new LinkNetworkRouteFactory() );
-	}
+//	public static void configurePopulationFactory( final Scenario scenario ) {
+//
+//		((PopulationFactoryImpl) scenario.getPopulation().getFactory()).setRouteFactory( LinkNetworkRouteImpl.class , new BikeSharingRouteFactory() );
+//		//((PopulationFactoryImpl) scenario.getPopulation().getFactory()).setRouteFactory( LinkNetworkRouteImpl.class , new LinkNetworkRouteFactory() );
+//	}
 	
 	
 

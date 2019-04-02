@@ -60,7 +60,7 @@ public class ImplementationModule extends AbstractModule {
 		    }
 		    this.bind(SingleModeNetworksCache.class).asEagerSingleton();
 		    this.addTravelDisutilityFactoryBinding(TransportMode.pt).to(TUG_WalkTravelDisutilityFactory.class);
-		    PlanCalcScoreConfigGroup plansCalc = (PlanCalcScoreConfigGroup) config.getModule(PlanCalcScoreConfigGroup.GROUP_NAME);
+//		    PlanCalcScoreConfigGroup plansCalc = (PlanCalcScoreConfigGroup) config.getModule(PlanCalcScoreConfigGroup.GROUP_NAME);
 			this.addPlanStrategyBinding("ResetBSPlanStrategy").to(ResetBSPlanStrategy.class ) ;
 			//XXXXX Hebenstreit: does this have any effect?
 		
@@ -118,13 +118,13 @@ public class ImplementationModule extends AbstractModule {
 		 } 
 		 
 
-		TripRouter create(Map<String, Provider<RoutingModule>> routingModules, MainModeIdentifier mainModeIdentifier) {
-		        TripRouter tripRouter = new TripRouter();
-		        for (Map.Entry<String, Provider<RoutingModule>> entry : routingModules.entrySet()) {
-		            tripRouter.setRoutingModule(entry.getKey(), entry.getValue().get());
-		        }
-		        tripRouter.setMainModeIdentifier(mainModeIdentifier);
-		        return tripRouter;
-		    }
+//		TripRouter create(Map<String, Provider<RoutingModule>> routingModules, MainModeIdentifier mainModeIdentifier) {
+//		        TripRouter tripRouter = new TripRouter();
+//		        for (Map.Entry<String, Provider<RoutingModule>> entry : routingModules.entrySet()) {
+//		            tripRouter.setRoutingModule(entry.getKey(), entry.getValue().get());
+//		        }
+//		        tripRouter.setMainModeIdentifier(mainModeIdentifier);
+//		        return tripRouter;
+//		    }
 }
 

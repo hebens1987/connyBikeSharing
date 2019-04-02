@@ -46,8 +46,7 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 	@Inject public LeastCostPathCalculatorFactory pathCalculatorFactory ;
 	@Inject private Map<String,TravelDisutilityFactory> travelDisutilityFactories ;
 	@Inject public Map<String,TravelTime> travelTimes ;
-	public static TransitRouterImpl trImpl;
-	public LeastCostPathCalculator lcp;
+//	public LeastCostPathCalculator lcp;
 	
 	
 
@@ -94,8 +93,6 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		final BikeSharingBikes bsBikes = (BikeSharingBikes) sc.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
 		
 		//EBikeSharingManager ebsManager = new EBikeSharingManagerImpl(confGroup,sc);
-		
-		BikesharingAgentFactory agentFactory = null;
 
 		TravelTime travelTime = travelTimes.get( TransportMode.bike ) ;
 
@@ -103,7 +100,7 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		TravelDisutility travelDisutility = travelDisutilityFactory.createTravelDisutility(travelTime) ;	
 
 		LeastCostPathCalculator pathCalculator = pathCalculatorFactory.createPathCalculator(sc.getNetwork(), travelDisutility, travelTime ) ;
-		lcp = pathCalculator;
+//		lcp = pathCalculator;
 		
 		QNetsimEngine qnet = new QNetsimEngine(qSim);
 		qSim.addMobsimEngine(qnet);
@@ -115,9 +112,9 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		
 
 		//bsBikes.generatePTRouterForBS(sc);
-		
-		agentFactory = new BikesharingAgentFactory(qSim, pathCalculator, pathCalculatorFactory, bsBikes.trImpl, sc);	
-		
+
+		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( qSim, pathCalculator, pathCalculatorFactory, bsBikes.trImpl, sc );
+
 		PopulationAgentSource agentSource = new PopulationAgentSource(sc.getPopulation(), agentFactory, qSim);
 		qSim.addAgentSource(agentSource);
 		//QNetsimEngineModule.configure(qSim); //Hebenstreit (15.06.2018)

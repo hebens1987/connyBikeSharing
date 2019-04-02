@@ -17,12 +17,15 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.population.LegImpl;
+import org.matsim.core.population.routes.NetworkRoute;
+import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParametersForPerson;
@@ -33,8 +36,8 @@ import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 
 
-public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring 
-{	
+class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
+{
 	@Inject
 	BicycleConfigGroup bikeConfigGroup;
 	
@@ -70,8 +73,8 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
 	}
 	
-	/***************************************************************************/	
-	double [] getLegDist(Leg newLegX, double travelTime)
+	/***************************************************************************/
+	private double [] getLegDist( Leg newLegX, double travelTime )
 	/***************************************************************************/
 	{
 		double[] firstDistThenTime = new double[2];
@@ -266,7 +269,17 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	public void handleLeg(Leg leg) 
 	/***************************************************************************/
 	{
-    	this.score = 0;
+
+//		List<Id<Link>> linkIds = null ;
+//		Route route = leg.getRoute();
+//		if ( route instanceof NetworkRoute ) {
+//			linkIds = ((NetworkRoute) route).getLinkIds();
+//		}
+//		if ( linkIds==null && leg.getMode().equals( EBConstants.BS_BIKE ) ) {
+//			// ??
+//		}
+
+		this.score = 0;
     	double dist = 0;
     	double feltTravelTime = 0;
     	
@@ -293,7 +306,7 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		else
 		{
 			feltTravelTime = leg.getTravelTime();
-			dist = leg.getRoute().getDistance();
+//			dist = leg.getRoute().getDistance();
 		}
 		
     	double legScore = 0;
