@@ -381,17 +381,15 @@ public class BikeSharingStationChoice
 		}
 		
 		List<BikeSharingFacility> bsList = new ArrayList<BikeSharingFacility>(bs);
-		int size = bsList.size();
-		for (int i = 0; i < size-1; i++) //ensures that no stations is twice or more in list
+		for (int i = 0; i < bsList.size(); i++) //ensures that no stations is twice or more in list
 		{
-			for (int j = 0; j < size-1; j++)
+			for (int j = 0; j < bsList.size(); j++)
 			{
 				if (i != j)
 				{
 					if ((bsList.get(i).equals(bsList.get(j))|| bsList.get(j).getNumberOfAvailableBikes() < 1))
 					{
 						bsList.remove(j);
-						size = bsList.size();
 						j--;
 					}
 				}
@@ -571,17 +569,15 @@ public class BikeSharingStationChoice
 		}
 		
 		List<BikeSharingFacility> bsList = new ArrayList<BikeSharingFacility>(bs);
-		int size = bsList.size();
-		for (int i = 0; i < size-1; i++) //ensures that no stations is twice or more in list
+		for (int i = 0; i < bsList.size(); i++) //ensures that no stations is twice or more in list
 		{
-			for (int j = 0; j < size-1; j++)
+			for (int j = 0; j < bsList.size(); j++)
 			{
 				if (i != j)
 				{
 					if ((bsList.get(i).equals(bsList.get(j))|| bsList.get(j).getFreeParkingSlots() < 1))
 					{
 						bsList.remove(j);
-						size = bsList.size();
 						j--;
 					}
 				}

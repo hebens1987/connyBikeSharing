@@ -16,6 +16,7 @@ import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.Route;
@@ -448,17 +449,21 @@ public class BSRunner {
 	public void planComparison(BasicPlanAgentImpl basicAgentDelegate)
 	/***************************************************************************/
 	{
-		// Hebenstreit TODO:
-		//setzt alle verschiedenen PlanElement Listen gleich! TODO: Hebenstreit
-		// warum pe1 != pe2 ?
 		List<PlanElement>pe1 = basicAgentDelegate.getCurrentPlan().getPlanElements(); 
-		List<PlanElement> pe2 = basicAgentDelegate.getPerson().getSelectedPlan().getPlanElements();//this will be replaced by pe1;
-		//basicAgentDelegate.setAllPlanElement(pe1); //Hebenstreit
-
-//		basicAgentDelegate.setCurrentPlanElementIndex(basicAgentDelegate.getCurrentPlanElementIndex());
-		// yyyyyy the above is not possible.  But the way it is programmed it also will not do anything.  kai, apr'19
+		//List<PlanElement>pe2 = basicAgentDelegate.getPerson().getSelectedPlan().getPlanElements();
+		//this call will afterwards match pe1;
+		setAllPlanElement(basicAgentDelegate.getCurrentPlan(),pe1); //Hebenstreit
 	} 
 	
+	/***************************************************************************/
+	/** makes the initial and the executed plan equal - necessary for bike sharing */
+	 public final void setAllPlanElement( Plan plan, List<PlanElement> pe) 
+	 /***************************************************************************/
+	 {
+	
+	  plan.getPerson().getSelectedPlan().getPlanElements().clear();
+	  plan.getPerson().getSelectedPlan().getPlanElements().addAll(pe);
+	 }
 	
 	
 	/***************************************************************************/
