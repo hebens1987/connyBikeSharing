@@ -1,0 +1,24 @@
+2018-02-01 14:54:43,949  INFO MatsimXmlParser:145 starting to parse xml from file network_RasterBsp.xml ...
+2018-02-01 14:54:43,980  INFO MatsimNetworkReader:98 using network_v1-reader.
+2018-02-01 14:54:43,980  INFO MatsimXmlParser:253 Trying to load http://matsim.org/files/dtd/network_v1.dtd. In some cases (e.g. network interface up but no connection), this may take a bit.
+2018-02-01 14:54:44,043  INFO NetworkImpl:134  node # 1
+2018-02-01 14:54:44,043  INFO NetworkImpl:134  node # 2
+2018-02-01 14:54:44,043  INFO NetworkImpl:134  node # 4
+2018-02-01 14:54:44,043  INFO NetworkImpl:134  node # 8
+2018-02-01 14:54:44,043  INFO NetworkImpl:134  node # 16
+2018-02-01 14:54:44,043  INFO NetworkImpl:134  node # 32
+2018-02-01 14:54:44,043  INFO NetworkImpl:134  node # 64
+2018-02-01 14:54:44,058  INFO NetworkImpl:130  link # 1
+2018-02-01 14:54:44,058  INFO NetworkImpl:130  link # 2
+2018-02-01 14:54:44,058  INFO NetworkImpl:130  link # 4
+2018-02-01 14:54:44,058  INFO NetworkImpl:130  link # 8
+2018-02-01 14:54:44,058  INFO NetworkImpl:130  link # 16
+2018-02-01 14:54:44,058  INFO NetworkImpl:130  link # 32
+2018-02-01 14:54:44,058  INFO NetworkImpl:130  link # 64
+2018-02-01 14:54:44,074  INFO NetworkImpl:130  link # 128
+2018-02-01 14:54:44,090  INFO NetworkImpl:130  link # 256
+2018-02-01 14:54:44,105 DEBUG MatsimFileTypeGuesser:147 Detected public id: null
+2018-02-01 14:54:44,105 DEBUG MatsimFileTypeGuesser:148 Detected system Id: http://www.matsim.org/files/dtd/transitSchedule_v1.dtd
+2018-02-01 14:54:44,121  INFO MatsimXmlParser:145 starting to parse xml from file transitSchedule.xml ...
+2018-02-01 14:54:44,121  INFO MatsimXmlParser:253 Trying to load http://www.matsim.org/files/dtd/transitSchedule_v1.dtd. In some cases (e.g. network interface up but no connection), this may take a bit.
+Schedule appears valid!
