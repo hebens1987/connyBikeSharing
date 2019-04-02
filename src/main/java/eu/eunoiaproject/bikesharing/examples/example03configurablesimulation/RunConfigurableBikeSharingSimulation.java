@@ -28,10 +28,8 @@ import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
-import org.matsim.core.config.ConfigGroup;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ControlerConfigGroup;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
-import org.matsim.core.config.groups.PlansCalcRouteConfigGroup.ModeRoutingParams;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
@@ -44,8 +42,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.RunType.debug;
-
 
 /**
  * @author thibautd, overworked by hebenstreit
@@ -56,17 +52,13 @@ public class RunConfigurableBikeSharingSimulation {
 	private static final Logger log =
 		Logger.getLogger(RunConfigurableBikeSharingSimulation.class);
 
-	enum User { conny, kai, raster }
-	static final User user = User.raster ;
-
-	public enum RunType { standard, debug }
-	public static final RunType runType = debug;
+	enum InputCase{fromArgs, kaiInputDiss, raster }
 
 	/***************************************************************************/
 	public static void main(final String... args) 
 	/***************************************************************************/
 	{
-		final Config config = prepareConfig( args );
+		final Config config = prepareConfig( args, InputCase.fromArgs );
 
 		final Scenario sc = prepareScenario( config );
 
@@ -94,7 +86,8 @@ public class RunConfigurableBikeSharingSimulation {
 
 	static Scenario prepareScenario( Config config ){
 		final Scenario sc = BikeAndEBikeSharingScenarioUtils.loadScenario( config );
-		switch( runType ) {
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( sc.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
 				loadTransitInScenario( sc );
 				break;
@@ -109,15 +102,15 @@ public class RunConfigurableBikeSharingSimulation {
 		return sc;
 	}
 
-	static Config prepareConfig( String... args ){
+	static Config prepareConfig( String [] args, InputCase user ){
 		String configFile ;
 		switch( user ) {
-			case conny:
+			case fromArgs:
 				configFile = args[0] ;
 				//final String configFile = "E:/MATCHSIM_ECLIPSE/matsim-master/playgrounds/thibautd/examples\BikeRouting\haus\config.xml";
 				//E:\MATCHSIM_ECLIPSE\matsim-master\playgrounds\thibautd\test\output\eu\eunoiaproject\bikesharing\framework\examples\TestRegressionConfigurableExample\testRunDoesNotFailMultimodal
 				break;
-			case kai:
+			case kaiInputDiss:
 				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
 				break;
 			case raster:
@@ -151,7 +144,8 @@ public class RunConfigurableBikeSharingSimulation {
 
 		// ---
 
-		switch( runType ) {
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
 				break;
 			case debug:

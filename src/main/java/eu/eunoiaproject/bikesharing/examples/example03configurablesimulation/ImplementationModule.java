@@ -17,29 +17,22 @@ import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravel
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelTime;
 import eu.eunoiaproject.freeFloatingBS.FFBikeSharingRoutingModule;
 
-import java.util.Map;
-
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.router.LeastCostPathCalculatorModule;
 import org.matsim.core.router.MainModeIdentifier;
 import org.matsim.core.router.MainModeIdentifierImpl;
 import org.matsim.core.router.NetworkRouting;
-import org.matsim.core.router.RoutingModule;
 import org.matsim.core.router.SingleModeNetworksCache;
-import org.matsim.core.router.TripRouter;
 import org.matsim.pt.router.TransitRouterModule;
-
-
-import com.google.inject.Provider;
 
 public class ImplementationModule extends AbstractModule {
 	
 	private final Config config;
 
-		public ImplementationModule(Config config) 
+		ImplementationModule( Config config )
 		{
 			this.config= config;
 		}
@@ -49,7 +42,8 @@ public class ImplementationModule extends AbstractModule {
 		 { 
 			this.bind(MainModeIdentifier.class).to(MainModeIdentifierImpl.class);
 		    this.install(new LeastCostPathCalculatorModule());
-		    switch( RunConfigurableBikeSharingSimulation.runType ) {
+			 BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+			 switch( bikeSharingConfig.getRunType() ) {
 			    case standard:
 				    this.install(new TransitRouterModule());
 				    break;

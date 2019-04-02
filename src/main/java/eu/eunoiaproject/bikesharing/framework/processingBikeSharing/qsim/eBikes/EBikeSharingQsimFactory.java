@@ -3,11 +3,13 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes
 
 import java.util.Map;
 
+import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.api.experimental.events.EventsManager;
 //import org.matsim.core.config.ConfigGroup;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.mobsim.qsim.ActivityEngine;
@@ -69,7 +71,8 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		qSim.addMobsimEngine(activityEngine);
 		qSim.addActivityHandler(activityEngine);
 
-		switch( RunConfigurableBikeSharingSimulation.runType ) {
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( sc.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
 				TransitQSimEngine transitEngine = new TransitQSimEngine(qSim);
 				qSim.addMobsimEngine(transitEngine);

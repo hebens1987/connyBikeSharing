@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
@@ -15,6 +16,7 @@ import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.population.ActivityImpl;
@@ -251,7 +253,8 @@ public class NoParkingAvailable {
 			planElements.addAll(indexOfInsertion, trip);
 			
 			//create new Plan
-			switch( RunConfigurableBikeSharingSimulation.runType ) {
+			BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( scenario.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+			switch( bikeSharingConfig.getRunType() ) {
 				case standard:
 					//			for (int i = 0; i < planElements.size(); i++ )
 					//			{
