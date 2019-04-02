@@ -4,7 +4,6 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes
 import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
-import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.api.experimental.events.EventsManager;
@@ -23,7 +22,6 @@ import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
-import org.matsim.pt.router.TransitRouterImpl;
 
 
 import com.google.inject.Inject;
@@ -117,7 +115,7 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 
 		//bsBikes.generatePTRouterForBS(sc);
 
-		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( qSim, pathCalculator, pathCalculatorFactory, bsBikes.trImpl, sc );
+		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( qSim, pathCalculator, pathCalculatorFactory, sc );
 
 		PopulationAgentSource agentSource = new PopulationAgentSource(sc.getPopulation(), agentFactory, qSim);
 		qSim.addAgentSource(agentSource);

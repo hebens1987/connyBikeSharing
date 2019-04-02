@@ -25,8 +25,8 @@ public class BikesharingAgentFactory implements AgentFactory{
     EventsManager eventsManager;
 	
 	
-	public BikesharingAgentFactory(final Netsim simulation, LeastCostPathCalculator pathCalculator, 
-			LeastCostPathCalculatorFactory pathF, TransitRouterImpl trImpl, Scenario scenario ) {
+	public BikesharingAgentFactory( final Netsim simulation, LeastCostPathCalculator pathCalculator,
+						  LeastCostPathCalculatorFactory pathF, Scenario scenario ) {
 		this.simulation = simulation;
 		this.pathCalculator = pathCalculator;
 		this.pathF = pathF;
