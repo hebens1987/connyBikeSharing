@@ -38,11 +38,6 @@ public class BikesharingAgentFactory implements AgentFactory{
 		
 		String type = p.getSelectedPlan().getType();
 		
-		if (type != "car")
-		{
-			System.out.println("Test"); //Hebenstreit TODO:
-		}
-		
 		//VehicleImpl vehicle =  new VehicleImpl(Id.createVehicleId(p.getId().toString()), null);
 		//MobsimVehicle veh = (MobsimVehicle) vehicle;
 		MobsimDriverAgent agent;

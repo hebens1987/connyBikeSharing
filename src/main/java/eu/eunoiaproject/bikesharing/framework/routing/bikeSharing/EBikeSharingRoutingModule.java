@@ -73,7 +73,6 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 	public final RoutingModule bsRouting;
 	public final RoutingModule bseRouting;
 	public final RoutingModule bsWalkRouting;
-	static BikeSharingStationChoice bsChoice;
 	private final BikeSharingFacilities ebikeSharingFacilitiesWithPTInteraction;
 	private final BikeSharingFacilities bikeSharingFacilitiesWithPTInteraction;
 	private static final Logger log = Logger.getLogger(EBikeSharingRoutingModule.class);
@@ -125,7 +124,7 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 		this.bseRouting = bseRouting;
 		this.c = new CreateSubtrips();
 		this.scenario = scenario;
-		EBikeSharingRoutingModule.bsChoice = new BikeSharingStationChoice(scenario);
+		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
 		this.bikeSharingFacilities = bsChoice.bikeSharingFacilities2;
 		this.ebikeSharingFacilities = bsChoice.ebikeSharingFacilities2;
 		this.ebikeSharingFacilitiesWithPTInteraction = bsChoice.bikeSharingFacilitiesPt2;
@@ -194,6 +193,7 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 		BSAtt att = BSAttribsAgent.getPersonAttributes( person, scenario);
 		
 
+		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
 		StationAndType[] startAndEnd = bsChoice.getInitialStations(
 				fromFacility.getCoord(), toFacility.getCoord(), att.searchRadius,
 				att.maxSearchRadius, att.maxBSTripLength, fromFacility.getId(), toFacility.getId());
