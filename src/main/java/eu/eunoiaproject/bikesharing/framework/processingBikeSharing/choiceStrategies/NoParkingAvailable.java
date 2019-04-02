@@ -259,7 +259,7 @@ public class NoParkingAvailable {
 					//			}
 					throw new RuntimeException("this is not possible.  But I also do not see why it should be needed, since the code already operates on the agent's " +
 										     "planElements. kai, apr'19") ;
-				case kaidebug:
+				case debug:
 					break;
 				default:
 					throw new RuntimeException("not implemented") ;

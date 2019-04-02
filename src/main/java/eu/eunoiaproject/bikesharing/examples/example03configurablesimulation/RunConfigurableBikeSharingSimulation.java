@@ -36,11 +36,8 @@ import org.matsim.pt.transitSchedule.api.TransitScheduleReader;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 
 import java.io.File;
-import java.util.Map;
-import java.util.function.Predicate;
 
-import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.RunType.kaidebug;
-import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.RunType.standard;
+import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.RunType.debug;
 
 
 /**
@@ -52,22 +49,24 @@ public class RunConfigurableBikeSharingSimulation {
 	private static final Logger log =
 		Logger.getLogger(RunConfigurableBikeSharingSimulation.class);
 
-	public enum RunType { standard, kaidebug }
-	public static final RunType runType = kaidebug ;
+	enum User { conny, kai }
+	static final User user = User.kai ;
+
+	public enum RunType { standard, debug}
+	public static final RunType runType = debug;
 
 	/***************************************************************************/
 	public static void main(final String... args) 
 	/***************************************************************************/
 	{
 		String configFile ;
-		switch( runType ) {
-			case standard:
-//				configFile = args[0] ;
+		switch( user ) {
+			case conny:
+				configFile = args[0] ;
 				//final String configFile = "E:/MATCHSIM_ECLIPSE/matsim-master/playgrounds/thibautd/examples\BikeRouting\haus\config.xml";
 				//E:\MATCHSIM_ECLIPSE\matsim-master\playgrounds\thibautd\test\output\eu\eunoiaproject\bikesharing\framework\examples\TestRegressionConfigurableExample\testRunDoesNotFailMultimodal
-				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
 				break;
-			case kaidebug:
+			case kai:
 				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
 				break;
 			default:
@@ -92,7 +91,7 @@ public class RunConfigurableBikeSharingSimulation {
 		switch( runType ) {
 			case standard:
 				break;
-			case kaidebug:
+			case debug:
 				config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
 				config.transit().setUseTransit( false );
 				config.transit().setTransitScheduleFile( null );
@@ -107,7 +106,7 @@ public class RunConfigurableBikeSharingSimulation {
 			case standard:
 				loadTransitInScenario( sc );
 				break;
-			case kaidebug:
+			case debug:
 				sc.getPopulation().getPersons().entrySet().removeIf( entry -> MatsimRandom.getRandom().nextDouble() < 0.9 ) ;
 				break;
 			default:

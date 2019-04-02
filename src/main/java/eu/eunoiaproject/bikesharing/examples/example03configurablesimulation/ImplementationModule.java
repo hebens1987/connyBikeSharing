@@ -53,7 +53,7 @@ public class ImplementationModule extends AbstractModule {
 			    case standard:
 				    this.install(new TransitRouterModule());
 				    break;
-			    case kaidebug:
+			    case debug:
 				    break;
 			    default:
 			    	throw new RuntimeException( "not implemented" ) ;
