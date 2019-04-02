@@ -24,8 +24,6 @@ import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.population.LegImpl;
-import org.matsim.core.population.routes.NetworkRoute;
-import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParametersForPerson;
@@ -36,8 +34,8 @@ import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 
 
-class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
-{
+public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring 
+{	
 	@Inject
 	BicycleConfigGroup bikeConfigGroup;
 	
@@ -49,7 +47,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	PlanCalcScoreConfigGroup cn;
 	CharyparNagelScoringParameters cnParams;
 	
-	//TODO: Verknüpfen von LegScoringFunctionBikeAndWalk mit IKK_WalkTravelDisutility und IKK_BikeTravelDisutility
+	//TODO: VerknÃ¼pfen von LegScoringFunctionBikeAndWalk mit IKK_WalkTravelDisutility und IKK_BikeTravelDisutility
 	//oder Verbessern von LegScoringFunctionBikeAndWalk --> einarbeiten von IKK_WalkTravelDisutility und IKK_BikeTravelDisutility
 	
 	/***************************************************************************/
@@ -73,8 +71,8 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
 	}
 	
-	/***************************************************************************/
-	private double [] getLegDist( Leg newLegX, double travelTime )
+	/***************************************************************************/	
+	double [] getLegDist(Leg newLegX, double travelTime)
 	/***************************************************************************/
 	{
 		double[] firstDistThenTime = new double[2];
@@ -84,6 +82,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	String legXEnd = null;
     	Leg legTemp = null;
     	double distance = 0;
+    	String routeD = null;
  	
     	if (newLegX.getMode()== "car" || newLegX.getMode() == "pt") //hier sollte es sowieso nie hineinlaufen - sonst Aufruf Fehlerhaft
     	{
@@ -94,66 +93,60 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	
     	else if (newLegX.getRoute().getStartLinkId().equals(newLegX.getRoute().getEndLinkId()))
     	{
-    		dist = 0;
-    		feltTravelTime = 0;
+    		routeD = newLegX.getRoute().getStartLinkId().toString();
     	}
 
     	else
     	{
-	    	String routeD = newLegX.getRoute().getRouteDescription();
-	    	if (routeD == null)
-	    	{
-	    		int i = 0;
-	    		List<PlanElement> pe = new ArrayList<PlanElement>(this.person.getSelectedPlan().getPlanElements());
-				//System.out.println("-----------------> Person: " + this.person.getId().toString() + " handling Mode: " + legX.getMode());
-				int size = pe.size()-1;
-				legXStart = newLegX.getRoute().getStartLinkId().toString();
-				legXEnd= newLegX.getRoute().getEndLinkId().toString();
 
-				//for (int i = 0; i < pe.size()-1; i++)
-	    		while ((i < size)) //-1 as the last Leg should not be handled!
-	    		{
-	    			//System.out.println(pe);
-	    			if (pe.get(i) instanceof Leg)
-	    			{
-	    				Leg legPlan = (Leg)pe.get(i);
-	    				if (legPlan == null)
-	    				{
-	    					System.out.println("Hebenstreit TODO:");
-	    				}
-	    				else if (legPlan.getRoute().getStartLinkId() == null || legPlan.getRoute().getStartLinkId() == null)
-	    				{
-	    					dist = legPlan.getRoute().getDistance();
-	    					feltTravelTime = legPlan.getTravelTime();
-	    			    	firstDistThenTime[0] = dist;
-	    			    	firstDistThenTime[1] = feltTravelTime;
-	    			    	return firstDistThenTime;
-	    				}
-	    				if (legPlan.getRoute().getStartLinkId() == null)
-	    				{
-	    					System.out.println("Hebenstreit TODO:");
-	    				}
-	    				String startLinkPlan = legPlan.getRoute().getStartLinkId().toString();
-	    				String endLinkPlan = legPlan.getRoute().getEndLinkId().toString();
-	    				
-	    				if (legXStart.equals(startLinkPlan))
-						{
-							if (legXEnd.equals(endLinkPlan))
-							{
-								legTemp = new LegImpl(newLegX.getMode());
-								legTemp = legPlan;
-								break; 
-							}
-						}
-	    			}
-	    			i++;
-	    		}
-	    	}
-	    	if (!(legTemp == null))
+	    	int i = 0;
+	    	List<PlanElement> pe = new ArrayList<PlanElement>(this.person.getSelectedPlan().getPlanElements());
+				//System.out.println("-----------------> Person: " + this.person.getId().toString() + " handling Mode: " + legX.getMode());
+			int size = pe.size();
+			legXStart = newLegX.getRoute().getStartLinkId().toString();
+			legXEnd= newLegX.getRoute().getEndLinkId().toString();
+
+			//for (int i = 0; i < pe.size()-1; i++)
+	    	while ((i < size)) //-1 as the last Leg should not be handled!
 	    	{
-	    		routeD = legTemp.getRoute().getRouteDescription();
+	    		//System.out.println(pe);
+	    		if (pe.get(i) instanceof Leg)
+	    		{
+	    			Leg legPlan = (Leg)pe.get(i);
+	    			if (legPlan == null)
+	    			{
+	    				System.out.println("Hebenstreit TODO:");
+	    			}
+	    			else if (legPlan.getRoute().getStartLinkId() == null || legPlan.getRoute().getStartLinkId() == null)
+	    			{
+	    				dist = legPlan.getRoute().getDistance();
+	   					feltTravelTime = legPlan.getTravelTime();
+	    		    	firstDistThenTime[0] = dist;
+	    		    	firstDistThenTime[1] = feltTravelTime;
+	    		    	return firstDistThenTime;
+	    			}	    				
+	    			if (legPlan.getRoute().getStartLinkId() == null)
+    				{
+	   					System.out.println("Hebenstreit TODO:");
+	   				}
+	   				String startLinkPlan = legPlan.getRoute().getStartLinkId().toString();
+	   				String endLinkPlan = legPlan.getRoute().getEndLinkId().toString();
+	    			
+	    			if (legXStart.equals(startLinkPlan))
+					{
+						if (legXEnd.equals(endLinkPlan))
+						{
+							legTemp = new LegImpl(legPlan.getMode());
+							legTemp = legPlan;
+							routeD = legTemp.getRoute().getRouteDescription();
+							break; 
+						}
+					}
+	    		}
+	    		i++;
 	    	}
-	    	else
+	    	
+	    	if (routeD == null)
 	    	{
 	    		routeD = null;
 	    		String mode = newLegX.getMode();
@@ -174,7 +167,8 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    		}
 	    	}
 
-			if ((!(newLegX.getMode().contains(TransportMode.bike)))|| (!(newLegX.getMode().contains("bs"))))
+			if ((!(newLegX.getMode().contains(TransportMode.bike)))&&(!(newLegX.getMode().equals(EBConstants.BS_BIKE)))
+					&& (!(newLegX.getMode().equals(EBConstants.BS_E_BIKE)))&& (!(newLegX.getMode().equals(EBConstants.BS_BIKE_FF))))
 	    	{
 	    		if (routeD!=null)
 	    		{
@@ -183,11 +177,11 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    			{
 	    				linksOfRoute = routeD.split("\\s+");
 	        	
-	    				for (int i = 0; i < linksOfRoute.length; i++)
+	    				for (int j = 0; j < linksOfRoute.length; j++)
 	    				{
 	        			//link array
 	        				Id<Link> act = null;
-	        				String linkIdToCompare = linksOfRoute[i];
+	        				String linkIdToCompare = linksOfRoute[j];
 	        				act = Id.createLinkId(linkIdToCompare);
 	        				Link link= network.getLinks().get(act);
 	        				//System.out.println(link.getId());
@@ -196,7 +190,8 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    			}
 	    		} 
 	    	}
-			else if ((newLegX.getMode().contains(TransportMode.bike))||(newLegX.getMode().contains("bs")))
+			else if ((newLegX.getMode().contains(TransportMode.bike))||(newLegX.getMode().equals(EBConstants.BS_E_BIKE))
+					|| newLegX.getMode().equals(EBConstants.BS_BIKE) || newLegX.getMode().equals(EBConstants.BS_BIKE_FF))
 	    	{
 	    		if (routeD!=null)
 	    		{
@@ -206,11 +201,11 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    			{
 	    				linksOfRoute = routeD.split("\\s+");
 	        	
-	    				for (int i = 0; i < linksOfRoute.length; i++)
+	    				for (int j = 0; j < linksOfRoute.length; j++)
 	    				{
 	        			//link array
 	        				Id<Link> act = null;
-	        				String linkIdToCompare = linksOfRoute[i];
+	        				String linkIdToCompare = linksOfRoute[j];
 	        				act = Id.createLinkId(linkIdToCompare);
 	        				Link link= network.getLinks().get(act);
 	        				//System.out.println(link.getId());
@@ -269,17 +264,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	public void handleLeg(Leg leg) 
 	/***************************************************************************/
 	{
-
-//		List<Id<Link>> linkIds = null ;
-//		Route route = leg.getRoute();
-//		if ( route instanceof NetworkRoute ) {
-//			linkIds = ((NetworkRoute) route).getLinkIds();
-//		}
-//		if ( linkIds==null && leg.getMode().equals( EBConstants.BS_BIKE ) ) {
-//			// ??
-//		}
-
-		this.score = 0;
+    	this.score = 0;
     	double dist = 0;
     	double feltTravelTime = 0;
     	
@@ -306,7 +291,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		else
 		{
 			feltTravelTime = leg.getTravelTime();
-//			dist = leg.getRoute().getDistance();
+			dist = leg.getRoute().getDistance();
 		}
 		
     	double legScore = 0;
@@ -497,7 +482,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
 		if (time < -1800)
 		{
-			scorePercentage = 4; //Über 1h30 Mietzeit
+			scorePercentage = 4; //Ãœber 1h30 Mietzeit
 		}
 		
 		else
@@ -530,7 +515,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
 		if (time < -1800)
 		{
-			scorePercentage = 10; //Über 1h30 Mietzeit
+			scorePercentage = 10; //Ãœber 1h30 Mietzeit
 		}
 		
 		else

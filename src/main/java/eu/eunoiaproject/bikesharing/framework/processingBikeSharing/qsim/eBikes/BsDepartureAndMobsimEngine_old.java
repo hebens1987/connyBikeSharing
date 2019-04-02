@@ -72,7 +72,7 @@ import java.util.Map.Entry;
  * and is DepartureHandler and MobsimEngine for them, further onPrepareSim() the
  * bs-station and bs-bikes get reset
  */
-public final class BsDepartureAndMobsimEngine implements DepartureHandler, MobsimEngine, AgentSource{
+public final class BsDepartureAndMobsimEngine_old implements DepartureHandler, MobsimEngine, AgentSource{
 	
 	Map<String,TravelDisutilityFactory> travelDisutilityFactories; 
 	Map<String,TravelTime> travelTimes;
@@ -92,7 +92,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 	}
 
 
-	private static final Logger log = Logger.getLogger( BsDepartureAndMobsimEngine.class ) ;
+	private static final Logger log = Logger.getLogger( BsDepartureAndMobsimEngine_old.class ) ;
 	@Inject EventsManager eventsManager;
 	
 	private final Queue<Tuple<Double, MobsimAgent>> parking_egr_List = new PriorityQueue<>(
@@ -270,7 +270,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			private final boolean withTravelTimeCheck;
 
 			@Inject
-			public BsDepartureAndMobsimEngine(Scenario scenario, EventsManager eventsManager, 
+			public BsDepartureAndMobsimEngine_old(Scenario scenario, EventsManager eventsManager, 
 					LeastCostPathCalculatorFactory pathCalculatorFactory,
 					Map<String,TravelDisutilityFactory> travelDisutilityFactories, Map<String,TravelTime> travelTimes, QSim qsim) {
 				this.scenario = scenario;
@@ -300,7 +300,7 @@ public final class BsDepartureAndMobsimEngine implements DepartureHandler, Mobsi
 			Double speed = agent.getExpectedTravelTime()/agent.getExpectedTravelDistance() ;
 			Facility<?> dpfac = agent.getCurrentFacility() ;
 			Facility<?> arfac = agent.getDestinationFacility() ;
-			travelTime = BsDepartureAndMobsimEngine.travelTimeCheck(travelTime, speed, dpfac, arfac);
+			travelTime = BsDepartureAndMobsimEngine_old.travelTimeCheck(travelTime, speed, dpfac, arfac);
 		}
 		double arrivalTime = now + travelTime ;
 

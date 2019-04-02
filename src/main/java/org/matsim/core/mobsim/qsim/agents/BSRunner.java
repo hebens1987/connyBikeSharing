@@ -21,6 +21,7 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QVehicle;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.PopulationFactoryImpl;
@@ -598,14 +599,14 @@ public class BSRunner {
 			if (path.links.get(0).getId() != startLinkId)
 			{
 				path.links.add(0, scenario.getNetwork().getLinks().get(startLinkId));
-				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, basicAgentDelegate.getPerson(), (Vehicle)basicAgentDelegate.getVehicle());
+				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, basicAgentDelegate.getPerson(), null);
 				travelTime = path.travelTime + travelTimeAddOn;
 			}
 		
 			if (path.links.get(path.links.size()-1) != endLinkId)
 			{
 				path.links.add(scenario.getNetwork().getLinks().get(destinationLink.getId()));
-				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(path.links.size()-1), departureTime, basicAgentDelegate.getPerson(), (Vehicle)basicAgentDelegate.getVehicle());
+				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(path.links.size()-1), departureTime, basicAgentDelegate.getPerson(), null);
 				travelTime = path.travelTime + travelTimeAddOn;
 			}
 		}
@@ -635,7 +636,7 @@ public class BSRunner {
 			{
 				path.links.add(scenario.getNetwork().getLinks().get(startLink.getId()));
 				path.links.add(scenario.getNetwork().getLinks().get(destinationLink.getId()));
-				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, basicAgentDelegate.getPerson(), (Vehicle)basicAgentDelegate.getVehicle())
+				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, basicAgentDelegate.getPerson(), null)
 						+ btt.getLinkTravelTime(path.links.get(path.links.size()-1), departureTime, basicAgentDelegate.getPerson(), null);
 				travelTime = path.travelTime + travelTimeAddOn;
 			}
@@ -643,7 +644,7 @@ public class BSRunner {
 			else
 			{
 				path.links.add(scenario.getNetwork().getLinks().get(startLink.getId()));
-				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, basicAgentDelegate.getPerson(), (Vehicle)basicAgentDelegate.getVehicle());
+				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, basicAgentDelegate.getPerson(), null);
 				travelTime = path.travelTime + travelTimeAddOn;
 				
 			}

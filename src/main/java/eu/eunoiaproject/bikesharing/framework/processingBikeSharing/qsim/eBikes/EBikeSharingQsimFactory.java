@@ -118,9 +118,9 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		PopulationAgentSource agentSource = new PopulationAgentSource(sc.getPopulation(), agentFactory, qSim);
 		qSim.addAgentSource(agentSource);
 		//QNetsimEngineModule.configure(qSim); //Hebenstreit (15.06.2018)
-		BsDepartureAndMobsimEngine bs2Engine = new BsDepartureAndMobsimEngine(sc, eventsManager, pathCalculatorFactory, travelDisutilityFactories, travelTimes, qSim);
+		BsMobsimEngine bs2Engine = new BsMobsimEngine(sc, eventsManager, pathCalculatorFactory, travelDisutilityFactories, travelTimes, qSim);
 		qSim.addMobsimEngine(bs2Engine );
-		qSim.addDepartureHandler(bs2Engine);
+		//qSim.addDepartureHandler(bs2Engine);
 
 
         //System.out.println("BikesharingQSimFactory allocated");

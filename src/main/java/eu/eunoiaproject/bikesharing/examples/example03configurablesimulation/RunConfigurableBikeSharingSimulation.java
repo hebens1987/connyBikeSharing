@@ -19,14 +19,19 @@
  * *********************************************************************** */
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
+import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BikeScenarioUtils;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAndEBikeSharingScenarioUtils;
  
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigGroup;
 import org.matsim.core.config.groups.ControlerConfigGroup;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
+import org.matsim.core.config.groups.PlansCalcRouteConfigGroup.ModeRoutingParams;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
@@ -36,6 +41,8 @@ import org.matsim.pt.transitSchedule.api.TransitScheduleReader;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.RunType.debug;
 
@@ -119,6 +126,7 @@ public class RunConfigurableBikeSharingSimulation {
 			default:
 				throw new RuntimeException("not implemented") ;
 		}
+		
 
 		OutputDirectoryLogging.catchLogEntries();
 		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
@@ -132,7 +140,13 @@ public class RunConfigurableBikeSharingSimulation {
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
 
 		config.global().setNumberOfThreads( 1 );
+		
+					//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
 
+					config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
+							EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
+
+					config.travelTimeCalculator().setSeparateModes( true ); 
 		failIfExists( config.controler().getOutputDirectory() );
 
 		// ---
@@ -153,7 +167,6 @@ public class RunConfigurableBikeSharingSimulation {
 		}
 		return config;
 	}
-
 
 	/***************************************************************************/
 	private static void failIfExists(final String outdir) 
