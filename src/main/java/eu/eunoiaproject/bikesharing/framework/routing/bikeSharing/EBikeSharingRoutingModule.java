@@ -23,19 +23,16 @@ import com.google.inject.Inject;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.StationAndType;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
+import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAtt;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAttribs;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAttribsAgent;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
 
 import org.apache.log4j.Logger;
-import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.population.Activity;

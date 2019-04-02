@@ -49,10 +49,10 @@ public class RunConfigurableBikeSharingSimulation {
 	private static final Logger log =
 		Logger.getLogger(RunConfigurableBikeSharingSimulation.class);
 
-	enum User { conny, kai }
+	enum User { conny, kai, raster }
 	static final User user = User.kai ;
 
-	public enum RunType { standard, debug}
+	public enum RunType { standard, debug }
 	public static final RunType runType = debug;
 
 	/***************************************************************************/
@@ -69,6 +69,9 @@ public class RunConfigurableBikeSharingSimulation {
 			case kai:
 				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
 				break;
+			case raster:
+				configFile = "./scenarios/RasterBsp/configRaster.xml" ;
+				break ;
 			default:
 				throw new RuntimeException("not implemented") ;
 		}
@@ -93,9 +96,11 @@ public class RunConfigurableBikeSharingSimulation {
 				break;
 			case debug:
 				config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
+				config.controler().setLastIteration( 1 );
+
 				config.transit().setUseTransit( false );
-				config.transit().setTransitScheduleFile( null );
-				config.transit().setVehiclesFile( null );
+//				config.transit().setTransitScheduleFile( null );
+//				config.transit().setVehiclesFile( null );
 				break;
 			default:
 				throw new RuntimeException( "not implemented" ) ;

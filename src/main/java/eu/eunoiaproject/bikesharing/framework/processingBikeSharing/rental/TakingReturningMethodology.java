@@ -27,7 +27,7 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentFoundBikeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.AgentFoundParkingEvent;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.choiceStrategies.NoBikeAvailable;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.choiceStrategies.NoParkingAvailable;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
+import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAgent;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;

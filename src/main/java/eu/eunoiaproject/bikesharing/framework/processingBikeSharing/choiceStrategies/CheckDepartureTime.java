@@ -6,7 +6,7 @@ import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
+import org.matsim.core.mobsim.qsim.agents.BSRunner;
 
 public class CheckDepartureTime
 {

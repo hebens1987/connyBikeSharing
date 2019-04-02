@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes;
+package org.matsim.core.mobsim.qsim.agents;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +17,9 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.api.experimental.events.EventsManager;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.PlanAgent;
-import org.matsim.core.mobsim.qsim.agents.*;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.mobsim.qsim.pt.MobsimDriverPassengerAgent;
@@ -236,12 +236,15 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	{
 //		super(plan, simulation);
 
-		this.basicAgentDelegate = new BasicPlanAgentImpl( plan, scenario, simulation.getEventsManager(), simulation.getSimTimer() ) ;
-		this.driverAgentDelegate = new PlanBasedDriverAgentImpl( this.basicAgentDelegate ) ;
-
 		BikesharingPersonDriverAgentImpl.scenario = simulation.getScenario();
 		BikesharingPersonDriverAgentImpl.pathCalculator = pathCalculator;
 		BikesharingPersonDriverAgentImpl.pathF = pathF;
+
+		Gbl.assertNotNull( plan );
+		Gbl.assertNotNull( scenario );
+		Gbl.assertNotNull( simulation );
+		this.basicAgentDelegate = new BasicPlanAgentImpl( plan, scenario, simulation.getEventsManager(), simulation.getSimTimer() ) ;
+		this.driverAgentDelegate = new PlanBasedDriverAgentImpl( this.basicAgentDelegate ) ;
 
 		if ( scenario.getConfig().qsim().getNumberOfThreads() != 1 ) {
 			throw new RuntimeException("does not work with multiple qsim threads (will use same instance of router)") ; 
@@ -312,7 +315,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		String actPlanMode = this.basicAgentDelegate.getCurrentPlan().getType();
 		
 		Activity thisElemX = (Activity)this.basicAgentDelegate.getCurrentPlanElement();
-		if ( WithinDayAgentUtils.getCurrentPlanElementIndex( this.basicAgentDelegate ) != this.basicAgentDelegate.getCurrentPlan().getPlanElements().size())
+		final Integer currentPlanElementIndex = this.basicAgentDelegate.getCurrentPlanElementIndex() ;
+		if ( currentPlanElementIndex != this.basicAgentDelegate.getCurrentPlan().getPlanElements().size())
 		{
 			thisElemX.setEndTime(now);
 		}
@@ -345,7 +349,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 				else //actual activity is plan activity
 				{
 					List<PlanElement> peList = this.basicAgentDelegate.getCurrentPlan().getPlanElements();
-					int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( this.basicAgentDelegate );
+					int actIndex = currentPlanElementIndex;
 					
 					if (actIndex < this.basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1) //Hebenstreit changed from size()-2
 					for (int i = 1; i < this.basicAgentDelegate.getCurrentPlan().getPlanElements().size(); i++) //remove the 4 elements walk-interaction-bsff-interaction

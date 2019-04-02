@@ -2,35 +2,19 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes
 
 import javax.inject.Inject;
 
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
-import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.api.experimental.events.EventsManager;
-import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.AgentFactory;
-import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.DefaultAgentFactory;
 import org.matsim.core.mobsim.qsim.agents.PersonDriverAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.TransitAgent;
-import org.matsim.core.mobsim.qsim.agents.TransitAgentFactory;
-import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
-import org.matsim.core.mobsim.qsim.pt.MobsimDriverPassengerAgent;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.pt.router.TransitRouterImpl;
-import org.matsim.vehicles.Vehicle;
-import org.matsim.vehicles.VehicleImpl;
-import org.matsim.vehicles.VehicleType;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikesharingPersonDriverAgentImpl;
-
-import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
 
 public class BikesharingAgentFactory implements AgentFactory{
 	private final Netsim simulation;

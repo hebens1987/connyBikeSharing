@@ -3,16 +3,11 @@ package eu.eunoiaproject.freeFloatingBS;
 import com.google.inject.Inject;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.StationAndType;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
+import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAtt;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAttribsAgent;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
@@ -27,7 +22,6 @@ import org.matsim.core.router.EmptyStageActivityTypes;
 import org.matsim.core.router.RoutingModule;
 import org.matsim.core.router.StageActivityTypes;
 import org.matsim.core.utils.geometry.CoordUtils;
-import org.matsim.facilities.ActivityFacilitiesImpl;
 import org.matsim.facilities.Facility;
 
 import javax.inject.Named;

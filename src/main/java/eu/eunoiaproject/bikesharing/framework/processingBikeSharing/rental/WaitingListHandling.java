@@ -1,20 +1,12 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 
-import eu.eunoiaproject.bikesharing.framework.events.AgentChangesLegAfterAbortWaiting;
-import eu.eunoiaproject.bikesharing.framework.events.AgentFoundBikeEvent;
-import eu.eunoiaproject.bikesharing.framework.events.AgentFoundParkingEvent;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
+import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
 

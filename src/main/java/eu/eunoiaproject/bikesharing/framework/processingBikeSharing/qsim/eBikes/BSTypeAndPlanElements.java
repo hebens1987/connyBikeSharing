@@ -7,8 +7,8 @@ import org.matsim.api.core.v01.population.PlanElement;
 public class BSTypeAndPlanElements 
 {
 
-	List<PlanElement> peList;
-	int type;
+	public List<PlanElement> peList;
+	public int type;
 	// 0 = full bs trip
 	// 1 = bs-pt
 	// 2 = pt-bs

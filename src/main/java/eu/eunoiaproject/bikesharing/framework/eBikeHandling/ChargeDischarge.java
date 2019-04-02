@@ -3,7 +3,7 @@ package eu.eunoiaproject.bikesharing.framework.eBikeHandling;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
+import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikesE;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 

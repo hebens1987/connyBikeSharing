@@ -30,7 +30,7 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStartsWaitingForFreeBi
 import eu.eunoiaproject.bikesharing.framework.events.AgentChoseNewStationEvent;
 import eu.eunoiaproject.bikesharing.framework.events.NoParkingSpaceEvent;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.StationAndType;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSRunner;
+import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.WaitingListHandling;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability;

@@ -4,7 +4,7 @@
 	Define the principal parameters needing variation as entities, for easy modification.
 	This is by no means mandatory, but helps a lot.
 -->
-	<!ENTITY inbase "C:/Users/hebens/Documents/Input_Diss/kurzeTests/RasterBsp" >
+	<!ENTITY inbase "./scenarios/RasterBsp" >
 	<!ENTITY outputName "Output_RASTER_2019" >
 	<!ENTITY plans "&inbase;/demand_RasterBsp.xml" >
 	<!ENTITY bikesharingfacilities "&inbase;/bike-sharing-facilities.xml" >

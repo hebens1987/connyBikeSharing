@@ -51,12 +51,12 @@
 			<version>${matsim.version}</version>
 		</dependency>
 		
-		<dependency>
-        		<groupId>org.matsim.contrib</groupId>
-        		<artifactId>emissions</artifactId>
-        		<version>${matsim.version}</version>
-        		<scope>compile</scope>
-      		</dependency>
+		<!--<dependency>-->
+        		<!--<groupId>org.matsim.contrib</groupId>-->
+        		<!--<artifactId>emissions</artifactId>-->
+        		<!--<version>${matsim.version}</version>-->
+        		<!--<scope>compile</scope>-->
+      		<!--</dependency>-->
 
 		<!-- Include the JUnit testing library.  Not transitive. -->
 		<dependency>
@@ -66,14 +66,14 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<!--MATSim test infrastructure.  Not transitive.-->
-			<groupId>org.matsim</groupId>
-			<artifactId>matsim</artifactId>
-			<type>test-jar</type>
-			<version>${matsim.version}</version>
-			<scope>test</scope>
-		</dependency>
+		<!--<dependency>-->
+			<!--&lt;!&ndash;MATSim test infrastructure.  Not transitive.&ndash;&gt;-->
+			<!--<groupId>org.matsim</groupId>-->
+			<!--<artifactId>matsim</artifactId>-->
+			<!--<type>test-jar</type>-->
+			<!--<version>${matsim.version}</version>-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
 		
 		<dependency>
             		<groupId>com.github.simunto</groupId>

@@ -1,11 +1,10 @@
-package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+package org.matsim.core.mobsim.qsim.agents;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSTypeAndPlanElements;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -21,18 +20,13 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.api.core.v01.population.PopulationFactory;
 import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
-import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
-import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.PopulationFactoryImpl;
 import org.matsim.core.population.routes.GenericRouteImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
-import org.matsim.core.population.routes.GenericRouteFactory;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.population.routes.RouteFactoryImpl;
-import org.matsim.core.router.Dijkstra;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculator.Path;
 import org.matsim.core.utils.geometry.CoordUtils;
@@ -40,8 +34,6 @@ import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.facilities.ActivityFacilitiesFactory;
-import org.matsim.facilities.ActivityFacility;
-import org.matsim.facilities.ActivityFacilityImpl;
 import org.matsim.facilities.Facility;
 import org.matsim.pt.router.TransitRouterImpl;
 import org.matsim.vehicles.Vehicle;
@@ -55,7 +47,6 @@ import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoic
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
@@ -66,6 +57,8 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBi
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
+
+import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.runType;
 
 
 /**
@@ -91,18 +84,18 @@ public class BSRunner {
 	
 	/**
 	 * *************************************************************************/
-	void bsRunner(
-			PlanElement thisElem,
-			PlanElement nextElem,
-			double now,
-			BasicPlanAgentImpl basicAgentDelegate,
-			Scenario scenario,
-			Map<Id<Person>,BikeAgent> agentsC,
-			Map<Id<Person>,BikeAgent> agentsE,
-			BikeSharingFacilities bsFac,
-			BikeSharingBikes bSharingVehicles,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal)
+	public void bsRunner(
+		  PlanElement thisElem,
+		  PlanElement nextElem,
+		  double now,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  Scenario scenario,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE,
+		  BikeSharingFacilities bsFac,
+		  BikeSharingBikes bSharingVehicles,
+		  LeastCostPathCalculatorFactory pathF,
+		  LeastCostPathCalculator cal )
 	/***************************************************************************/
 	{
 		TransitRouterImpl trImpl = bSharingVehicles.generatePTRouterForBS(scenario);
@@ -118,8 +111,8 @@ public class BSRunner {
 		{
 			Activity nextAct = null;
 
-//			final int currentPlanElementIndex = basicAgentDelegate.getCurrentPlanElementIndex();
-			final int currentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) ;
+			final int currentPlanElementIndex = basicAgentDelegate.getCurrentPlanElementIndex();
+//			final int currentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) ;
 			if (basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1 - currentPlanElementIndex != 0)//Hebenstreit: changed from != 1
 			{
 				final int s = currentPlanElementIndex;
@@ -167,7 +160,7 @@ public class BSRunner {
 				Facility toFacF = ff.createActivityFacility( toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
 				sat = bsChoice.getStationsDuringSim(fromFacF,toFacF,
 						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now);
-				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate ,trImpl, pathF, cal, agentsC, agentsE, sat);
+				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate ,trImpl, pathF, cal, agentsC, agentsE, sat );
 				List<PlanElement> actualPlanElem = planElementAndType.peList;
 				int bikeSharingType = planElementAndType.type;
 				basicAgentDelegate.getCurrentPlan().getPlanElements().addAll( currentPlanElementIndex +1,actualPlanElem );
