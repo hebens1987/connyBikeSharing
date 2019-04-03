@@ -233,9 +233,17 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	 * this means planElements get exchanged or enhanced 
 	 * **/
 	
+	//TODO: Hier werd der Agent überschrieben
 	public BikesharingPersonDriverAgentImpl(BasicPlanAgentImpl basicPlanAgent)
-	{
+	{		
 		this.basicAgentDelegate = basicPlanAgent;
+	}
+	
+	//TODO: hier kommt irgendein Agent heraus, wenn nicht mit obigem kombiniert
+	//Habe ich ergänzt um getCurrentElementIndex verwenden zu können - noch nicht 100%ig Richtig!
+	public BasicPlanAgentImpl getPlanAgent (BikesharingPersonDriverAgentImpl impl)
+	{
+		return this.basicAgentDelegate;
 	}
 	
 	public BikesharingPersonDriverAgentImpl(
@@ -261,11 +269,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		this.basicAgentDelegate.getModifiablePlan() ; // this lets the agent make a full copy of the plan, which can then be modified
 	}
 	
-//	public BasicPlanAgentImpl getPlanAgent (BikesharingPersonDriverAgentImpl impl)
-//	{
-//		return this.basicAgentDelegate;
-//	}
-//
+
+
 //	// -----------------------------------------------------------------------------------------------------------------------------
 //
 //	public void setMode(String mode)
