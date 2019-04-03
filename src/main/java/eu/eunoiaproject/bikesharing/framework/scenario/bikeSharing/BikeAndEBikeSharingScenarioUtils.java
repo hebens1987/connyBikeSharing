@@ -15,6 +15,7 @@ import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.controler.OutputDirectoryLogging;
 import org.matsim.core.population.PopulationFactoryImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
+import org.matsim.core.router.NetworkRoutingInclAccessEgressModule;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.facilities.ActivityFacilities;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
@@ -40,49 +41,56 @@ public class BikeAndEBikeSharingScenarioUtils {
 		final Config config = ConfigUtils.loadConfig(
 				fileName,
 				modules );
+
+		{
+			ActivityParams params = new ActivityParams( "bs_walk interaction" ) ;
+			params.setScoringThisActivityAtAll( false );
+			config.planCalcScore().addActivityParams( params );
+		}
 		
 		
 		if ( config.planCalcScore().getActivityParams( EBConstants.INTERACTION_TYPE_BS + "_r" ) == null ) 
 		{
 			// not so nice...
-			final ActivityParams params = new ActivityParams( TransportMode.pt );
+//			final ActivityParams params = new ActivityParams( TransportMode.pt );
+			// never used
 
 			final ActivityParams params_t = new ActivityParams(EBConstants.INTERACTION_TYPE_BS + "_t" );
 			final ActivityParams params_r = new ActivityParams(EBConstants.INTERACTION_TYPE_BS + "_r" );
 			
-			params_t.setClosingTime(params.getClosingTime());
-			params_t.setEarliestEndTime(params.getEarliestEndTime());
-			params_t.setLatestStartTime(params.getLatestStartTime());
-			params_t.setMinimalDuration(params.getMinimalDuration());
-			params_t.setOpeningTime(params.getOpeningTime());
-			params_t.setPriority(params.getPriority());
+//			params_t.setClosingTime(params.getClosingTime());
+//			params_t.setEarliestEndTime(params.getEarliestEndTime());
+//			params_t.setLatestStartTime(params.getLatestStartTime());
+//			params_t.setMinimalDuration(params.getMinimalDuration());
+//			params_t.setOpeningTime(params.getOpeningTime());
+//			params_t.setPriority(params.getPriority());
 			params_t.setScoringThisActivityAtAll(false);
-			params_t.setTypicalDuration(params.getTypicalDuration());
-			params_t.setTypicalDurationScoreComputation(params.getTypicalDurationScoreComputation());
+//			params_t.setTypicalDuration(params.getTypicalDuration());
+//			params_t.setTypicalDurationScoreComputation(params.getTypicalDurationScoreComputation());
 			
-			params_r.setClosingTime(params.getClosingTime());
-			params_r.setEarliestEndTime(params.getEarliestEndTime());
-			params_r.setLatestStartTime(params.getLatestStartTime());
-			params_r.setMinimalDuration(params.getMinimalDuration());
-			params_r.setOpeningTime(params.getOpeningTime());
-			params_r.setPriority(params.getPriority());
+//			params_r.setClosingTime(params.getClosingTime());
+//			params_r.setEarliestEndTime(params.getEarliestEndTime());
+//			params_r.setLatestStartTime(params.getLatestStartTime());
+//			params_r.setMinimalDuration(params.getMinimalDuration());
+//			params_r.setOpeningTime(params.getOpeningTime());
+//			params_r.setPriority(params.getPriority());
 			params_r.setScoringThisActivityAtAll(false);
-			params_r.setTypicalDuration(params.getTypicalDuration());
-			params_r.setTypicalDurationScoreComputation(params.getTypicalDurationScoreComputation());
+//			params_r.setTypicalDuration(params.getTypicalDuration());
+//			params_r.setTypicalDurationScoreComputation(params.getTypicalDurationScoreComputation());
 			
 			config.planCalcScore().addActivityParams( params_t );
 			config.planCalcScore().addActivityParams( params_r );
 			
 			final ActivityParams bsWalkInteract = new ActivityParams("s_walk interaction");
-			bsWalkInteract.setClosingTime(params.getClosingTime());
-			bsWalkInteract.setEarliestEndTime(params.getEarliestEndTime());
-			bsWalkInteract.setLatestStartTime(params.getLatestStartTime());
-			bsWalkInteract.setMinimalDuration(params.getMinimalDuration());
-			bsWalkInteract.setOpeningTime(params.getOpeningTime());
-			bsWalkInteract.setPriority(params.getPriority());
+//			bsWalkInteract.setClosingTime(params.getClosingTime());
+//			bsWalkInteract.setEarliestEndTime(params.getEarliestEndTime());
+//			bsWalkInteract.setLatestStartTime(params.getLatestStartTime());
+//			bsWalkInteract.setMinimalDuration(params.getMinimalDuration());
+//			bsWalkInteract.setOpeningTime(params.getOpeningTime());
+//			bsWalkInteract.setPriority(params.getPriority());
 			bsWalkInteract.setScoringThisActivityAtAll(false);
-			bsWalkInteract.setTypicalDuration(params.getTypicalDuration());
-			bsWalkInteract.setTypicalDurationScoreComputation(params.getTypicalDurationScoreComputation());
+//			bsWalkInteract.setTypicalDuration(params.getTypicalDuration());
+//			bsWalkInteract.setTypicalDurationScoreComputation(params.getTypicalDurationScoreComputation());
 		}
 		
 		

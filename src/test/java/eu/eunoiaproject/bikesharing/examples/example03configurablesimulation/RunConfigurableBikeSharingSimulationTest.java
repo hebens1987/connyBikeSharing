@@ -3,9 +3,7 @@ package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 import com.google.inject.Inject;
 
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -61,7 +59,8 @@ public class RunConfigurableBikeSharingSimulationTest{
 	@Test
 	public void testTwo() {
 
-		final Config config = prepareConfig( null, InputCase.connyInputDiss );
+//		final Config config = prepareConfig( null, InputCase.connyInputDiss );
+		final Config config = prepareConfig( null, InputCase.inputDiss );
 
 		config.controler().setLastIteration(10);
 
@@ -69,18 +68,16 @@ public class RunConfigurableBikeSharingSimulationTest{
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
 
 		Scenario scenario = prepareScenario( config ) ;
+
 		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
 		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
+		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
 
 		Controler controler = prepareControler( scenario ) ;
 
 		controler.addOverridingModule( new AbstractModule(){
 			@Override
 			public void install(){
-//				this.bind( Checker.class ).in( Singleton.class ) ;
-//				this.addEventHandlerBinding().to( Checker.class ).in( Singleton.class ) ;
-//				this.addControlerListenerBinding().to( Checker.class ).in( Singleton.class ) ;
-
 				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
 			}
 		} );

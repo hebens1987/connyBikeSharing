@@ -52,7 +52,7 @@ public class RunConfigurableBikeSharingSimulation {
 	private static final Logger log =
 		Logger.getLogger(RunConfigurableBikeSharingSimulation.class);
 
-	enum InputCase{fromArgs, kaiInputDiss, raster, connyInputDiss }
+	enum InputCase{fromArgs, inputDiss, raster, connyInputDiss }
 
 	/***************************************************************************/
 	public static void main(final String... args) 
@@ -99,8 +99,8 @@ public class RunConfigurableBikeSharingSimulation {
 				//final String configFile = "E:/MATCHSIM_ECLIPSE/matsim-master/playgrounds/thibautd/examples\BikeRouting\haus\config.xml";
 				//E:\MATCHSIM_ECLIPSE\matsim-master\playgrounds\thibautd\test\output\eu\eunoiaproject\bikesharing\framework\examples\TestRegressionConfigurableExample\testRunDoesNotFailMultimodal
 				break;
-			case kaiInputDiss:
-				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
+			case inputDiss:
+				configFile = "./scenarios/Input_Diss/config_bs.xml" ;
 				break;
 			case connyInputDiss:
 				configFile = "C:/Users/hebens/Documents/Input_Diss/config_bs.xml" ;

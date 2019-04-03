@@ -103,7 +103,7 @@ public class BikeSharingStationChoice
 
 			this.b_pt_qt = bikeSharingFacilitiesPt2.getCurrentQuadTree();
 
-			log.warn("quadTree=" + this.b_pt_qt ) ;
+//			log.warn("quadTree=" + this.b_pt_qt ) ;
 			
 			//final double directDistance = CoordUtils.calcEuclideanDistance( fromFacility , toFacility );
 
