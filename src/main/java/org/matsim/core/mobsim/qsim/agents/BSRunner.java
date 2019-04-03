@@ -24,6 +24,7 @@ import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.*;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.PopulationFactoryImpl;
@@ -568,6 +569,7 @@ public class BSRunner {
 		{
 			btt = new TUG_WalkTravelTime(confBC);
 			btd = new TUG_WalkTravelDisutility(confBC, pcsConf);
+			Gbl.assertNotNull(routeAlgoFac);
 			routeAlgo = routeAlgoFac.createPathCalculator(
 					scenario.getNetwork(), btd, btt) ;
 		}
