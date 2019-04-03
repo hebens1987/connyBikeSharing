@@ -92,10 +92,10 @@ public class BikeSharingStationChoice
 			this.e_pt_qt = ebikeSharingFacilitiesPt2.getCurrentQuadTree();
 			this.b_qt = bikeSharingFacilities2.getCurrentQuadTree();
 
-			log.warn("printing ...");
-			for( Map.Entry<Id<BikeSharingFacility>, BikeSharingFacility> entry : bikeSharingFacilitiesPt2.facilities.entrySet() ){
-				log.warn( "entry=" + entry.getValue() ) ;
-			}
+//			log.warn("printing ...");
+//			for( Map.Entry<Id<BikeSharingFacility>, BikeSharingFacility> entry : bikeSharingFacilitiesPt2.facilities.entrySet() ){
+//				log.warn( "entry=" + entry.getValue() ) ;
+//			}
 
 //			if ( true ){
 //				throw new RuntimeException( "stop" );

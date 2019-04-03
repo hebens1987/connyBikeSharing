@@ -1,12 +1,11 @@
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
+import com.google.inject.Inject;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.events.Event;
-import org.matsim.api.core.v01.events.LinkEnterEvent;
-import org.matsim.api.core.v01.events.LinkLeaveEvent;
 import org.matsim.api.core.v01.events.PersonDepartureEvent;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -43,6 +42,36 @@ public class RunConfigurableBikeSharingSimulationTest{
 				this.bind( Checker.class ).in( Singleton.class ) ;
 				this.addEventHandlerBinding().to( Checker.class ).in( Singleton.class ) ;
 				this.addControlerListenerBinding().to( Checker.class ).in( Singleton.class ) ;
+
+				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
+			}
+		} );
+
+		controler.run() ;
+
+	}
+	@Test
+	public void testTwo() {
+
+		final Config config = prepareConfig( null, InputCase.kaiInputDiss );
+
+		config.controler().setLastIteration(10);
+
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
+		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
+
+		Scenario scenario = prepareScenario( config ) ;
+
+		Controler controler = prepareControler( scenario ) ;
+
+		controler.addOverridingModule( new AbstractModule(){
+			@Override
+			public void install(){
+//				this.bind( Checker.class ).in( Singleton.class ) ;
+//				this.addEventHandlerBinding().to( Checker.class ).in( Singleton.class ) ;
+//				this.addControlerListenerBinding().to( Checker.class ).in( Singleton.class ) ;
+
+				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
 			}
 		} );
 
@@ -50,10 +79,26 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 	}
 
+	private static class EventsPrinter implements BasicEventHandler {
+		private int iteration ;
+		@Inject private Config config ;
+		@Override public void handleEvent( Event event ){
+			if ( iteration == config.controler().getLastIteration() ) {
+				if( event instanceof  PersonDepartureEvent ) {
+					System.err.println( event.toString() );
+				}
+			}
+		}
+		@Override
+		public void reset( int iteration ){
+			this.iteration = iteration ;
+		}
+	}
+
 	private static class Checker implements BasicEventHandler, ShutdownListener {
 		int iteration = 0 ;
 		int cnt = 0 ;
-
+		@Inject Config config ;
 		@Override public void handleEvent( Event event ){
 			if ( iteration == 1 ) {
 //				if( !(event instanceof LinkEnterEvent || event instanceof LinkLeaveEvent) ){
