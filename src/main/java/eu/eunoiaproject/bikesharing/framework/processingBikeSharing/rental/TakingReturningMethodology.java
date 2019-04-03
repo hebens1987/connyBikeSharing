@@ -206,8 +206,9 @@ public class TakingReturningMethodology {
 				agentInterim1.getEvents().processEvent(new AgentStopsWaitingForFreeBikeSlotEvent(
 				now, agentInterim1.getId(), Id.create(station.getId().toString(), ActivityFacility.class)));
 //				final int agentInterim1CurrentPlanElementIndex = agentInterim1.getCurrentPlanElementIndex();
-				BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agentInterim1);
-				final int agentInterim1CurrentPlanElementIndex= agent2.getCurrentPlanElementIndex(agentInterim1) ;
+//				BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agentInterim1);
+//				final int agentInterim1CurrentPlanElementIndex= agent2.getCurrentPlanElementIndex(agentInterim1) ;
+				int agentInterim1CurrentPlanElementIndex = agentInterim1.getCurrentPlan().getPlanElements().indexOf( agentInterim1.getCurrentPlanElement() ) ;
 				if (agentInterim1.getCurrentPlan().getPlanElements().get( agentInterim1CurrentPlanElementIndex ) instanceof Leg)
 				{
 					System.out.println("TODO: Hebenstreit  ....  TakingReturningMethodology 189");
@@ -277,8 +278,9 @@ public class TakingReturningMethodology {
 					now, agentInterim1.getId(), Id.create(station.getId().toString(), ActivityFacility.class)));
 //					final int agentInterim1CurrentPlanElementIndex = agentInterim1.getCurrentPlanElementIndex();
 					//final int agentInterim1CurrentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim1 ) ;
-					BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agentInterim1);
-					final int agentInterim1CurrentPlanElementIndex= agent2.getCurrentPlanElementIndex(agentInterim1) ;
+//					BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agentInterim1);
+//					final int agentInterim1CurrentPlanElementIndex= agent2.getCurrentPlanElementIndex(agentInterim1) ;
+					int agentInterim1CurrentPlanElementIndex = agentInterim1.getCurrentPlan().getPlanElements().indexOf( agentInterim1.getCurrentPlanElement() ) ;
 					//if (agentInterim1.getCurrentPlan().getPlanElements().get( agentInterim1CurrentPlanElementIndex ) instanceof Leg)
 					//		{
 					//			System.out.println("ERROR: TODO: HEBENSTREIT");

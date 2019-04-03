@@ -88,8 +88,9 @@ public class NoBikeAvailable
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
 //		int planIndex = basicAgentDelegate.getCurrentPlanElementIndex();
-		BikesharingPersonDriverAgentImpl agent = new BikesharingPersonDriverAgentImpl(basicAgentDelegate);
-		int planIndex = agent.getCurrentPlanElementIndex(basicAgentDelegate) ;
+//		BikesharingPersonDriverAgentImpl agent = new BikesharingPersonDriverAgentImpl(basicAgentDelegate);
+//		int planIndex = agent.getCurrentPlanElementIndex(basicAgentDelegate) ;
+		int planIndex = basicAgentDelegate.getCurrentPlan().getPlanElements().indexOf( basicAgentDelegate.getCurrentPlanElement() ) ;
 		List<PlanElement> planElements = basicAgentDelegate.getCurrentPlan().getPlanElements();
 		//PlanElement peX = planElements.get(planIndex);
 		String modeChangeOrWait = "wait";
@@ -342,8 +343,9 @@ public class NoBikeAvailable
 			bsInteractWait5.setType(EBConstants.WAIT);
 			bsInteractWait.setFacilityId(bsInteractPe.getFacilityId());
 //			final int currentPlanElementIndex = basicAgentDelegate.getCurrentPlanElementIndex();
-			BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate);
-			final int currentPlanElementIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate) ;
+//			BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate);
+//			final int currentPlanElementIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate) ;
+			int currentPlanElementIndex = basicAgentDelegate.getCurrentPlan().getPlanElements().indexOf( basicAgentDelegate.getCurrentPlanElement() ) ;
 			list.add( currentPlanElementIndex +1, bsInteractWait5 );
 			list.add( currentPlanElementIndex +1, bsInteractWait4 );
 			list.add( currentPlanElementIndex +1, bsInteractWait3 );

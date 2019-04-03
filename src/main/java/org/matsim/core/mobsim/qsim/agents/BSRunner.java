@@ -722,8 +722,9 @@ public class BSRunner {
 //		int actIndex = basicAgentDelegate2.getCurrentPlanElementIndex();
 		
 		//int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate2 ) ;
-		BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate2);
-		final int actIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate2) ;
+//		BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate2);
+//		final int actIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate2) ;
+		final int actIndex = basicAgentDelegate2.getCurrentPlan().getPlanElements().indexOf( basicAgentDelegate2.getCurrentPlanElement() ) ;
 
 		for (int i = actIndex + 1; i < basicAgentDelegate2.getCurrentPlan().getPlanElements().size(); i++)
 		{

@@ -176,8 +176,9 @@ public class NoParkingAvailable {
 			bsInteractWait5.setType("wait");
 			bsInteractWait5.setStartTime(now + 12*60);
 			bsInteractWait.setFacilityId(bsInteractPe.getFacilityId());
-			BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate);
-			final int currentPlanElementIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate) ;
+//			BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate);
+//			final int currentPlanElementIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate) ;
+			final int currentPlanElementIndex = basicAgentDelegate.getCurrentPlan().getPlanElements().indexOf( basicAgentDelegate.getCurrentPlan() ) ;
 			list.add( currentPlanElementIndex +1, bsInteractWait5 );
 			list.add( currentPlanElementIndex +1, bsInteractWait4 );
 			list.add( currentPlanElementIndex +1, bsInteractWait3 );
