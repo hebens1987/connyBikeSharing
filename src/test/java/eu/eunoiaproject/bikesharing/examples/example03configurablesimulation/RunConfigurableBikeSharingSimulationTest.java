@@ -7,6 +7,7 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGro
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.events.Event;
@@ -18,6 +19,7 @@ import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.events.ShutdownEvent;
 import org.matsim.core.controler.listener.ShutdownListener;
 import org.matsim.core.events.handler.BasicEventHandler;
+import org.matsim.testcases.MatsimTestUtils;
 
 import javax.inject.Singleton;
 
@@ -26,14 +28,15 @@ import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulat
 public class RunConfigurableBikeSharingSimulationTest{
 	private static final Logger log = Logger.getLogger( RunConfigurableBikeSharingSimulationTest.class ) ;
 
-	
+	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
 	public void testOne() {
 
 		final Config config = prepareConfig( null, InputCase.raster );
 
-		config.controler().setLastIteration(2);
+		config.controler().setLastIteration(10);
+		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
@@ -59,10 +62,11 @@ public class RunConfigurableBikeSharingSimulationTest{
 	@Test
 	public void testTwo() {
 
-//		final Config config = prepareConfig( null, InputCase.connyInputDiss );
+		//		final Config config = prepareConfig( null, InputCase.connyInputDiss );
 		final Config config = prepareConfig( null, InputCase.inputDiss );
 
 		config.controler().setLastIteration(10);
+		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
@@ -72,6 +76,32 @@ public class RunConfigurableBikeSharingSimulationTest{
 		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
 		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
 		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
+
+		Controler controler = prepareControler( scenario ) ;
+
+		controler.addOverridingModule( new AbstractModule(){
+			@Override
+			public void install(){
+				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
+			}
+		} );
+
+		controler.run() ;
+
+	}
+
+	@Test
+	public void testThree() {
+
+		final Config config = prepareConfig( null, InputCase.raster );
+
+		config.controler().setLastIteration(10);
+		config.controler().setOutputDirectory( utils.getOutputDirectory() );
+
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
+		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.standard );
+
+		Scenario scenario = prepareScenario( config ) ;
 
 		Controler controler = prepareControler( scenario ) ;
 

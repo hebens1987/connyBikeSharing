@@ -86,7 +86,8 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 
 		TeleportationEngine tp = new TeleportationEngine(sc, eventsManager);
 		qSim.addMobsimEngine(tp);
-		qSim.addDepartureHandler(tp);
+//		qSim.addDepartureHandler(tp);
+		// adding this also as departure handler ends up having it added twice, so don't do that.  kai, apr'19
 		
 
 

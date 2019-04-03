@@ -263,10 +263,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 		this.pathCalculator = pathCalculator ;
 
-		this.bsFac = (BikeSharingFacilities)
-					   scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
-		this.bSharingVehicles =(BikeSharingBikes)
-							 scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
+		this.bsFac = (BikeSharingFacilities) scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
+		this.bSharingVehicles =(BikeSharingBikes) scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
 
 	}
 	
@@ -323,14 +321,25 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	public void endActivityAndComputeNextState(final double now) 
 	/***************************************************************************/
 	{
-		BSRunner runner = new BSRunner(); 
+		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
 		
 		//PlanElement last = this.basicAgentDelegate.getCurrentPlan().getPlanElements().get(
 		//		this.basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1);//Hebenstreit
 		String actPlanMode = this.basicAgentDelegate.getCurrentPlan().getType();
-		
-		Activity thisElemX = (Activity)this.basicAgentDelegate.getCurrentPlanElement();
+
+
+		final PlanElement currentPlanElement = this.basicAgentDelegate.getCurrentPlanElement();
+		if ( ! ( currentPlanElement instanceof Activity ) ) {
+			log.warn("current plan element of agent=" + this.getId() + " is not instance of activity; following cast will fail.  Full plan =") ;
+			for( PlanElement planElement : this.basicAgentDelegate.getCurrentPlan().getPlanElements() ){
+				System.err.println( planElement.toString() ) ;
+			}
+			System.err.println("currentPlanElement=" + currentPlanElement.toString() ) ;
+		}
+
+
+		Activity thisElemX = (Activity) currentPlanElement;
 		final Integer currentPlanElementIndex = this.basicAgentDelegate.getCurrentPlanElementIndex() ;
 		if ( currentPlanElementIndex != this.basicAgentDelegate.getCurrentPlan().getPlanElements().size())
 		{

@@ -118,6 +118,8 @@ public class RunConfigurableBikeSharingSimulation {
 
 
 		BikeScenarioUtils.loadConfig(configFile );
+		// yyyyyy what is this?  Why is it loading the configFile twice?
+
 		final Config config = BikeAndEBikeSharingScenarioUtils.loadConfig( configFile );
 		//config.addCoreModules();
 		config.addModule( new BicycleConfigGroup() );
