@@ -67,19 +67,8 @@ public class RunConfigurableBikeSharingSimulation {
 		controler.run();
 	}
 
-	static Controler prepareControler( Scenario sc ){
+	static Controler prepareControler(Scenario sc ){
 		final Controler controler = new Controler( sc );
-
-		//////////////////////////////////////////////////////////
-		//installBikes(controler);
-		//controler.addOverridingModule( new EBikeSharingTripRouterModule() );
-		//controler.setModules(new EBikeSharingTripRouterModule());
-		//controler.setModules(new TripRouterModule());
-		//controler.setModules(new ImplementationModule());
-
-		//controler.addOverridingModule(new TripRouterModule());
-		//controler.addOverridingModule(new TransitRouterModule());
-
 		controler.addOverridingModule(new ImplementationModule(sc.getConfig()) );
 		return controler;
 	}
@@ -134,18 +123,16 @@ public class RunConfigurableBikeSharingSimulation {
 
 		config.global().setNumberOfThreads( 1 );
 		
+		
+		
 		//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
 
 		//Does not use the implemented routing modules anymore - just uses Network Route
 		//Can I use a combination? TODO:
-		//config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
-		//			EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
-		config.qsim().setMainModes( new HashSet<>( Arrays.asList( 
-				TransportMode.car, 
-				TransportMode.walk,
-				EBConstants.BS_WALK_FF, 
-				EBConstants.BS_WALK) ) ) ;
-
+		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
+					EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
+		//config.qsim().setMainModes( new HashSet<>( Arrays.asList( 
+		//		TransportMode.car, TransportMode.walk,EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
 		
 		config.travelTimeCalculator().setSeparateModes( true ); 
 		failIfExists( config.controler().getOutputDirectory() );
