@@ -154,7 +154,7 @@ public class BikeSharingFacilities implements MatsimToplevelContainer {
 					if (tmp.getValue().getId().toString().endsWith("_pt"))
 					{
 						stationsOfType.addFacility(tmp.getValue(), scenario);
-						log.warn("added " + tmp.getValue().getId().toString() ) ;
+//						log.warn("added " + tmp.getValue().getId().toString() ) ;
 					}
 				}
 			}

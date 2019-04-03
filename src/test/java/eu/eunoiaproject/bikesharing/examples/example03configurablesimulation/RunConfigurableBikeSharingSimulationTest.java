@@ -42,11 +42,57 @@ public class RunConfigurableBikeSharingSimulationTest{
 				this.bind( Checker.class ).in( Singleton.class ) ;
 				this.addEventHandlerBinding().to( Checker.class ).in( Singleton.class ) ;
 				this.addControlerListenerBinding().to( Checker.class ).in( Singleton.class ) ;
+
+				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
 			}
 		} );
 
 		controler.run() ;
 
+	}
+	@Test
+	public void testTwo() {
+
+		final Config config = prepareConfig( null, InputCase.kaiInputDiss );
+
+		config.controler().setLastIteration(10);
+
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
+		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
+
+		Scenario scenario = prepareScenario( config ) ;
+
+		Controler controler = prepareControler( scenario ) ;
+
+		controler.addOverridingModule( new AbstractModule(){
+			@Override
+			public void install(){
+//				this.bind( Checker.class ).in( Singleton.class ) ;
+//				this.addEventHandlerBinding().to( Checker.class ).in( Singleton.class ) ;
+//				this.addControlerListenerBinding().to( Checker.class ).in( Singleton.class ) ;
+
+				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
+			}
+		} );
+
+		controler.run() ;
+
+	}
+
+	private static class EventsPrinter implements BasicEventHandler {
+		private int iteration ;
+		@Inject private Config config ;
+		@Override public void handleEvent( Event event ){
+			if ( iteration == config.controler().getLastIteration() ) {
+				if( event instanceof  PersonDepartureEvent ) {
+					System.err.println( event.toString() );
+				}
+			}
+		}
+		@Override
+		public void reset( int iteration ){
+			this.iteration = iteration ;
+		}
 	}
 
 	private static class Checker implements BasicEventHandler, ShutdownListener {
@@ -72,11 +118,6 @@ public class RunConfigurableBikeSharingSimulationTest{
 					}
 					cnt ++ ;
 					log.warn("cnt=" + cnt ) ;
-				}
-			}
-			if ( iteration == config.controler().getLastIteration() ) {
-				if( event instanceof  PersonDepartureEvent ) {
-					System.err.println( event.toString() );
 				}
 			}
 		}

@@ -84,9 +84,9 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 				throw new RuntimeException( "not implemented" ) ;
 		}
 
-		//TeleportationEngine tp = new TeleportationEngine(sc, eventsManager);
-		//qSim.addMobsimEngine(tp);
-		//qSim.addDepartureHandler(tp);
+		TeleportationEngine tp = new TeleportationEngine(sc, eventsManager);
+		qSim.addMobsimEngine(tp);
+		qSim.addDepartureHandler(tp);
 		
 
 
