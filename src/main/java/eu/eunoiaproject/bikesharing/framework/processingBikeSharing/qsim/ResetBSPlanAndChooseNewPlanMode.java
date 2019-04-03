@@ -60,7 +60,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					forbidCar = true;
 				}
 			}
-			final String currentMode = getTransportMode(tour);
+			final String currentMode = plan.getType();
 
 
 			while (true) {
@@ -97,21 +97,17 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					}
 				}
 			}
-			checkPlan(tour, currentMode);
 			changeLegModeTo(tour, newMode);
 			
 		}
 		return newMode;
 	}
 
-	private String getTransportMode(final List<PlanElement> tour) {
-		return ((Leg) (tour.get(1))).getMode();
-	}
-	
+
 	private boolean checkPlan (final List<PlanElement> list, String mode)
 	{
 
-			for (int i = 0; i < list.size(); i++)
+			for (int i = 0; i < list.size()-1; i++)
 			{
 				if (list.get(i) instanceof Activity)
 				{

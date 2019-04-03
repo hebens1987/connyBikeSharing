@@ -72,191 +72,55 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	}
 	
 	/***************************************************************************/	
-	double [] getLegDist(Leg newLegX, double travelTime)
+	double [] getLegDistAndTime(Leg newLegX, double travelTime)
 	/***************************************************************************/
 	{
-		double[] firstDistThenTime = new double[2];
-		double dist = 0;
+		travelTime = newLegX.getTravelTime();
+		double travelTime2 = newLegX.getRoute().getTravelTime();
+		double[] timeDist = {0,0};
 		double feltTravelTime = 0;
-		String legXStart = null;
-    	String legXEnd = null;
-    	Leg legTemp = null;
-    	double distance = 0;
-    	String routeD = null;
- 	
-    	if (newLegX.getMode()== "car" || newLegX.getMode() == "pt") //hier sollte es sowieso nie hineinlaufen - sonst Aufruf Fehlerhaft
-    	{
-    		firstDistThenTime[0] = newLegX.getRoute().getDistance();
-    		firstDistThenTime[1] = newLegX.getRoute().getTravelTime();
-    		return firstDistThenTime;
-    	}
-    	
-    	else if (newLegX.getRoute().getStartLinkId().equals(newLegX.getRoute().getEndLinkId()))
-    	{
-    		routeD = newLegX.getRoute().getStartLinkId().toString();
-    	}
-
-    	else
-    	{
-
-	    	int i = 0;
-	    	List<PlanElement> pe = new ArrayList<PlanElement>(this.person.getSelectedPlan().getPlanElements());
-				//System.out.println("-----------------> Person: " + this.person.getId().toString() + " handling Mode: " + legX.getMode());
-			int size = pe.size();
-			legXStart = newLegX.getRoute().getStartLinkId().toString();
-			legXEnd= newLegX.getRoute().getEndLinkId().toString();
-
-			//for (int i = 0; i < pe.size()-1; i++)
-	    	while ((i < size)) //-1 as the last Leg should not be handled!
+		double distance = 0;
+		String routeD = newLegX.getRoute().getRouteDescription();
+	    if (routeD!=null)
+	    {
+	    	TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
+	    	String[] linksOfRoute;
+	    	if (routeD.contains(" "))
 	    	{
-	    		//System.out.println(pe);
-	    		if (pe.get(i) instanceof Leg)
-	    		{
-	    			Leg legPlan = (Leg)pe.get(i);
-	    			if (legPlan == null)
-	    			{
-	    				System.out.println("Hebenstreit TODO:");
-	    			}
-	    			else if (legPlan.getRoute().getStartLinkId() == null || legPlan.getRoute().getStartLinkId() == null)
-	    			{
-	    				dist = legPlan.getRoute().getDistance();
-	   					feltTravelTime = legPlan.getTravelTime();
-	    		    	firstDistThenTime[0] = dist;
-	    		    	firstDistThenTime[1] = feltTravelTime;
-	    		    	return firstDistThenTime;
-	    			}	    				
-	    			if (legPlan.getRoute().getStartLinkId() == null)
-    				{
-	   					System.out.println("Hebenstreit TODO:");
-	   				}
-	   				String startLinkPlan = legPlan.getRoute().getStartLinkId().toString();
-	   				String endLinkPlan = legPlan.getRoute().getEndLinkId().toString();
-	    			
-	    			if (legXStart.equals(startLinkPlan))
-					{
-						if (legXEnd.equals(endLinkPlan))
-						{
-							legTemp = new LegImpl(legPlan.getMode());
-							legTemp = legPlan;
-							routeD = legTemp.getRoute().getRouteDescription();
-							break; 
-						}
-					}
-	    		}
-	    		i++;
-	    	}
-	    	
-	    	if (routeD == null)
-	    	{
-	    		routeD = null;
-	    		String mode = newLegX.getMode();
-	    		if (!(mode.equals("bs_walk")))
-	    		{
-	    			System.out.println("^No Route found");
-	    		}
-	    		else
-	    		{
-	    			double d = newLegX.getRoute().getDistance();
-	    			if (d == 0)
-	    			{
-	    				d = newLegX.getTravelTime()/1.1;
-	    			}
-			    	firstDistThenTime[0] = d;
-			    	firstDistThenTime[1] = newLegX.getTravelTime();
-			    	return firstDistThenTime;
-	    		}
-	    	}
-
-			if ((!(newLegX.getMode().contains(TransportMode.bike)))&&(!(newLegX.getMode().equals(EBConstants.BS_BIKE)))
-					&& (!(newLegX.getMode().equals(EBConstants.BS_E_BIKE)))&& (!(newLegX.getMode().equals(EBConstants.BS_BIKE_FF))))
-	    	{
-	    		if (routeD!=null)
-	    		{
-	    			String[] linksOfRoute;
-	    			if (routeD.contains(" "))
-	    			{
-	    				linksOfRoute = routeD.split("\\s+");
+	    		linksOfRoute = routeD.split("\\s+");
 	        	
-	    				for (int j = 0; j < linksOfRoute.length; j++)
-	    				{
-	        			//link array
-	        				Id<Link> act = null;
-	        				String linkIdToCompare = linksOfRoute[j];
-	        				act = Id.createLinkId(linkIdToCompare);
-	        				Link link= network.getLinks().get(act);
-	        				//System.out.println(link.getId());
-	        				distance = distance + link.getLength();
-	    				}
-	    			}
-	    		} 
-	    	}
-			else if ((newLegX.getMode().contains(TransportMode.bike))||(newLegX.getMode().equals(EBConstants.BS_E_BIKE))
-					|| newLegX.getMode().equals(EBConstants.BS_BIKE) || newLegX.getMode().equals(EBConstants.BS_BIKE_FF))
-	    	{
-	    		if (routeD!=null)
+	    		for (int j = 0; j < linksOfRoute.length; j++)
 	    		{
-	    			TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
-	    			String[] linksOfRoute;
-	    			if (routeD.contains(" "))
+
+	        	//link array
+	        		Id<Link> act = null;
+	        		String linkIdToCompare = linksOfRoute[j];
+	        		act = Id.createLinkId(linkIdToCompare);
+	        		Link link= network.getLinks().get(act);
+	        		//System.out.println(link.getId());
+	        		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null);
+	    			if (j == 0 || j == linksOfRoute.length-1)
 	    			{
-	    				linksOfRoute = routeD.split("\\s+");
-	        	
-	    				for (int j = 0; j < linksOfRoute.length; j++)
-	    				{
-	        			//link array
-	        				Id<Link> act = null;
-	        				String linkIdToCompare = linksOfRoute[j];
-	        				act = Id.createLinkId(linkIdToCompare);
-	        				Link link= network.getLinks().get(act);
-	        				//System.out.println(link.getId());
-	        				double[] timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null);
-	        				feltTravelTime = feltTravelTime + timeDist[0];
-	        				distance = distance + timeDist[1];
-	    				}
-	    				double kmProH = (distance/1000)/(feltTravelTime/3600);
-	    				//if (kmProH > 25)
-	    				//{
-	    				//	System.out.println("Warum nur? Hebenstreit");
-	    				//}
+	    				timeDist[0] = timeDist[0]/2;
+	    				timeDist[1] = timeDist[1]/2;
 	    			}
-	    			else 
-	    			{
-	    				//single link
-	    				Id<Link> act = null;
-	    				act = Id.createLinkId(routeD);
-	    				Link link= network.getLinks().get(act);
-	    				//System.out.println(link.getId());
-	    				double[] timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null);
-        				feltTravelTime = timeDist[0];
-        				distance = timeDist[1];
-	    			}
-	    		} 
+	        		feltTravelTime = feltTravelTime + timeDist[0];
+	        		distance = distance + timeDist[1];
+	    		}
 	    	}
+	    	else
+	    	{
+	    		Link link= network.getLinks().get(Id.create(routeD, Link.class));
+	    		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null);
+	    		feltTravelTime = timeDist[0];
+	    		distance = timeDist[1];
+	    	}
+	    }
+	    
+	    timeDist[0] = feltTravelTime;
+	    timeDist[1] = distance;
+	    return timeDist;
 
-			dist = distance;
-
-			if (dist == 0)
-			{
-				if (newLegX.getMode().contains(TransportMode.walk))
-				{
-					dist = newLegX.getTravelTime()/1.1;
-				}
-				
-				if (newLegX.getMode().contains(TransportMode.bike))
-				{
-					dist = newLegX.getTravelTime()/4.1;
-				}
-			}
-    	}
-
-    	firstDistThenTime[0] = dist;
-    	if (feltTravelTime == 0)
-    	{
-    		feltTravelTime = travelTime;
-    	}
-
-    	firstDistThenTime[1] = feltTravelTime;
-    	return firstDistThenTime;
 	}
 	
 	/***************************************************************************/
@@ -268,17 +132,12 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	double dist = 0;
     	double feltTravelTime = 0;
     	
-		if (leg.getMode()== EBConstants.MODE_FF 
-				|| leg.getMode()== EBConstants.BS_WALK 
-						|| leg.getMode()== EBConstants.BS_BIKE 
-								|| leg.getMode()== EBConstants.BS_E_BIKE 
-										|| leg.getMode()== EBConstants.MODE 
-												|| leg.getMode()== TransportMode.bike 
-														|| leg.getMode()== TransportMode.walk
-														|| leg.getMode()== TransportMode.egress_walk
-														|| leg.getMode() == TransportMode.access_walk) //only pt,transit_walk and car shall not run into
+		if (leg.getMode().equals(EBConstants.MODE_FF) 
+				|| leg.getMode().equals(EBConstants.BS_BIKE )
+								|| leg.getMode().equals(EBConstants.BS_E_BIKE )
+												|| leg.getMode().equals(TransportMode.bike)) //only pt,transit_walk and car shall not run into
 		{
-			double[] arr = getLegDist(leg, leg.getTravelTime());
+			double[] arr = getLegDistAndTime(leg, leg.getTravelTime());
 			
 	    	if (arr != null)
 	    	{

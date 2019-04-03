@@ -136,9 +136,17 @@ public class RunConfigurableBikeSharingSimulation {
 		
 		//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
 
-		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
-					EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
+		//Does not use the implemented routing modules anymore - just uses Network Route
+		//Can I use a combination? TODO:
+		//config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
+		//			EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
+		config.qsim().setMainModes( new HashSet<>( Arrays.asList( 
+				TransportMode.car, 
+				TransportMode.walk,
+				EBConstants.BS_WALK_FF, 
+				EBConstants.BS_WALK) ) ) ;
 
+		
 		config.travelTimeCalculator().setSeparateModes( true ); 
 		failIfExists( config.controler().getOutputDirectory() );
 
