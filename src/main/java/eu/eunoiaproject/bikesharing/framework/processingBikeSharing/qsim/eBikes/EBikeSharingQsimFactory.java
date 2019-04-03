@@ -4,12 +4,19 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes
 import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelTime;
+import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.api.experimental.events.EventsManager;
 //import org.matsim.core.config.ConfigGroup;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.QSimConfigGroup;
+import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.mobsim.qsim.ActivityEngine;
 import org.matsim.core.mobsim.qsim.QSim;
@@ -26,8 +33,6 @@ import org.matsim.core.router.util.TravelTime;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
 //import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 
 /**
@@ -97,14 +102,8 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		
 		//EBikeSharingManager ebsManager = new EBikeSharingManagerImpl(confGroup,sc);
 
-		TravelTime travelTime = travelTimes.get( TransportMode.bike ) ;
-
-		TravelDisutilityFactory travelDisutilityFactory = travelDisutilityFactories.get( TransportMode.bike) ;
-		TravelDisutility travelDisutility = travelDisutilityFactory.createTravelDisutility(travelTime) ;	
-
-		LeastCostPathCalculator standardBikePathCalculator = pathCalculatorFactory.createPathCalculator(sc.getNetwork(), travelDisutility, travelTime ) ;
 //		lcp = standardBikePathCalculator;
-		
+
 		QNetsimEngine qnet = new QNetsimEngine(qSim);
 		qSim.addMobsimEngine(qnet);
 		qSim.addDepartureHandler(qnet.getDepartureHandler());
@@ -116,7 +115,36 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 
 		//bsBikes.generatePTRouterForBS(sc);
 
-		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( qSim, standardBikePathCalculator, pathCalculatorFactory );
+		BicycleConfigGroup confBC = (BicycleConfigGroup) qSim.getScenario().getConfig().getModule("bicycleAttributes");
+		PlanCalcScoreConfigGroup pcsConf = (PlanCalcScoreConfigGroup)
+									 qSim.getScenario().getConfig().getModule("planCalcScore");
+
+		BikeSharingContext.Builder builder = new BikeSharingContext.Builder() ;
+		{
+			TravelTime travelTime = travelTimes.get( TransportMode.bike );
+			TravelDisutilityFactory travelDisutilityFactory = travelDisutilityFactories.get( TransportMode.bike );
+			TravelDisutility travelDisutility = travelDisutilityFactory.createTravelDisutility( travelTime );
+			LeastCostPathCalculator standardBikePathCalculator = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), travelDisutility, travelTime );
+			builder.setStandardBikePathCalculator( standardBikePathCalculator ) ;
+		}
+		{
+			TravelTime btt = new TUG_BSTravelTime(confBC);
+			TravelDisutility btd = 	new TUG_BikeTravelDisutility(confBC, pcsConf);
+			LeastCostPathCalculator calc = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt ) ;
+			builder.setSharedBikePathCalculator( calc ) ;
+		}
+		{
+			TravelTime btt = new TUG_WalkTravelTime( confBC );
+			TravelDisutility btd = new TUG_WalkTravelDisutility( confBC, pcsConf );
+			LeastCostPathCalculator routeAlgo = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt );;
+			builder.setWalkPathCalculator( routeAlgo ) ;
+		}
+		{
+			builder.setQSim( qSim ) ;
+		}
+		BikeSharingContext context = builder.build();;
+
+		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( context );
 
 		PopulationAgentSource agentSource = new PopulationAgentSource(sc.getPopulation(), agentFactory, qSim);
 		qSim.addAgentSource(agentSource);

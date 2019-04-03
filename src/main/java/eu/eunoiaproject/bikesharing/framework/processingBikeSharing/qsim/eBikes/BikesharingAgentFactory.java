@@ -4,19 +4,12 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.qsim.agents.AgentFactory;
 import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
-import org.matsim.core.mobsim.qsim.interfaces.Netsim;
-import org.matsim.core.router.util.LeastCostPathCalculator;
-import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 
 public class BikesharingAgentFactory implements AgentFactory{
-	private final Netsim simulation;
-	private LeastCostPathCalculator standardBikePathCalculator;
-	private LeastCostPathCalculatorFactory pathF;
+	private final BikeSharingContext bikeSharingContext;
 
-	BikesharingAgentFactory( final Netsim simulation, LeastCostPathCalculator standardBikePathCalculator, LeastCostPathCalculatorFactory pathF ) {
-		this.simulation = simulation;
-		this.standardBikePathCalculator = standardBikePathCalculator;
-		this.pathF = pathF;
+	BikesharingAgentFactory( BikeSharingContext bikeSharingContext ) {
+		this.bikeSharingContext = bikeSharingContext;
 	}
 
 	@Override
@@ -40,8 +33,7 @@ public class BikesharingAgentFactory implements AgentFactory{
 //		if ((type.equals("ffBikeSharing"))||
 //			type.equals("eBikeSharing") || type.equals(TransportMode.pt))
 		{ 
-			agent = new BikesharingPersonDriverAgentImpl(p.getSelectedPlan(), this.simulation,
-				  standardBikePathCalculator, pathF, null);
+			agent = new BikesharingPersonDriverAgentImpl(p.getSelectedPlan(), null, bikeSharingContext );
 		}
 		//if (type.equals("pt"))
 		//{

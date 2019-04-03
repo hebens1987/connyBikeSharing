@@ -2,8 +2,8 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.choiceStrat
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -19,8 +19,6 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
-import org.matsim.core.router.util.LeastCostPathCalculator;
-import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.ActivityFacility;
@@ -39,9 +37,6 @@ import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoic
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAtt;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAttribsAgent;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAgent;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
 
@@ -60,22 +55,17 @@ public class NoBikeAvailable
 	 * - returns 1 if the route was reset to a walk or pt trip
 	 * - returns 2 if there was a new Station with Available Bikes found**/
 	@SuppressWarnings("unchecked")
-	public static String noBikeAvailable(
+	public static void noBikeAvailable(
 		  BikeSharingFacility station,
 		  Activity nextAct,
 		  double now,
-		  Scenario scenario,
-		  BasicPlanAgentImpl basicAgentDelegate,
-		  Map<Id<Person>, BikeAgent> agentsC,
-		  Map<Id<Person>, BikeAgent> agentsE,
-		  BikeSharingFacilities bsFac,
-		  BikeSharingBikes bSharingVehicles,
-		  LeastCostPathCalculatorFactory pathF,
-		  LeastCostPathCalculator cal )
+		  BasicPlanAgentImpl basicAgentDelegate, BikeSharingContext bikeSharingContext )
 	//setzt den Plan anders, sodass der Agent rerouting macht oder wartet
 	//wird aufgerufen wenn das Aktuelle Element Bs-Interaction ist
 	/***************************************************************************/
-	{	
+	{
+		Scenario scenario = bikeSharingContext.getqSim().getScenario() ;
+
 		//if a station change was already conducted once
 		// 1:1 chance for wait and change legMode
 		BSRunner runner = new BSRunner();
@@ -255,7 +245,7 @@ public class NoBikeAvailable
 			Link endLink = network.getLinks().get(noBSAct.getLinkId()); 
 			
 			//WALK_LEG
-			Leg p0 = (Leg)BSRunner.createLeg(startLink, stationLink1 , EBConstants.BS_WALK, now, basicAgentDelegate,scenario, pathF );
+			Leg p0 = (Leg)BSRunner.createLeg(startLink, stationLink1 , EBConstants.BS_WALK, now, basicAgentDelegate, bikeSharingContext );
 			p0.setDepartureTime(now);
 			trip.add(p0); 
 			
@@ -269,11 +259,11 @@ public class NoBikeAvailable
 			Leg p2;
 			if (newChoiceStart.station.getStationType().equals("e"))
 			{
-				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_E_BIKE, p1.getEndTime(), basicAgentDelegate,scenario, pathF );
+				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_E_BIKE, p1.getEndTime(), basicAgentDelegate, bikeSharingContext );
 			}
 			else
 			{
-				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_BIKE, p1.getEndTime(), basicAgentDelegate,scenario, pathF );
+				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_BIKE, p1.getEndTime(), basicAgentDelegate, bikeSharingContext );
 
 			}
 			p2.setDepartureTime(p1.getEndTime());
@@ -286,7 +276,7 @@ public class NoBikeAvailable
 			trip.add(p3);
 			
 			//WALK_LEG	
-			Leg p4 = (Leg)BSRunner.createLeg(stationLink2, endLink , EBConstants.BS_WALK, p3.getEndTime(), basicAgentDelegate,scenario, pathF );
+			Leg p4 = (Leg)BSRunner.createLeg(stationLink2, endLink , EBConstants.BS_WALK, p3.getEndTime(), basicAgentDelegate, bikeSharingContext );
 			p4.setDepartureTime(p3.getEndTime());
 			trip.add(p4);
 			
@@ -365,7 +355,7 @@ public class NoBikeAvailable
 				//WALK_LEG
 				//Hebenstreit vor Urlaub: hier muss über basicAgentDelegate auf den aktuellen Plan 
 				//zugegriffen und dieser verändert werden - zu prüfen
-				Leg p = (Leg)BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,scenario, pathF );
+				Leg p = (Leg)BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate, bikeSharingContext );
 				p.setDepartureTime(now);
 				trip.add(p); 
 				travelTimeTotal = p.getTravelTime();
@@ -378,7 +368,7 @@ public class NoBikeAvailable
 				if (p0 == null)
 				{
 					Leg p0a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
-						scenario, pathF );
+						  bikeSharingContext );
 					p0a.setDepartureTime(now);
 					trip.add(p0a); 
 				}
@@ -396,7 +386,7 @@ public class NoBikeAvailable
 				//Hebenstreit vor Urlaub: hier muss über basicAgentDelegate auf den aktuellen Plan 
 				//zugegriffen und dieser verändert werden - zu prüfen
 				
-				Leg p1 = (Leg)BSRunner.createLeg(startLink, endLink , TransportMode.walk, now, basicAgentDelegate,scenario, pathF );
+				Leg p1 = (Leg)BSRunner.createLeg(startLink, endLink , TransportMode.walk, now, basicAgentDelegate, bikeSharingContext );
 				p1.setDepartureTime(now);
 				trip.add(p1); 
 				travelTimeTotal = p1.getTravelTime();
@@ -409,7 +399,7 @@ public class NoBikeAvailable
 				if (pe2 == null)
 				{
 					Leg pe2a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
-						scenario, pathF );
+						  bikeSharingContext );
 					pe2a.setDepartureTime(now);
 					trip.add(pe2a); 
 				}
@@ -450,7 +440,6 @@ public class NoBikeAvailable
 		}
 		runner.planComparison(basicAgentDelegate);
 		log.info("Agent with ID:;" + basicAgentDelegate.getPerson().getId() + ";did not get a Bike -->;" + whatToChoose);
-		return whatToChoose;
 	}
 	
 }

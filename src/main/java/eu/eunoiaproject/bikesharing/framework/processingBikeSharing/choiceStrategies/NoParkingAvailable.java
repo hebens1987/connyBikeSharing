@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -19,8 +20,6 @@ import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
-import org.matsim.core.router.util.LeastCostPathCalculator;
-import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.ActivityFacility;
 import org.matsim.facilities.Facility;
@@ -60,16 +59,12 @@ public class NoParkingAvailable {
 		  BikeSharingFacility station,
 		  Activity nextAct,
 		  double now,
-		  Scenario scenario,
 		  BasicPlanAgentImpl basicAgentDelegate,
-		  Map<Id<Person>, BikeAgent> agentsC,
-		  Map<Id<Person>, BikeAgent> agentsE,
-		  BikeSharingFacilities bsFac,
-		  BikeSharingBikes bSharingVehicles,
-		  LeastCostPathCalculatorFactory pathF,
-		  LeastCostPathCalculator cal )
+		  BikeSharingContext bikeSharingContext )
 	/***************************************************************************/
 	{
+		Scenario scenario = bikeSharingContext.getqSim().getScenario();;
+
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
 		
@@ -221,12 +216,12 @@ public class NoParkingAvailable {
 			Leg p2 ;
 			if (station.getStationType().equals("e"))
 			{
-				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_E_BIKE, now, basicAgentDelegate, scenario, pathF );
+				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_E_BIKE, now, basicAgentDelegate, bikeSharingContext );
 			}
 			
 			else
 			{
-				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_BIKE, now, basicAgentDelegate, scenario, pathF );
+				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_BIKE, now, basicAgentDelegate, bikeSharingContext );
 			}
 			
 			p2.setDepartureTime(now);
@@ -239,7 +234,7 @@ public class NoParkingAvailable {
 			trip.add(a2);
 			
 			//WALK_LEG	
-			Leg p3 = (Leg)BSRunner.createLeg(stationLink, endLink , EBConstants.BS_WALK, now, basicAgentDelegate,scenario, pathF );
+			Leg p3 = (Leg)BSRunner.createLeg(stationLink, endLink , EBConstants.BS_WALK, now, basicAgentDelegate, bikeSharingContext );
 			p3.setDepartureTime(a2.getEndTime());
 			trip.add(p3);
 			

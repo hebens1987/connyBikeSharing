@@ -3,20 +3,14 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental;
 import java.util.List;
 import java.util.Map;
 
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Leg;
-import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.api.core.v01.population.*;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
-import org.matsim.core.population.routes.RouteFactoryImpl;
 import org.matsim.core.population.routes.NetworkRoute;
-import org.matsim.core.router.util.LeastCostPathCalculator;
-import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.facilities.ActivityFacility;
-import org.matsim.pt.router.TransitRouterImpl;
 
 import eu.eunoiaproject.bikesharing.framework.eBikeHandling.ReturnBike;
 import eu.eunoiaproject.bikesharing.framework.eBikeHandling.TakeABike;
@@ -40,20 +34,16 @@ public class TakingReturningMethodology {
 	private final static Logger log = Logger.getLogger(TakingReturningMethodology.class);
 	
 	public boolean takingABike(
-			PlanElement thisElem, 
-			BasicPlanAgentImpl basicAgentDelegate,
-			BikeSharingBikes bSharingVehicles,
-			BikeSharingFacilities bsFac,
-			Activity nextAct,
-			Activity pAct0,
-			double now,
-			Scenario scenario,
-			Map<Id<Person>, BikeAgent> agentsC,
-			Map<Id<Person>, BikeAgent> agentsE,
-			Leg leg,
-			RouteFactoryImpl routeFactory,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal)
+		  PlanElement thisElem,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  BikeSharingBikes bSharingVehicles,
+		  BikeSharingFacilities bsFac,
+		  Activity nextAct,
+		  Activity pAct0,
+		  double now,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE,
+		  Leg leg, BikeSharingContext bikeSharingContext )
 	{
 		
 		BSRunner runner = new BSRunner();
@@ -84,7 +74,7 @@ public class TakingReturningMethodology {
 						";could not take a C-Bike at Station:;" + station.getId());
 					//Insert new Choice Strategy (C)
 					NoBikeAvailable.noBikeAvailable(
-						station, nextAct, now, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal ); //false is not EBike
+						station, nextAct, now, basicAgentDelegate, bikeSharingContext ); //false is not EBike
 					value = false;
 				}
 			}
@@ -133,7 +123,7 @@ public class TakingReturningMethodology {
 							";could not take an C-Bike at Station:;" + station.getId());
 					//Insert new Choice Strategy (E)
 					NoBikeAvailable.noBikeAvailable(
-							station, nextAct, now, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal ); //true - it is an EBike
+							station, nextAct, now, basicAgentDelegate, bikeSharingContext ); //true - it is an EBike
 					value = false;
 				}
 			}
@@ -146,7 +136,8 @@ public class TakingReturningMethodology {
 				newAgE.setBikeE(bikeE);
 				newAgE.setPersonId(personId);
 				agentsE.put(personId,newAgE);
-				routeFactory.createRoute(
+				PopulationFactory pf = bikeSharingContext.getqSim().getScenario().getPopulation().getFactory();;
+				pf.createRoute(
 						NetworkRoute.class,
 						leg.getRoute().getStartLinkId(), 
 						leg.getRoute().getEndLinkId());
@@ -170,21 +161,15 @@ public class TakingReturningMethodology {
 	}
 	
 	public void checkingForWaingToReturn(
-			PlanElement thisElem,
-			BikeSharingBikes bSharingVehicles,
-			BikeSharingFacilities bsFac,
-			Activity pAct0,
-			Activity nextAct,
-			double now,
-			Scenario scenario,
-			Map<Id<Person>, BikeAgent> agentsC,
-			Map<Id<Person>, BikeAgent> agentsE,
-			Leg leg,
-			RouteFactoryImpl routeFactory,
-			BikeSharingFacility station,
-			TransitRouterImpl trImpl,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal)
+		  BikeSharingBikes bSharingVehicles,
+		  BikeSharingFacilities bsFac,
+		  Activity pAct0,
+		  Activity nextAct,
+		  double now,
+		  Scenario scenario,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE,
+		  BikeSharingFacility station, BikeSharingContext bikeSharingContext )
 	{
 		//if a bike was successfully taken, check the toReturn waiting list, if its length is greater zero, make agent arrive
 		if (station.getWaitingToReturnBike()!=null)
@@ -194,9 +179,9 @@ public class TakingReturningMethodology {
 				BSRunner runner = new BSRunner();
 				runner.planComparison(station.getWaitingToReturnBike().get(0).bpAgent);
 				BasicPlanAgentImpl agentInterim1 = station.getWaitingToReturnBike().get(0).bpAgent;
-				returningABike(thisElem, station.getWaitingToReturnBike().get(0).bpAgent, 
-						bSharingVehicles, bsFac, nextAct, pAct0, now, scenario, 
-						agentsC, agentsE, leg, routeFactory, trImpl, pathF, cal);
+				returningABike( station.getWaitingToReturnBike().get(0 ).bpAgent,
+					  bsFac, nextAct, pAct0, now,
+					  agentsC, agentsE, bikeSharingContext );
 				
 				log.warn("Agent with ID:;" + agentInterim1.getId() + ";was waiting to return a bike, while a bike was taken!;"  + now);
 				agentInterim1.getEvents().processEvent(new AgentFoundParkingEvent(
@@ -239,22 +224,17 @@ public class TakingReturningMethodology {
 		// TODO Auto-generated method stub
 	
 	public void checkingForWaingToTake(
-			PlanElement thisElem,
-			BasicPlanAgentImpl basicAgentDelegate,
-			BikeSharingBikes bSharingVehicles,
-			BikeSharingFacilities bsFac,
-			Activity pAct0,
-			Activity nextAct,
-			double now,
-			Scenario scenario,
-			BikeSharingFacility station,
-			Map<Id<Person>, BikeAgent> agentsC,
-			Map<Id<Person>, BikeAgent> agentsE,
-			Leg legInp,
-			RouteFactoryImpl routeFactory,
-			TransitRouterImpl trImpl,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal)
+		  PlanElement thisElem,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  BikeSharingBikes bSharingVehicles,
+		  BikeSharingFacilities bsFac,
+		  Activity pAct0,
+		  Activity nextAct,
+		  double now,
+		  BikeSharingFacility station,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE,
+		  Leg legInp, BikeSharingContext bikeSharingContext )
 	{
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
@@ -266,8 +246,8 @@ public class TakingReturningMethodology {
 					BasicPlanAgentImpl agentInterim1 = station.getWaitingToTakeBike().get(0).bpAgent;
 					takingABike(
 							thisElem, station.getWaitingToTakeBike().get(0).bpAgent, 
-							bSharingVehicles, bsFac, nextAct, pAct0, now, scenario, 
-							agentsC, agentsE, legInp, routeFactory, pathF, cal);
+							bSharingVehicles, bsFac, nextAct, pAct0, now,
+						  agentsC, agentsE, legInp, bikeSharingContext );
 
 					log.warn("Agent with ID:;" + agentInterim1.getId() + ";was waiting to take a bike, while a bike was returned!;"  + now);
 					agentInterim1.getEvents().processEvent(new AgentFoundBikeEvent(
@@ -300,7 +280,7 @@ public class TakingReturningMethodology {
 					list.remove(list.get(index+1));
 					list.add(index+1, leg2);
 
-					WaitingListHandling.abortWaitingAtStation (scenario,station,agentInterim1,true);	
+					WaitingListHandling.abortWaitingAtStation (bikeSharingContext.getqSim().getScenario(),station,agentInterim1,true);
 					
 				}
 				//a bike was returned - so a new bike can be taken at the same time
@@ -310,21 +290,13 @@ public class TakingReturningMethodology {
 	
 
 	public boolean returningABike(
-			PlanElement thisElem, 
-			BasicPlanAgentImpl basicAgentDelegate,
-			BikeSharingBikes bSharingVehicles,
-			BikeSharingFacilities bsFac,
-			Activity thisAct,
-			Activity nextAct,
-			double now,
-			Scenario scenario,
-			Map<Id<Person>, BikeAgent> agentsC,
-			Map<Id<Person>, BikeAgent> agentsE,
-			Leg leg,
-			RouteFactoryImpl routeFactory,
-			TransitRouterImpl trImpl,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal)
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  BikeSharingFacilities bsFac,
+		  Activity thisAct,
+		  Activity nextAct,
+		  double now,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE, BikeSharingContext bikeSharingContext )
 	{
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
@@ -378,7 +350,8 @@ public class TakingReturningMethodology {
 						
 						if(!(bsFac.totalWaitingListReturn.containsKey(basicAgentDelegate.getPerson().getId())))
 						{
-							NoParkingAvailable.noParkingAvailable(station, nextAct, now, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal );
+							NoParkingAvailable.noParkingAvailable(station, nextAct, now, basicAgentDelegate,
+								  bikeSharingContext );
 							value = false;
 						}
 					}
@@ -431,7 +404,7 @@ public class TakingReturningMethodology {
 					if (!(bsFac.totalWaitingListReturn.containsKey(basicAgentDelegate.getPerson().getId())))
 					{
 						NoParkingAvailable.noParkingAvailable(station, nextAct, now,
-							  scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal );
+							  basicAgentDelegate, bikeSharingContext );
 						value = false;
 					}
 												

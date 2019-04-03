@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -19,12 +20,10 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.PlanAgent;
+import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
-import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.mobsim.qsim.pt.MobsimDriverPassengerAgent;
 import org.matsim.core.mobsim.qsim.pt.TransitVehicle;
-import org.matsim.core.router.util.LeastCostPathCalculator;
-import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.facilities.ActivityFacility;
 import org.matsim.facilities.Facility;
@@ -71,7 +70,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 	private final Map<Id<Person>, BikeAgent> agentsC = new HashMap<Id<Person>, BikeAgent>();
 	private final Map<Id<Person>, BikeAgent> agentsE = new HashMap<Id<Person>, BikeAgent>();
-	private final LeastCostPathCalculatorFactory pathF ;
 
 	private final Scenario scenario ;
 
@@ -79,23 +77,20 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 	private final BikeSharingBikes bSharingVehicles ;
 
-	private final LeastCostPathCalculator standardBikePathCalculator;
-
+	private final BikeSharingContext bikeSharingContext;
 
 
 	/***************************************************************************/
 
 	public BikesharingPersonDriverAgentImpl(
-			final Plan plan, 
-			final Netsim simulation, 
-			LeastCostPathCalculator standardBikePathCalculator,
-			LeastCostPathCalculatorFactory pathF, 
-			MobsimVehicle veh)
+		  final Plan plan,
+		  MobsimVehicle veh, BikeSharingContext bikeSharingContext )
 	/***************************************************************************/
 	{
+		this.bikeSharingContext = bikeSharingContext;
 
-		scenario = simulation.getScenario();
-		this.pathF = pathF ;
+		final QSim simulation = bikeSharingContext.getqSim();
+		scenario = simulation.getScenario() ;
 
 		this.basicAgentDelegate = new BasicPlanAgentImpl( plan, scenario, simulation.getEventsManager(), simulation.getSimTimer() ) ;
 		this.driverAgentDelegate = new PlanBasedDriverAgentImpl( this.basicAgentDelegate ) ;
@@ -106,8 +101,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		}
 		this.basicAgentDelegate.setVehicle(veh);
 		this.basicAgentDelegate.getModifiablePlan() ; // this lets the agent make a full copy of the plan, which can then be modified
-
-		this.standardBikePathCalculator = standardBikePathCalculator ;
 
 		this.bsFac = (BikeSharingFacilities) scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
 		this.bSharingVehicles =(BikeSharingBikes) scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
@@ -246,7 +239,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						if (pe1 == null)
 						{
 							PlanElement peWalk = BSRunner.createLeg(one, three, EBConstants.BS_WALK_FF, now, this.basicAgentDelegate,
-								scenario, pathF );
+								  bikeSharingContext );
 							trip.add(peWalk);
 							peList.addAll(actIndex+1, trip);
 						}
@@ -277,7 +270,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						Link two = scenario.getNetwork().getLinks().get(thisBikeFF.getLinkId());
 						
 						PlanElement pe1 = BSRunner.createLeg(one, two, EBConstants.BS_WALK_FF, now, this.basicAgentDelegate,
-								scenario, pathF );
+							  bikeSharingContext );
 						List<PlanElement>pe1List = runner.peToPeList(pe1);
 						Leg leg1 = (Leg)pe1;
 						
@@ -285,7 +278,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						PlanElement interact1 = CreateSubtrips.createInteractionFF(dummy1, pe1List, leg1.getDepartureTime()+leg1.getTravelTime());
 						
 						PlanElement pe2 = BSRunner.createLeg(two, three, EBConstants.BS_BIKE_FF, now+leg1.getTravelTime(), this.basicAgentDelegate,
-								scenario, pathF );
+							  bikeSharingContext );
 						List<PlanElement>pe2List = runner.peToPeList(pe2);
 						Leg leg2 = (Leg)pe2;
 						FFDummyFacility dummy2 = new FFDummyFacilityImpl(thisBikeFF.getBikeId(), nextAct.getCoord(), nextAct.getLinkId());
@@ -323,8 +316,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						Leg next = (Leg) nextElem;
 						next.setDepartureTime(now);
 
-						runner.bsRunner(thisElem, nextElem, now, this.basicAgentDelegate, 
-								scenario, agentsC, agentsE, bsFac, bSharingVehicles, pathF, standardBikePathCalculator );
+						runner.bsRunner(thisElem, nextElem, now, this.basicAgentDelegate,
+							  agentsC, agentsE, bsFac, bSharingVehicles, bikeSharingContext );
 						
 						if (this.basicAgentDelegate.getNextPlanElement() instanceof Leg)
 						{
@@ -459,7 +452,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					
 					
 					PlanElement pe = BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, agentInterim,
-							scenario, pathF );
+						  bikeSharingContext );
 					
 					
 					BikeSharingBikes bsb = (BikeSharingBikes) scenario.getScenarioElement("bikeSharingBikes");
@@ -578,7 +571,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						Link startLink2 = scenario.getNetwork().getLinks().get(walksTo);
 						Link endLink2 = scenario.getNetwork().getLinks().get(walksFrom);
 						PlanElement pe2 = BSRunner.createLeg(startLink2, endLink2, TransportMode.walk, now+1, agentInterim,
-								scenario, pathF );
+							  bikeSharingContext );
 						Leg leg = (Leg)pe2;
 						leg.setTravelTime(leg.getTravelTime()*1000);
 						if (leg.getTravelTime() < 2500) {leg.setTravelTime(2500);}
