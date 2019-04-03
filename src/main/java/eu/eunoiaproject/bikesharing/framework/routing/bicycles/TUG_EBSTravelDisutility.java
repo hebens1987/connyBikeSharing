@@ -38,7 +38,7 @@ public class TUG_EBSTravelDisutility implements TravelDisutility
 			PlanCalcScoreConfigGroup cnScoringGroup) 
 	/***************************************************************************/
 	{
-			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup);
+			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup,false);
 			bikeLinkAttributes = bts.getBikeLinkAttributes();
 			usergroupAttributes = bts.getUsergroupAttributes();
 			personAttributes = bts.getPersonAttributes();

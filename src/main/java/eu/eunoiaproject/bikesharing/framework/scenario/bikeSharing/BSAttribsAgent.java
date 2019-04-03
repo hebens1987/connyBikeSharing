@@ -38,7 +38,7 @@ public class BSAttribsAgent
 	public static synchronized BSAtt getPersonAttributes(Person person, Scenario scenario)
 	{
 		final BicycleConfigGroup bikeConfigGroup= (BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
-		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup);
+		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup,false);
 		ObjectAttributes personAttributes = bts.getPersonAttributes();
 		int routingType = 0;
 		if (personAttributes.getAttribute(person.getId().toString(), "routingType") != null)

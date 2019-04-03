@@ -52,7 +52,7 @@ public class RunConfigurableBikeSharingSimulation {
 	private static final Logger log =
 		Logger.getLogger(RunConfigurableBikeSharingSimulation.class);
 
-	enum InputCase{fromArgs, kaiInputDiss, raster }
+	enum InputCase{fromArgs, kaiInputDiss, raster, connyInputDiss }
 
 	/***************************************************************************/
 	public static void main(final String... args) 
@@ -101,6 +101,9 @@ public class RunConfigurableBikeSharingSimulation {
 				break;
 			case kaiInputDiss:
 				configFile = "/Users/kainagel/Downloads/conny/Input_Diss/config_bs.xml" ;
+				break;
+			case connyInputDiss:
+				configFile = "C:/Users/hebens/Documents/Input_Diss/config_bs.xml" ;
 				break;
 			case raster:
 				configFile = "./scenarios/RasterBsp/configRaster.xml" ;

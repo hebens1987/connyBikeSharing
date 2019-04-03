@@ -46,6 +46,7 @@ public class BikeAndEBikeSharingScenarioUtils {
 		{
 			// not so nice...
 			final ActivityParams params = new ActivityParams( TransportMode.pt );
+
 			final ActivityParams params_t = new ActivityParams(EBConstants.INTERACTION_TYPE_BS + "_t" );
 			final ActivityParams params_r = new ActivityParams(EBConstants.INTERACTION_TYPE_BS + "_r" );
 			
@@ -71,6 +72,17 @@ public class BikeAndEBikeSharingScenarioUtils {
 			
 			config.planCalcScore().addActivityParams( params_t );
 			config.planCalcScore().addActivityParams( params_r );
+			
+			final ActivityParams bsWalkInteract = new ActivityParams("s_walk interaction");
+			bsWalkInteract.setClosingTime(params.getClosingTime());
+			bsWalkInteract.setEarliestEndTime(params.getEarliestEndTime());
+			bsWalkInteract.setLatestStartTime(params.getLatestStartTime());
+			bsWalkInteract.setMinimalDuration(params.getMinimalDuration());
+			bsWalkInteract.setOpeningTime(params.getOpeningTime());
+			bsWalkInteract.setPriority(params.getPriority());
+			bsWalkInteract.setScoringThisActivityAtAll(false);
+			bsWalkInteract.setTypicalDuration(params.getTypicalDuration());
+			bsWalkInteract.setTypicalDurationScoreComputation(params.getTypicalDurationScoreComputation());
 		}
 		
 		

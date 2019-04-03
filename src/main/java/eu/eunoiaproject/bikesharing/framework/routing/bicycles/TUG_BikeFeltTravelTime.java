@@ -40,7 +40,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			BicycleConfigGroup bikeConfigGroup) 
 	/***************************************************************************/
 	{
-			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup);
+			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup, false);
 			bikeLinkAttributes = bts.getBikeLinkAttributes();
 			usergroupAttributes = bts.getUsergroupAttributes();
 			personAttributes = bts.getPersonAttributes();

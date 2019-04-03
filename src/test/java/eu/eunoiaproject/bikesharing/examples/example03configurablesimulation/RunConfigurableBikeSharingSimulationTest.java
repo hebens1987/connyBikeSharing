@@ -1,6 +1,12 @@
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import com.google.inject.Inject;
+
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
+import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelTime;
+import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
+
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,12 +28,14 @@ import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulat
 public class RunConfigurableBikeSharingSimulationTest{
 	private static final Logger log = Logger.getLogger( RunConfigurableBikeSharingSimulationTest.class ) ;
 
+	
+
 	@Test
 	public void testOne() {
 
 		final Config config = prepareConfig( null, InputCase.raster );
 
-		config.controler().setLastIteration(10);
+		config.controler().setLastIteration(2);
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
@@ -53,7 +61,7 @@ public class RunConfigurableBikeSharingSimulationTest{
 	@Test
 	public void testTwo() {
 
-		final Config config = prepareConfig( null, InputCase.kaiInputDiss );
+		final Config config = prepareConfig( null, InputCase.connyInputDiss );
 
 		config.controler().setLastIteration(10);
 
@@ -61,6 +69,8 @@ public class RunConfigurableBikeSharingSimulationTest{
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
 
 		Scenario scenario = prepareScenario( config ) ;
+		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
+		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
 
 		Controler controler = prepareControler( scenario ) ;
 

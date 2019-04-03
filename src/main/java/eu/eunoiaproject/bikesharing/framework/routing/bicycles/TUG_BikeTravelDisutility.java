@@ -43,7 +43,7 @@ public class TUG_BikeTravelDisutility implements TravelDisutility
 			PlanCalcScoreConfigGroup cnScoringGroup) 
 	/***************************************************************************/
 	{
-			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup);
+			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup, false);
 			bikeLinkAttributes = bts.getBikeLinkAttributes();
 			personAttributes = bts.getPersonAttributes();
 			this.bikeConfigGroup = bikeConfigGroup;

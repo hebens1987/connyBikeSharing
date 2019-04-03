@@ -27,7 +27,7 @@ public class IKK_ObjectAttributesSingleton {
 	}
 
 	/***************************************************************************/
-	private IKK_ObjectAttributesSingleton(BicycleConfigGroup bikeConfigGroup)
+	public IKK_ObjectAttributesSingleton(BicycleConfigGroup bikeConfigGroup)
 	/***************************************************************************/
 	{
 		bikeLinkAttributes = new ObjectAttributes();
@@ -40,12 +40,15 @@ public class IKK_ObjectAttributesSingleton {
 	
 	/***************************************************************************/
 	public static IKK_ObjectAttributesSingleton getInstance(
-			BicycleConfigGroup bikeConfigGroup)
+			BicycleConfigGroup bikeConfigGroup, boolean newCheckout)
 	/***************************************************************************/
 	{
-		if (instance == null){
+
+		if (newCheckout)
 			instance = new IKK_ObjectAttributesSingleton(bikeConfigGroup);
-		}
+		if (instance == null)
+			instance = new IKK_ObjectAttributesSingleton(bikeConfigGroup);
+		
 		
 		return instance;
 	}

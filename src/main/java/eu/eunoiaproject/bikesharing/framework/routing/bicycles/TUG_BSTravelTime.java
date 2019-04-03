@@ -35,7 +35,7 @@ public class TUG_BSTravelTime implements TravelTime
 	TUG_BSTravelTime(BicycleConfigGroup bikeConfigGroup)
 	/***************************************************************************/
 	{	 
-		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup);
+		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup,false);
 		bikeLinkAttributes = bts.getBikeLinkAttributes();
 		personAttributes = bts.getPersonAttributes();
 	}
