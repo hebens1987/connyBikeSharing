@@ -126,7 +126,7 @@ public class RunConfigurableBikeSharingSimulation {
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
 
-		config.global().setNumberOfThreads( 1 );
+		config.global().setNumberOfThreads( 8 );
 		
 		
 		
@@ -144,12 +144,13 @@ public class RunConfigurableBikeSharingSimulation {
 
 		// ---
 
+		config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
+
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
 		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
 				break;
 			case debug:
-				config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
 				config.controler().setLastIteration( 1 );
 
 				config.transit().setUseTransit( false );

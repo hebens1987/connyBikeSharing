@@ -1,36 +1,22 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes;
 
-import javax.inject.Inject;
-
-import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
-import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.agents.AgentFactory;
-import org.matsim.core.mobsim.qsim.agents.PersonDriverAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
-import org.matsim.pt.router.TransitRouterImpl;
-import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
 
 public class BikesharingAgentFactory implements AgentFactory{
 	private final Netsim simulation;
-	private LeastCostPathCalculator pathCalculator;
+	private LeastCostPathCalculator standardBikePathCalculator;
 	private LeastCostPathCalculatorFactory pathF;
-	private Scenario scenario;
-    @Inject
-    EventsManager eventsManager;
-	
-	
-	public BikesharingAgentFactory( final Netsim simulation, LeastCostPathCalculator pathCalculator,
-						  LeastCostPathCalculatorFactory pathF, Scenario scenario ) {
+
+	BikesharingAgentFactory( final Netsim simulation, LeastCostPathCalculator standardBikePathCalculator, LeastCostPathCalculatorFactory pathF ) {
 		this.simulation = simulation;
-		this.pathCalculator = pathCalculator;
+		this.standardBikePathCalculator = standardBikePathCalculator;
 		this.pathF = pathF;
-		this.scenario = scenario;
 	}
 
 	@Override
@@ -44,28 +30,29 @@ public class BikesharingAgentFactory implements AgentFactory{
 		
 		if (type == null)
 		{
-			System.out.println("There must be a plan type set in the plans file for the use of bike sharing, please do so!");
-			System.exit(0);
+			throw new RuntimeException("There must be a plan type set in the plans file for the use of bike sharing, please do so!");
+//			System.exit(0);
+			// if System.exit(...) is encountered in regression test, one gets weird behavior.  kai, apr'19
 		}
-		QSim qsim = new QSim(scenario, eventsManager);
+//		QSim qsim = new QSim(scenario, eventsManager);
 		
 		//Hebenstreit TODO:
-		if ((type.equals("ffBikeSharing"))||
-			type.equals("eBikeSharing") || type.equals(TransportMode.pt))
+//		if ((type.equals("ffBikeSharing"))||
+//			type.equals("eBikeSharing") || type.equals(TransportMode.pt))
 		{ 
 			agent = new BikesharingPersonDriverAgentImpl(p.getSelectedPlan(), this.simulation,
-					 pathCalculator, pathF, null);
+				  standardBikePathCalculator, pathF, null);
 		}
 		//if (type.equals("pt"))
 		//{
 		//	agent = TransitAgent.createTransitAgent(p, this.simulation); 
 		//}
-		else
-		{
-			agent = new PersonDriverAgentImpl(p.getSelectedPlan(), this.simulation); 
-		}
+//		else
+//		{
+//			agent = new PersonDriverAgentImpl(p.getSelectedPlan(), this.simulation);
+//		}
 		
-		qsim.insertAgentIntoMobsim(agent);
+//		qsim.insertAgentIntoMobsim(agent);
 		return agent;
 	}
 }

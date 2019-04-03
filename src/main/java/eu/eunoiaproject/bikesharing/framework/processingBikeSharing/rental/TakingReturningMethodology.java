@@ -11,7 +11,6 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
 import org.matsim.core.population.routes.RouteFactoryImpl;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.router.util.LeastCostPathCalculator;
@@ -84,8 +83,8 @@ public class TakingReturningMethodology {
 					log.info("Agent with ID:; " + personId + 
 						";could not take a C-Bike at Station:;" + station.getId());
 					//Insert new Choice Strategy (C)
-					NoBikeAvailable.noBikeAvailable (
-						station, nextAct, now, false, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal); //false is not EBike
+					NoBikeAvailable.noBikeAvailable(
+						station, nextAct, now, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal ); //false is not EBike
 					value = false;
 				}
 			}
@@ -133,8 +132,8 @@ public class TakingReturningMethodology {
 					log.info("Agent with ID:;" + personId + 
 							";could not take an C-Bike at Station:;" + station.getId());
 					//Insert new Choice Strategy (E)
-					NoBikeAvailable.noBikeAvailable (
-							station, nextAct, now, false, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal); //true - it is an EBike
+					NoBikeAvailable.noBikeAvailable(
+							station, nextAct, now, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal ); //true - it is an EBike
 					value = false;
 				}
 			}
@@ -379,7 +378,7 @@ public class TakingReturningMethodology {
 						
 						if(!(bsFac.totalWaitingListReturn.containsKey(basicAgentDelegate.getPerson().getId())))
 						{
-							NoParkingAvailable.noParkingAvailable(station, nextAct, now, true, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal);
+							NoParkingAvailable.noParkingAvailable(station, nextAct, now, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal );
 							value = false;
 						}
 					}
@@ -431,7 +430,8 @@ public class TakingReturningMethodology {
 					
 					if (!(bsFac.totalWaitingListReturn.containsKey(basicAgentDelegate.getPerson().getId())))
 					{
-						NoParkingAvailable.noParkingAvailable(station, nextAct, now, true, scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal);
+						NoParkingAvailable.noParkingAvailable(station, nextAct, now,
+							  scenario, basicAgentDelegate, agentsC, agentsE, bsFac, bSharingVehicles, pathF, cal );
 						value = false;
 					}
 												

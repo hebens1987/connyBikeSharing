@@ -76,6 +76,8 @@ public class RunConfigurableBikeSharingSimulationTest{
 		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
 		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
 		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
+//		Das liest die Object Attributes files ein und dami sich das nicht unzählich wiederholt macht es das nur wenns nicht null ist...
+//		Damit es Test cases mit unterschiedlichem inpun läuft hab ich es verändert... ist nicht hübsch aber tit was es soll (zuvor hat testcase 2 auf attribute von testcase 1 zugegriffen)
 
 		Controler controler = prepareControler( scenario ) ;
 
@@ -94,6 +96,32 @@ public class RunConfigurableBikeSharingSimulationTest{
 	public void testThree() {
 
 		final Config config = prepareConfig( null, InputCase.raster );
+
+		config.controler().setLastIteration(10);
+		config.controler().setOutputDirectory( utils.getOutputDirectory() );
+
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
+		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.standard );
+
+		Scenario scenario = prepareScenario( config ) ;
+
+		Controler controler = prepareControler( scenario ) ;
+
+		controler.addOverridingModule( new AbstractModule(){
+			@Override
+			public void install(){
+				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
+			}
+		} );
+
+		controler.run() ;
+
+	}
+
+	@Test
+	public void testFour() {
+
+		final Config config = prepareConfig( null, InputCase.inputDiss );
 
 		config.controler().setLastIteration(10);
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );

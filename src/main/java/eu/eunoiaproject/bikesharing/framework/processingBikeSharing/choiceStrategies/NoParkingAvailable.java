@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
-import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -18,8 +17,6 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.router.util.LeastCostPathCalculator;
@@ -60,18 +57,17 @@ public class NoParkingAvailable {
 	 * - returns 1 if the route was aborted
 	 * - returns 2 if there was a new Station with Available Parking found**/
 	public static void noParkingAvailable(
-			BikeSharingFacility station, 
-			Activity nextAct, 
-			double now, 
-			boolean isEBike, 
-			Scenario scenario, 
-			BasicPlanAgentImpl basicAgentDelegate,
-			Map<Id<Person>,BikeAgent> agentsC,
-			Map<Id<Person>,BikeAgent> agentsE,
-			BikeSharingFacilities bsFac,
-			BikeSharingBikes bSharingVehicles,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal)
+		  BikeSharingFacility station,
+		  Activity nextAct,
+		  double now,
+		  Scenario scenario,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE,
+		  BikeSharingFacilities bsFac,
+		  BikeSharingBikes bSharingVehicles,
+		  LeastCostPathCalculatorFactory pathF,
+		  LeastCostPathCalculator cal )
 	/***************************************************************************/
 	{
 		BSRunner runner = new BSRunner();
@@ -225,12 +221,12 @@ public class NoParkingAvailable {
 			Leg p2 ;
 			if (station.getStationType().equals("e"))
 			{
-				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_E_BIKE, now, isEBike,  basicAgentDelegate, scenario, pathF, cal); 
+				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_E_BIKE, now, basicAgentDelegate, scenario, pathF );
 			}
 			
 			else
 			{
-				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_BIKE, now, isEBike,  basicAgentDelegate, scenario, pathF, cal); 
+				p2 = (Leg)BSRunner.createLeg(startLink, stationLink, EBConstants.BS_BIKE, now, basicAgentDelegate, scenario, pathF );
 			}
 			
 			p2.setDepartureTime(now);
@@ -243,7 +239,7 @@ public class NoParkingAvailable {
 			trip.add(a2);
 			
 			//WALK_LEG	
-			Leg p3 = (Leg)BSRunner.createLeg(stationLink, endLink , EBConstants.BS_WALK, now, isEBike,  basicAgentDelegate,scenario, pathF, cal);
+			Leg p3 = (Leg)BSRunner.createLeg(stationLink, endLink , EBConstants.BS_WALK, now, basicAgentDelegate,scenario, pathF );
 			p3.setDepartureTime(a2.getEndTime());
 			trip.add(p3);
 			

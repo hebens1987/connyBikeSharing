@@ -20,7 +20,6 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.*;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
@@ -133,12 +132,12 @@ public class BSRunner {
 			
 			Activity fromFac = (Activity)thisElem;
 			//System.out.println(fromFac.getType());
-			Activity toFac = (Activity)nextAct;
+			Activity toFac = nextAct;
 
 			//System.out.println(toFac.getType());
 			StationAndType[] sat = new StationAndType[2];
 			BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
-			ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();;
+			ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
 			if (toFac.getCoord() != null)
 			{
 				BSAtt att = BSAttribsAgent.getPersonAttributes(basicAgentDelegate.getPerson(), scenario);
@@ -147,7 +146,7 @@ public class BSRunner {
 				Facility toFacF = ff.createActivityFacility( toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
 				sat = bsChoice.getStationsDuringSim(fromFacF,toFacF,
 						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now);
-				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate ,trImpl, pathF, cal, agentsC, agentsE, sat );
+				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate , pathF, cal, sat );
 				List<PlanElement> actualPlanElem = planElementAndType.peList;
 				int bikeSharingType = planElementAndType.type;
 				basicAgentDelegate.getCurrentPlan().getPlanElements().addAll( currentPlanElementIndex +1,actualPlanElem );
@@ -230,13 +229,13 @@ public class BSRunner {
 				if (itIsAnEStation)
 				{
 					handleProbabilityMeasures(toUse.probabilityE, actIndex, basicAgentDelegate.getCurrentPlan().getPlanElements(), fromFac, toFac, toUse.startStationE, toUse.endStationE, scenario, now,
-								basicAgentDelegate, trImpl, pathF, cal, agentsC, agentsE, itIsAnEStation, bikeSharingType);
+								basicAgentDelegate, trImpl, pathF, cal, agentsC, agentsE, bikeSharingType );
 				}
 					
 				else
 				{
 					handleProbabilityMeasures(toUse.probabilityC, actIndex, basicAgentDelegate.getCurrentPlan().getPlanElements(), fromFac, toFac, toUse.startStationC, toUse.endStationC, scenario, now,
-								basicAgentDelegate, trImpl, pathF, cal, agentsC, agentsE, itIsAnEStation, bikeSharingType);
+								basicAgentDelegate, trImpl, pathF, cal, agentsC, agentsE, bikeSharingType );
 				}
 				//TODO: Hebenstreit - hier wird nur nach typischen BS-Stationen gesucht - also Start- und End-Station --> nicht nach ptStations
 				planComparison(basicAgentDelegate);
@@ -303,7 +302,7 @@ public class BSRunner {
 											routeFactory, trImpl, pathF, cal);
 									}
 								((Leg) nextElem).setDepartureTime(now);
-								((Activity)basicAgentDelegate.getNextActivity()).setStartTime(now + ((Leg) nextElem).getTravelTime());
+								basicAgentDelegate.getNextActivity().setStartTime(now + ((Leg) nextElem).getTravelTime() );
 							}
 						}
 					}
@@ -473,9 +472,9 @@ public class BSRunner {
 			return null;
 		}
 		
-		((Leg)trip.get(0)).getRoute().setStartLinkId(startLinkId);
-		Route route = new GenericRouteImpl (((Leg)trip.get(trip.size()-2)).getRoute().getEndLinkId(), endLinkId);
-		((Leg)trip.get(trip.size()-1)).setRoute(route);
+		trip.get(0).getRoute().setStartLinkId(startLinkId );
+		Route route = new GenericRouteImpl ( trip.get(trip.size()-2 ).getRoute().getEndLinkId(), endLinkId);
+		trip.get(trip.size()-1).setRoute(route );
 		
 				
 		trip.get(0).setDepartureTime(now);
@@ -537,27 +536,25 @@ public class BSRunner {
 	}
 	
 	public static PlanElement createLeg(
-			Link startLink, Link destinationLink, 
-			String mode, double departureTime, boolean isEBike,
-			BasicPlanAgentImpl basicAgentDelegate,
-			Scenario scenario,
-			LeastCostPathCalculatorFactory routeAlgoFac,
-			LeastCostPathCalculator routeAlgo)
+		  Link startLink, Link destinationLink,
+		  String mode, double departureTime,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  Scenario scenario,
+		  LeastCostPathCalculatorFactory routeAlgoFac )
 	{
 		TravelTime btt;
 		TravelDisutility btd;
 		double travelTime = 0;
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
-		PopulationFactory pf = scenario.getPopulation().getFactory() ;
-		RouteFactoryImpl routeFactory = ((PopulationFactoryImpl)pf).getRouteFactory() ;
-		BicycleConfigGroup confBC = (BicycleConfigGroup) 
+		BicycleConfigGroup confBC = (BicycleConfigGroup)
 				scenario.getConfig().getModule("bicycleAttributes");
 		PlanCalcScoreConfigGroup pcsConf = 
 				(PlanCalcScoreConfigGroup) 
 				scenario.getConfig().getModule("planCalcScore");
 
-		if ((mode.equals(EBConstants.BS_BIKE))||(mode.equals(EBConstants.BS_E_BIKE))||(mode.equals(TransportMode.bike)))
+		LeastCostPathCalculator routeAlgo;
+		if ((mode.equals(EBConstants.BS_BIKE ))||(mode.equals(EBConstants.BS_E_BIKE ))||(mode.equals(TransportMode.bike )))
 		{
 			btt = new TUG_BSTravelTime(confBC);
 			btd = 	new TUG_BikeTravelDisutility(confBC, pcsConf);
@@ -571,11 +568,11 @@ public class BSRunner {
 			btd = new TUG_WalkTravelDisutility(confBC, pcsConf);
 			Gbl.assertNotNull(routeAlgoFac);
 			routeAlgo = routeAlgoFac.createPathCalculator(
-					scenario.getNetwork(), btd, btt) ;
+					scenario.getNetwork(), btd, btt ) ;
 		}
 
-		Path path = routeAlgo.calcLeastCostPath(scenario.getNetwork().getLinks().get(startLink.getId()).getToNode(),
-				scenario.getNetwork().getLinks().get(destinationLink.getId()).getFromNode(), departureTime, basicAgentDelegate.getPerson(), null);
+		Path path = routeAlgo.calcLeastCostPath(scenario.getNetwork().getLinks().get(startLink.getId() ).getToNode(),
+				scenario.getNetwork().getLinks().get(destinationLink.getId()).getFromNode(), departureTime, basicAgentDelegate.getPerson(), null );
 		
 		double distance = 0.0;
 		Id <Link> startLinkId = startLink.getId();
@@ -714,9 +711,8 @@ public class BSRunner {
 	 * it does not remove the first found bs_walk, it removes the next elements 
 	 * until a plan activity (like home or shopping) was found **/
 	public static Activity removeBSPlanElements(
-			List<PlanElement> planElements, 
-			Network network,
-			BasicPlanAgentImpl basicAgentDelegate2)
+		  List<PlanElement> planElements,
+		  BasicPlanAgentImpl basicAgentDelegate2 )
 	/***************************************************************************/
 	{
 //		int actIndex = basicAgentDelegate2.getCurrentPlanElementIndex();
@@ -764,12 +760,12 @@ public class BSRunner {
 				EBConstants.INTERACTION_TYPE_BS + takeReturn , facility.getCoord() );
 		
 		actE.setMaximumDuration( duration );
-		((ActivityImpl) actE).setLinkId( facility.getLinkId() );
+		actE.setLinkId( facility.getLinkId() );
 		// XXX This may cause problems if IDs of ActivityFacilities 
 		//and BikeSharingFacilities overlap... needs to be checked before
-		((ActivityImpl) actE).setFacilityId( facility.getId());
-		((ActivityImpl) actE).setEndTime(now + duration);
-		((ActivityImpl) actE).setStartTime(now);
+		actE.setFacilityId( facility.getId() );
+		actE.setEndTime(now + duration );
+		actE.setStartTime(now );
 		//String newType= actE.getType().toString()+"_take"; 
 		//Hebenstreit: TODO: erst bei Letzter iteration!
 		//actE.setType(newType);
@@ -777,12 +773,12 @@ public class BSRunner {
 	}
 	
 	/***************************************************************************/
-	public List<PlanElement> getFullTrip (List<PlanElement> first, 
-			PlanElement second, 
-			List<PlanElement> third, 
-			PlanElement fourth, 
-			List<PlanElement> fifth,
-			Scenario scenario)
+	private List<PlanElement> getFullTrip( List<PlanElement> first,
+							   PlanElement second,
+							   List<PlanElement> third,
+							   PlanElement fourth,
+							   List<PlanElement> fifth,
+							   Scenario scenario )
 	/***************************************************************************/
 	{
 		List<PlanElement> trip = new ArrayList<PlanElement>();
@@ -804,19 +800,16 @@ public class BSRunner {
 	 * BS-PT (1), BS-PT (2), changeMode(3) ]
 	 * #C [ if intermodal is used: 
 	 * public transport usage because total-trip-length too long for cycling,   
-	 * trips may deviate from those 4 main options]      */                    
-	public BSTypeAndPlanElements calcBSRoute(
-			Activity fromFacility,
-			Activity toFacility,
-			double departureTime,
-			Scenario scenario,
-			BasicPlanAgentImpl basicAgentDelegate,
-			TransitRouterImpl trImpl,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal,
-			Map<Id<Person>,BikeAgent> agentsC,
-			Map<Id<Person>,BikeAgent> agentsE,
-			StationAndType[] startAndEnd)  //bikeSharingOptionSelection -1 --> full pt Trip
+	 * trips may deviate from those 4 main options]      */
+	private BSTypeAndPlanElements calcBSRoute(
+		  Activity fromFacility,
+		  Activity toFacility,
+		  double departureTime,
+		  Scenario scenario,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  LeastCostPathCalculatorFactory pathF,
+		  LeastCostPathCalculator cal,
+		  StationAndType[] startAndEnd )  //bikeSharingOptionSelection -1 --> full pt Trip
 	/***************************************************************************/
 	{
 		BSTypeAndPlanElements bsReturn = new BSTypeAndPlanElements();
@@ -825,7 +818,6 @@ public class BSRunner {
 		boolean useEBSEnd = false;
 		boolean useEBS = false;
 		Person person = basicAgentDelegate.getPerson();
-		List<PlanElement> trip = new ArrayList<PlanElement>();
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();
 		//TODO: define ptUsage - due to the different possible types:
@@ -843,8 +835,6 @@ public class BSRunner {
 		int bikeSharingOptionSelection;
 		// Chain of trip: walk - bike - walk (==0)
 		List<PlanElement> firstLeg = null;
-		List<PlanElement> thirdLeg = null;
-		List<PlanElement> fifthLeg = null;
 		BikeSharingFacility startBSFac = null;
 		BikeSharingFacility endBSFac = null;
 		if (startAndEnd != null)
@@ -887,6 +877,9 @@ public class BSRunner {
 		Link fromLink = scenario.getNetwork().getLinks().get(fromFacility.getLinkId());
 		Link toLink = scenario.getNetwork().getLinks().get(toFacility.getLinkId());
 		// Choice 3: Chain of trip: pt
+		List<PlanElement> trip;
+		List<PlanElement> thirdLeg;
+		List<PlanElement> fifthLeg;
 		if (bikeSharingOptionSelection == 3)
 		{
 			BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
@@ -896,7 +889,7 @@ public class BSRunner {
 
 			if (trip == null)
 			{
-				trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, useEBS, basicAgentDelegate,scenario, pathF, cal));
+				trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate,scenario, pathF ) );
 			}
 
 		
@@ -909,30 +902,27 @@ public class BSRunner {
 		{
 			if ((startBSFac == null) || (endBSFac== null)) //no start or end station found
 			{
-				trip = createPTLegs(fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
-				trip = firstLeg;
-				if (trip == null)
-				{
-					trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK,departureTime,useEBS, basicAgentDelegate, scenario, pathF, cal));
-				}
+//				trip = createPTLegs(fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
+//				trip = firstLeg;
+				trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK,departureTime, basicAgentDelegate, scenario, pathF ) );
 			}
 			else
 			{	Link startStationLink = scenario.getNetwork().getLinks().get(start.station.getLinkId());
 				Link endStationLink = scenario.getNetwork().getLinks().get(end.station.getLinkId());	
-				firstLeg = peToPeList(createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTime,useEBS,basicAgentDelegate, scenario,  pathF, cal));
+				firstLeg = peToPeList(createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate, scenario,  pathF ) );
 				double departureTimeTempA = departureTime + ((Leg) firstLeg.get(0)).getTravelTime();
 				PlanElement second = CreateSubtrips.createInteractionTakeBS(start.station, firstLeg, departureTimeTempA);
 				if (start.station.getStationType().equals("e"))
 				{
-					thirdLeg = peToPeList (createLeg(startStationLink,endStationLink,EBConstants.BS_E_BIKE, departureTimeTempA+EBConstants.TIME_TAKE, useEBS, basicAgentDelegate, scenario,  pathF, cal));
+					thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_E_BIKE, departureTimeTempA+EBConstants.TIME_TAKE, basicAgentDelegate, scenario,  pathF ) );
 				}
 				else
 				{
-					thirdLeg = peToPeList (createLeg(startStationLink,endStationLink,EBConstants.BS_BIKE, departureTimeTempA+EBConstants.TIME_TAKE, useEBS, basicAgentDelegate, scenario,  pathF, cal));
+					thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_BIKE, departureTimeTempA+EBConstants.TIME_TAKE, basicAgentDelegate, scenario,  pathF ) );
 				}
 				double departureTimeTempC = ((Leg) thirdLeg.get(0)).getDepartureTime() + ((Leg) thirdLeg.get(0)).getTravelTime()+EBConstants.TIME_RETURN;
 				PlanElement fourth = CreateSubtrips.createInteractionReturnBS(end.station, thirdLeg, departureTimeTempC);
-				fifthLeg = peToPeList (createLeg(endStationLink,toLink,EBConstants.BS_WALK, departureTimeTempC, useEBS, basicAgentDelegate, scenario,  pathF, cal));
+				fifthLeg = peToPeList(createLeg(endStationLink,toLink,EBConstants.BS_WALK, departureTimeTempC, basicAgentDelegate, scenario,  pathF ) );
 				trip = getFullTrip (firstLeg, second, thirdLeg, fourth, fifthLeg,scenario);	
 			}
 		}
@@ -941,43 +931,43 @@ public class BSRunner {
 		{
 			if (start == null || end == null)
 			{
-				trip =  (List<PlanElement>)createPTLegs(
-						fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
+				trip = createPTLegs(
+						fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId() );
 				
 				if (trip== null)
 				{
-					trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, useEBS, basicAgentDelegate, scenario, pathF, cal));
+					trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate, scenario, pathF ) );
 				}
 			}
 			else if (startBSFac == null || endBSFac == null)
 			{
-				trip = (List<PlanElement>) createPTLegs(fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
+				trip = createPTLegs(fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId() );
 				if (trip == null)
 				{
-					trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, useEBS, basicAgentDelegate, scenario, pathF, cal));
+					trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate, scenario, pathF ) );
 				}
 			}
 			else
 			{
 				Link startStationLink = scenario.getNetwork().getLinks().get(start.station.getLinkId());
 				Link endStationLink = scenario.getNetwork().getLinks().get(end.station.getLinkId());	
-				firstLeg = peToPeList (createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTime,useEBS,basicAgentDelegate, scenario, pathF, cal));
+				firstLeg = peToPeList(createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate, scenario, pathF ) );
 				double departureTimeTempA = departureTime + ((Leg) firstLeg.get(0)).getTravelTime() + EBConstants.TIME_TAKE;
 				PlanElement second = CreateSubtrips.createInteractionTakeBS(start.station, firstLeg, departureTimeTempA-EBConstants.TIME_TAKE);
 				if (start.station.getStationType().equals("e"))
 				{
-					thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_E_BIKE, departureTimeTempA, false, basicAgentDelegate, scenario, pathF, cal));
+					thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_E_BIKE, departureTimeTempA, basicAgentDelegate, scenario, pathF ) );
 				}
 				else
 				{
-					thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_BIKE, departureTimeTempA, false, basicAgentDelegate, scenario, pathF, cal));
+					thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_BIKE, departureTimeTempA, basicAgentDelegate, scenario, pathF ) );
 				}
 				double departureTimeTempB = ((Leg) thirdLeg.get(0)).getDepartureTime() + ((Leg) thirdLeg.get(0)).getTravelTime()+EBConstants.TIME_RETURN;
 				PlanElement fourth = CreateSubtrips.createInteractionReturnBS( end.station, thirdLeg, departureTimeTempB-EBConstants.TIME_RETURN);
 				fifthLeg = createPTLegs(end.station.getCoord(), toFacility.getCoord(), departureTimeTempB, person, scenario, end.station.getLinkId(), toFacility.getLinkId());
 				if (fifthLeg == null)
 				{
-					fifthLeg = peToPeList (createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTimeTempB,false,basicAgentDelegate, scenario, pathF, cal));					
+					fifthLeg = peToPeList(createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTimeTempB, basicAgentDelegate, scenario, pathF ) );
 				}
 					
 				trip = getFullTrip (firstLeg, second, thirdLeg, fourth, fifthLeg, scenario);
@@ -992,22 +982,22 @@ public class BSRunner {
 			//TODO: Hebenstreit
 			if (firstLeg == null)
 			{
-				firstLeg = peToPeList(createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTime, false, basicAgentDelegate, scenario, pathF, cal));
+				firstLeg = peToPeList(createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate, scenario, pathF ) );
 			}
 			double departureTimeTempA = departureTime + ((Leg) firstLeg.get(0)).getTravelTime() + EBConstants.TIME_TAKE;
 			PlanElement second = CreateSubtrips.createInteractionTakeBS(start.station, firstLeg, departureTimeTempA-EBConstants.TIME_TAKE);
 
 			if (start.station.getStationType().equals("e"))
 			{
-				thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_E_BIKE,departureTimeTempA, false ,basicAgentDelegate, scenario, pathF, cal));
+				thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_E_BIKE,departureTimeTempA, basicAgentDelegate, scenario, pathF ) );
 			}
 			else
 			{
-				thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_BIKE,departureTimeTempA, false ,basicAgentDelegate, scenario, pathF, cal));
+				thirdLeg = peToPeList(createLeg(startStationLink,endStationLink,EBConstants.BS_BIKE,departureTimeTempA, basicAgentDelegate, scenario, pathF ) );
 			}
 			double departureTimeTempB = ((Leg) thirdLeg.get(0)).getDepartureTime() + ((Leg) thirdLeg.get(0)).getTravelTime() + EBConstants.TIME_RETURN ;
 			PlanElement fourth = CreateSubtrips.createInteractionReturnBS(end.station, thirdLeg, departureTimeTempB-EBConstants.TIME_RETURN);
-			fifthLeg = peToPeList(createLeg(endStationLink,toLink, EBConstants.BS_WALK,departureTimeTempB, false,basicAgentDelegate, scenario, pathF, cal));
+			fifthLeg = peToPeList(createLeg(endStationLink,toLink, EBConstants.BS_WALK,departureTimeTempB, basicAgentDelegate, scenario, pathF ) );
 			trip = getFullTrip (firstLeg, second, thirdLeg, fourth, fifthLeg, scenario);	
 			
 		}
@@ -1019,7 +1009,7 @@ public class BSRunner {
 			trip = createPTLegs(fromFacility.getCoord(),toFacility.getCoord(),departureTime,person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
 			if (trip == null)
 			{
-				trip = peToPeList(createLeg(fromLink,toLink,EBConstants.BS_WALK, departureTime, false, basicAgentDelegate, scenario, pathF, cal));
+				trip = peToPeList(createLeg(fromLink,toLink,EBConstants.BS_WALK, departureTime, basicAgentDelegate, scenario, pathF ) );
 			}
 		}
 		
@@ -1050,8 +1040,8 @@ public class BSRunner {
 		return bsReturn;
 	}
 	/***************************************************************************/
-	/**Converts a PlanElement to a List<PlanElement>  */ 
-	public List<PlanElement> peToPeList(PlanElement pe)
+	/**Converts a PlanElement to a List<PlanElement>  */
+	List<PlanElement> peToPeList( PlanElement pe )
 	/***************************************************************************/
 	{
 		List<PlanElement> list = new ArrayList<PlanElement>();
@@ -1060,24 +1050,23 @@ public class BSRunner {
 	}
 	
 	/***************************************************************************/
-	public void handleProbabilityMeasures(
-			double probabilityValue, 
-			int actIndex, 
-			List<PlanElement> pEList, 
-			Activity thisAct, 
-			Activity nextAct,
-			BikeSharingFacility startStation, 
-			BikeSharingFacility endStation,
-			Scenario scenario, 
-			double now,
-			BasicPlanAgentImpl basicAgentDelegate, 
-			TransitRouterImpl trImpl,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal,
-			Map<Id<Person>,BikeAgent> agentsC,
-			Map<Id<Person>,BikeAgent> agentsE,
-			boolean eBikesUsed,
-			int routingType)
+	private void handleProbabilityMeasures(
+		  double probabilityValue,
+		  int actIndex,
+		  List<PlanElement> pEList,
+		  Activity thisAct,
+		  Activity nextAct,
+		  BikeSharingFacility startStation,
+		  BikeSharingFacility endStation,
+		  Scenario scenario,
+		  double now,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  TransitRouterImpl trImpl,
+		  LeastCostPathCalculatorFactory pathF,
+		  LeastCostPathCalculator cal,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE,
+		  int routingType )
 	/***************************************************************************/
 	{
 		double random = Math.random();
@@ -1112,7 +1101,7 @@ public class BSRunner {
 			{
 				Link first = scenario.getNetwork().getLinks().get(thisAct.getLinkId());
 				Link second = scenario.getNetwork().getLinks().get(nextAct.getLinkId());
-				legInsteadOfPt = (Leg)createLeg(first, second, EBConstants.BS_WALK, now, false, basicAgentDelegate,scenario, pathF, cal);
+				legInsteadOfPt = (Leg)createLeg(first, second, EBConstants.BS_WALK, now, basicAgentDelegate,scenario, pathF );
 				pEList.add(actIndex+1, legInsteadOfPt);
 				nextAct.setStartTime(now + legInsteadOfPt.getTravelTime());
 				//if (nextAct.getEndTime() < nextAct.getStartTime() && (!nextAct.getType().equals("home")))
@@ -1167,7 +1156,7 @@ public class BSRunner {
 			//walk from Interact2 to Act2
 			if (routingType == 0)
 			{
-				act1_int1 = peToPeList(createLeg (startLink, int1, EBConstants.BS_WALK, now, eBikesUsed, basicAgentDelegate, scenario,pathF,cal));
+				act1_int1 = peToPeList(createLeg(startLink, int1, EBConstants.BS_WALK, now, basicAgentDelegate, scenario,pathF ) );
 				((Leg)act1_int1.get(0)).setTravelTime(((Leg)act1_int1.get(0)).getTravelTime());
 				((Leg)act1_int1.get(0)).getRoute().setTravelTime(((Leg)act1_int1.get(0)).getTravelTime());
 				((Leg)act1_int1.get(0)).setDepartureTime(now);
@@ -1175,11 +1164,11 @@ public class BSRunner {
 				interact1.setEndTime(interact1.getStartTime()+EBConstants.TIME_TAKE);
 				if (startStation.getStationType().equals("e"))
 				{
-					int1_int2 = peToPeList(createLeg (int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), eBikesUsed, basicAgentDelegate, scenario, pathF,cal));
+					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), basicAgentDelegate, scenario, pathF ) );
 				}
 				else
 				{
-					int1_int2 = peToPeList(createLeg (int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), eBikesUsed, basicAgentDelegate, scenario, pathF,cal));
+					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), basicAgentDelegate, scenario, pathF ) );
 				}
 				
 				((Leg)int1_int2.get(0)).setDepartureTime(interact1.getEndTime());
@@ -1187,7 +1176,7 @@ public class BSRunner {
 				((Leg)int1_int2.get(0)).getRoute().setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
 				interact2.setStartTime(((Leg)int1_int2.get(0)).getDepartureTime()+((Leg)int1_int2.get(0)).getTravelTime());
 				interact2.setEndTime(interact2.getStartTime()+EBConstants.TIME_RETURN);
-				int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), eBikesUsed, basicAgentDelegate,scenario, pathF, cal));
+				int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate,scenario, pathF ) );
 				((Leg)int2_act2.get(0)).setDepartureTime(interact2.getEndTime());
 				((Leg)int2_act2.get(0)).setTravelTime(((Leg)int2_act2.get(0)).getTravelTime());
 				((Leg)int2_act2.get(0)).getRoute().setTravelTime(((Leg)int2_act2.get(0)).getTravelTime());
@@ -1199,17 +1188,17 @@ public class BSRunner {
 			// pt from Interact2 to Act2
 			else if (routingType == 1)
 			{
-				act1_int1 = peToPeList(createLeg (startLink, int1, EBConstants.BS_WALK, now, eBikesUsed, basicAgentDelegate, scenario,pathF,cal));
+				act1_int1 = peToPeList(createLeg(startLink, int1, EBConstants.BS_WALK, now, basicAgentDelegate, scenario,pathF ) );
 				((Leg)act1_int1.get(0)).setDepartureTime(now);
 				interact1.setStartTime(now+((Leg)act1_int1.get(0)).getTravelTime());
 				interact1.setEndTime(interact1.getStartTime()+EBConstants.TIME_TAKE);
 				if (startStation.getStationType().equals("e"))
 				{
-					int1_int2 = peToPeList(createLeg (int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), eBikesUsed, basicAgentDelegate, scenario,pathF,cal));
+					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), basicAgentDelegate, scenario,pathF ) );
 				}
 				else
 				{
-					int1_int2 = peToPeList(createLeg (int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), eBikesUsed, basicAgentDelegate, scenario,pathF,cal));
+					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), basicAgentDelegate, scenario,pathF ) );
 				}
 				((Leg)int1_int2.get(0)).setDepartureTime(interact1.getEndTime());
 				((Leg)int1_int2.get(0)).setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
@@ -1219,7 +1208,7 @@ public class BSRunner {
 				int2_act2 = createPTLegs (int2.getCoord(), act2.getCoord(), now, basicAgentDelegate.getPerson(), scenario, int2.getId(), act2.getLinkId());
 				if (int2_act2 == null) 
 				{
-					int2_act2 = peToPeList(createLeg (int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), eBikesUsed, basicAgentDelegate, scenario,pathF,cal));
+					int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate, scenario,pathF ) );
 				}
 				((Leg)int2_act2.get(0)).setDepartureTime(interact2.getEndTime());
 			}
@@ -1234,18 +1223,18 @@ public class BSRunner {
 				act1_int1 = createPTLegs (startLink.getCoord(), int1.getCoord(), now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), int1.getId());
 				if (act1_int1 == null) 
 				{
-					act1_int1 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), eBikesUsed, basicAgentDelegate,scenario, pathF, cal));
+					act1_int1 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate,scenario, pathF ) );
 				}
 				((Leg)act1_int1.get(0)).setDepartureTime(now);
 				interact1.setStartTime(now+((Leg)act1_int1.get(act1_int1.size()-1)).getDepartureTime() + ((Leg)act1_int1.get(act1_int1.size()-1)).getTravelTime());
 				interact1.setEndTime(interact1.getStartTime()+EBConstants.TIME_TAKE);
 				if (startStation.getStationType().equals("e"))
 				{
-					int1_int2 = peToPeList(createLeg (int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), eBikesUsed, basicAgentDelegate, scenario, pathF,cal));
+					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), basicAgentDelegate, scenario, pathF ) );
 				}
 				else 
 				{
-					int1_int2 = peToPeList(createLeg (int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), eBikesUsed, basicAgentDelegate, scenario, pathF,cal));
+					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), basicAgentDelegate, scenario, pathF ) );
 				}
 				
 				((Leg)int1_int2.get(0)).setDepartureTime(interact1.getEndTime());
@@ -1253,7 +1242,7 @@ public class BSRunner {
 				((Leg)int1_int2.get(0)).getRoute().setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
 				interact2.setStartTime(((Leg)int1_int2.get(0)).getDepartureTime()+((Leg)int1_int2.get(0)).getTravelTime());
 				interact2.setEndTime(interact2.getStartTime()+EBConstants.TIME_RETURN);
-				int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), eBikesUsed, basicAgentDelegate,scenario, pathF, cal));
+				int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate,scenario, pathF ) );
 			}
 			
 			//add all Elements

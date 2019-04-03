@@ -17,11 +17,6 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.DefaultAgentFactory;
-import org.matsim.core.mobsim.qsim.agents.PersonDriverAgentImpl;
-import org.matsim.core.mobsim.qsim.agents.PlanBasedDriverAgentImpl;
-import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.router.util.LeastCostPathCalculator;
@@ -38,7 +33,6 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentChoseNewStationEvent;
 import eu.eunoiaproject.bikesharing.framework.events.NoVehicleBikeSharingEvent;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.StationAndType;
 
-import org.matsim.core.mobsim.framework.MobsimAgent;
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.WaitingListHandling;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
@@ -67,18 +61,17 @@ public class NoBikeAvailable
 	 * - returns 2 if there was a new Station with Available Bikes found**/
 	@SuppressWarnings("unchecked")
 	public static String noBikeAvailable(
-			BikeSharingFacility station, 
-			Activity nextAct, 
-			double now, 
-			boolean isEBike,
-			Scenario scenario,
-			BasicPlanAgentImpl basicAgentDelegate,
-			Map<Id<Person>,BikeAgent> agentsC,
-			Map<Id<Person>,BikeAgent> agentsE,
-			BikeSharingFacilities bsFac,
-			BikeSharingBikes bSharingVehicles,
-			LeastCostPathCalculatorFactory pathF,
-			LeastCostPathCalculator cal) 
+		  BikeSharingFacility station,
+		  Activity nextAct,
+		  double now,
+		  Scenario scenario,
+		  BasicPlanAgentImpl basicAgentDelegate,
+		  Map<Id<Person>, BikeAgent> agentsC,
+		  Map<Id<Person>, BikeAgent> agentsE,
+		  BikeSharingFacilities bsFac,
+		  BikeSharingBikes bSharingVehicles,
+		  LeastCostPathCalculatorFactory pathF,
+		  LeastCostPathCalculator cal )
 	//setzt den Plan anders, sodass der Agent rerouting macht oder wartet
 	//wird aufgerufen wenn das Aktuelle Element Bs-Interaction ist
 	/***************************************************************************/
@@ -257,12 +250,12 @@ public class NoBikeAvailable
 			Link stationLink2 = network.getLinks().get(newChoiceEnd.station.getLinkId());
 			Link startLink = network.getLinks().get(route.getStartLinkId());
 			
-			noBSAct = BSRunner.removeBSPlanElements(planElements, network, basicAgentDelegate);
+			noBSAct = BSRunner.removeBSPlanElements(planElements, basicAgentDelegate );
 			
 			Link endLink = network.getLinks().get(noBSAct.getLinkId()); 
 			
 			//WALK_LEG
-			Leg p0 = (Leg)BSRunner.createLeg(startLink, stationLink1 , EBConstants.BS_WALK, now, isEBike, basicAgentDelegate,scenario, pathF, cal);
+			Leg p0 = (Leg)BSRunner.createLeg(startLink, stationLink1 , EBConstants.BS_WALK, now, basicAgentDelegate,scenario, pathF );
 			p0.setDepartureTime(now);
 			trip.add(p0); 
 			
@@ -276,11 +269,11 @@ public class NoBikeAvailable
 			Leg p2;
 			if (newChoiceStart.station.getStationType().equals("e"))
 			{
-				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_E_BIKE, p1.getEndTime(), isEBike, basicAgentDelegate,scenario, pathF, cal);
+				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_E_BIKE, p1.getEndTime(), basicAgentDelegate,scenario, pathF );
 			}
 			else
 			{
-				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_BIKE, p1.getEndTime(), isEBike, basicAgentDelegate,scenario, pathF, cal);
+				p2 = (Leg)BSRunner.createLeg(stationLink1, stationLink2, EBConstants.BS_BIKE, p1.getEndTime(), basicAgentDelegate,scenario, pathF );
 
 			}
 			p2.setDepartureTime(p1.getEndTime());
@@ -293,7 +286,7 @@ public class NoBikeAvailable
 			trip.add(p3);
 			
 			//WALK_LEG	
-			Leg p4 = (Leg)BSRunner.createLeg(stationLink2, endLink , EBConstants.BS_WALK, p3.getEndTime(), isEBike, basicAgentDelegate,scenario, pathF, cal);
+			Leg p4 = (Leg)BSRunner.createLeg(stationLink2, endLink , EBConstants.BS_WALK, p3.getEndTime(), basicAgentDelegate,scenario, pathF );
 			p4.setDepartureTime(p3.getEndTime());
 			trip.add(p4);
 			
@@ -357,7 +350,7 @@ public class NoBikeAvailable
 		
 		else if (whatToChoose.equals("changeMode"))
 		{
-			noBSAct = BSRunner.removeBSPlanElements(planElements, network, basicAgentDelegate);
+			noBSAct = BSRunner.removeBSPlanElements(planElements, basicAgentDelegate );
 			noBSAct.getCoord();
 			
 			Link test = network.getLinks().get(route.getStartLinkId());
@@ -372,7 +365,7 @@ public class NoBikeAvailable
 				//WALK_LEG
 				//Hebenstreit vor Urlaub: hier muss über basicAgentDelegate auf den aktuellen Plan 
 				//zugegriffen und dieser verändert werden - zu prüfen
-				Leg p = (Leg)BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, isEBike, basicAgentDelegate,scenario, pathF, cal);
+				Leg p = (Leg)BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,scenario, pathF );
 				p.setDepartureTime(now);
 				trip.add(p); 
 				travelTimeTotal = p.getTravelTime();
@@ -384,8 +377,8 @@ public class NoBikeAvailable
 				List<PlanElement> p0 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId());
 				if (p0 == null)
 				{
-					Leg p0a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, false, basicAgentDelegate,
-						scenario, pathF, cal);
+					Leg p0a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
+						scenario, pathF );
 					p0a.setDepartureTime(now);
 					trip.add(p0a); 
 				}
@@ -403,7 +396,7 @@ public class NoBikeAvailable
 				//Hebenstreit vor Urlaub: hier muss über basicAgentDelegate auf den aktuellen Plan 
 				//zugegriffen und dieser verändert werden - zu prüfen
 				
-				Leg p1 = (Leg)BSRunner.createLeg(startLink, endLink , TransportMode.walk, now, isEBike, basicAgentDelegate,scenario, pathF, cal);
+				Leg p1 = (Leg)BSRunner.createLeg(startLink, endLink , TransportMode.walk, now, basicAgentDelegate,scenario, pathF );
 				p1.setDepartureTime(now);
 				trip.add(p1); 
 				travelTimeTotal = p1.getTravelTime();
@@ -415,8 +408,8 @@ public class NoBikeAvailable
 				List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId());
 				if (pe2 == null)
 				{
-					Leg pe2a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, false, basicAgentDelegate,
-						scenario, pathF, cal);
+					Leg pe2a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
+						scenario, pathF );
 					pe2a.setDepartureTime(now);
 					trip.add(pe2a); 
 				}

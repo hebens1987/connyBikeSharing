@@ -17,7 +17,6 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.api.experimental.events.EventsManager;
-import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.HasPerson;
 import org.matsim.core.mobsim.framework.PlanAgent;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimVehicle;
@@ -60,159 +59,19 @@ import org.matsim.vehicles.Vehicle;
 
 
 /**
-
  */
 public class BikesharingPersonDriverAgentImpl
 implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 	private final static Logger log = Logger.getLogger(BikesharingPersonDriverAgentImpl.class);
 
-//	public Plan getModifiablePlan(){
-//		return basicAgentDelegate.getModifiablePlan();
-//	}
-//
-//	public Activity getNextActivity(){
-//		return basicAgentDelegate.getNextActivity();
-//	}
-//
-//	public Activity getPreviousActivity(){
-//		return basicAgentDelegate.getPreviousActivity();
-//	}
-
-	public Scenario getScenario(){
-		return basicAgentDelegate.getScenario();
-	}
-
-	public EventsManager getEvents(){
-		return basicAgentDelegate.getEvents();
-	}
-
 	private final BasicPlanAgentImpl basicAgentDelegate;
-
-	@Override
-	public Id<Link> getCurrentLinkId(){
-		return driverAgentDelegate.getCurrentLinkId();
-	}
-
-	@Override
-	public Facility<? extends Facility<?>> getCurrentFacility(){
-		return basicAgentDelegate.getCurrentFacility();
-	}
-
-	@Override
-	public Facility<? extends Facility<?>> getDestinationFacility(){
-		return basicAgentDelegate.getDestinationFacility();
-	}
-
-	@Override
-	public State getState(){
-		return basicAgentDelegate.getState();
-	}
-
-	@Override
-	public double getActivityEndTime(){
-		return basicAgentDelegate.getActivityEndTime();
-	}
-
-	@Override
-	public void setStateToAbort( double now ){
-		basicAgentDelegate.setStateToAbort( now );
-	}
-
-	@Override
-	public Double getExpectedTravelTime(){
-		return basicAgentDelegate.getExpectedTravelTime();
-	}
-
-	@Override
-	public Double getExpectedTravelDistance(){
-		return basicAgentDelegate.getExpectedTravelDistance();
-	}
-
-	@Override
-	public void notifyArrivalOnLinkByNonNetworkMode( Id<Link> linkId ){
-		basicAgentDelegate.notifyArrivalOnLinkByNonNetworkMode( linkId );
-	}
-
-	@Override
-	public Id<Link> getDestinationLinkId(){
-		return basicAgentDelegate.getDestinationLinkId();
-	}
-
-	@Override
-	public String getMode(){
-		return basicAgentDelegate.getMode();
-	}
-
-	@Override
-	public Id<Link> chooseNextLinkId(){
-		return driverAgentDelegate.chooseNextLinkId();
-	}
-
-	@Override
-	public void notifyMoveOverNode( Id<Link> newLinkId ){
-		driverAgentDelegate.notifyMoveOverNode( newLinkId );
-	}
-
-	@Override
-	public boolean isWantingToArriveOnCurrentLink(){
-		return driverAgentDelegate.isWantingToArriveOnCurrentLink();
-	}
-
-	@Override
-	public Id<Person> getId(){
-		return basicAgentDelegate.getId();
-	}
-
-	@Override
-	public PlanElement getCurrentPlanElement(){
-		return basicAgentDelegate.getCurrentPlanElement();
-	}
-
-	@Override
-	public PlanElement getNextPlanElement(){
-		return basicAgentDelegate.getNextPlanElement();
-	}
-
-	@Override
-	public PlanElement getPreviousPlanElement(){
-		return basicAgentDelegate.getPreviousPlanElement();
-	}
-
-	@Override
-	public Plan getCurrentPlan(){
-		return basicAgentDelegate.getCurrentPlan();
-	}
-	
-	public int getCurrentPlanElementIndex(BasicPlanAgentImpl basicAgentDelegate2) {
-		return basicAgentDelegate2.getCurrentPlanElementIndex();
-	}
-
-	@Override
-	public Person getPerson(){
-		return basicAgentDelegate.getPerson();
-	}
-
-	@Override
-	public void setVehicle( MobsimVehicle veh ){
-		basicAgentDelegate.setVehicle( veh );
-	}
-
-	@Override
-	public MobsimVehicle getVehicle(){
-		return basicAgentDelegate.getVehicle();
-	}
-
-	@Override
-	public Id<Vehicle> getPlannedVehicleId(){
-		return basicAgentDelegate.getPlannedVehicleId();
-	}
-
 	private final PlanBasedDriverAgentImpl driverAgentDelegate;
+	private final TransitAgentImpl transitAgentDelegate ;
+
 	private final Map<Id<Person>, BikeAgent> agentsC = new HashMap<Id<Person>, BikeAgent>();
 	private final Map<Id<Person>, BikeAgent> agentsE = new HashMap<Id<Person>, BikeAgent>();
 	private final LeastCostPathCalculatorFactory pathF ;
-	private final TransitAgentImpl transitAgentDelegate ;
 
 	private final Scenario scenario ;
 
@@ -220,65 +79,41 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 	private final BikeSharingBikes bSharingVehicles ;
 
-	private final LeastCostPathCalculator pathCalculator ;
+	private final LeastCostPathCalculator standardBikePathCalculator;
 
 
 
 	/***************************************************************************/
-	/**
-	 * Hebenstreit: This class implements a BikesharingPersonDriverAgent
-	 * It is one of the most important classes for bike-sharing
-	 * it recognizes a bs-interaction one step before it will be performed
-	 * and creates re-planning possibility during the ongoing mobsim
-	 * this means planElements get exchanged or enhanced 
-	 * **/
-	
-//	public BikesharingPersonDriverAgentImpl(BasicPlanAgentImpl basicPlanAgent)
-//	{
-//		this.basicAgentDelegate = basicPlanAgent;
-//	}
-	
+
 	public BikesharingPersonDriverAgentImpl(
 			final Plan plan, 
 			final Netsim simulation, 
-			LeastCostPathCalculator pathCalculator, 
+			LeastCostPathCalculator standardBikePathCalculator,
 			LeastCostPathCalculatorFactory pathF, 
 			MobsimVehicle veh)
 	/***************************************************************************/
 	{
-//		super(plan, simulation);
 
 		scenario = simulation.getScenario();
 		this.pathF = pathF ;
 
 		this.basicAgentDelegate = new BasicPlanAgentImpl( plan, scenario, simulation.getEventsManager(), simulation.getSimTimer() ) ;
 		this.driverAgentDelegate = new PlanBasedDriverAgentImpl( this.basicAgentDelegate ) ;
+		this.transitAgentDelegate = new TransitAgentImpl( basicAgentDelegate );
 
 		if ( scenario.getConfig().qsim().getNumberOfThreads() != 1 ) {
 			throw new RuntimeException("does not work with multiple qsim threads (will use same instance of router)") ; 
 		}
-		this.transitAgentDelegate = new TransitAgentImpl( basicAgentDelegate );
 		this.basicAgentDelegate.setVehicle(veh);
 		this.basicAgentDelegate.getModifiablePlan() ; // this lets the agent make a full copy of the plan, which can then be modified
 
-		this.pathCalculator = pathCalculator ;
+		this.standardBikePathCalculator = standardBikePathCalculator ;
 
 		this.bsFac = (BikeSharingFacilities) scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
 		this.bSharingVehicles =(BikeSharingBikes) scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
 
 	}
 	
-//	public BasicPlanAgentImpl getPlanAgent (BikesharingPersonDriverAgentImpl impl)
-//	{
-//		return this.basicAgentDelegate;
-//	}
-//
-//	// -----------------------------------------------------------------------------------------------------------------------------
-//
-//	public void setMode(String mode)
-//	{
-//
-//	}
 	@Override
 	public void endLegAndComputeNextState(final double now) 
 	/***************************************************************************/
@@ -410,8 +245,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						List<PlanElement> pe1 = BSRunner.createPTLegs(thisAct.getCoord(), nextAct.getCoord(), now, this.basicAgentDelegate.getPerson(), scenario, thisAct.getLinkId(), nextAct.getLinkId());
 						if (pe1 == null)
 						{
-							PlanElement peWalk = BSRunner.createLeg(one, three, EBConstants.BS_WALK_FF, now, false, this.basicAgentDelegate,
-								scenario, pathF, pathCalculator);
+							PlanElement peWalk = BSRunner.createLeg(one, three, EBConstants.BS_WALK_FF, now, this.basicAgentDelegate,
+								scenario, pathF );
 							trip.add(peWalk);
 							peList.addAll(actIndex+1, trip);
 						}
@@ -441,16 +276,16 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					{
 						Link two = scenario.getNetwork().getLinks().get(thisBikeFF.getLinkId());
 						
-						PlanElement pe1 = BSRunner.createLeg(one, two, EBConstants.BS_WALK_FF, now, false, this.basicAgentDelegate,
-								scenario, pathF, pathCalculator);
+						PlanElement pe1 = BSRunner.createLeg(one, two, EBConstants.BS_WALK_FF, now, this.basicAgentDelegate,
+								scenario, pathF );
 						List<PlanElement>pe1List = runner.peToPeList(pe1);
 						Leg leg1 = (Leg)pe1;
 						
 						FFDummyFacility dummy1 = new FFDummyFacilityImpl(thisBikeFF.getBikeId(), thisBikeFF.getCoordinate(), Id.createLinkId(thisBikeFF.getLinkId().toString()));
 						PlanElement interact1 = CreateSubtrips.createInteractionFF(dummy1, pe1List, leg1.getDepartureTime()+leg1.getTravelTime());
 						
-						PlanElement pe2 = BSRunner.createLeg(two, three, EBConstants.BS_BIKE_FF, now+leg1.getTravelTime(), false, this.basicAgentDelegate,
-								scenario, pathF, pathCalculator);
+						PlanElement pe2 = BSRunner.createLeg(two, three, EBConstants.BS_BIKE_FF, now+leg1.getTravelTime(), this.basicAgentDelegate,
+								scenario, pathF );
 						List<PlanElement>pe2List = runner.peToPeList(pe2);
 						Leg leg2 = (Leg)pe2;
 						FFDummyFacility dummy2 = new FFDummyFacilityImpl(thisBikeFF.getBikeId(), nextAct.getCoord(), nextAct.getLinkId());
@@ -489,7 +324,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						next.setDepartureTime(now);
 
 						runner.bsRunner(thisElem, nextElem, now, this.basicAgentDelegate, 
-								scenario, agentsC, agentsE, bsFac, bSharingVehicles, pathF, pathCalculator);
+								scenario, agentsC, agentsE, bsFac, bSharingVehicles, pathF, standardBikePathCalculator );
 						
 						if (this.basicAgentDelegate.getNextPlanElement() instanceof Leg)
 						{
@@ -561,7 +396,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	
 	
 
-	public BasicPlanAgentImpl handleWaitingTake(double now, List<WaitingData> waitingList)
+	private void handleWaitingTake( double now, List<WaitingData> waitingList )
 	{
 		if (waitingList != null)
 			if (waitingList.size()>0)
@@ -623,8 +458,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					endLink = scenario.getNetwork().getLinks().get(nextAct.getLinkId());
 					
 					
-					PlanElement pe = BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, false, agentInterim,
-							scenario, pathF, pathCalculator); 
+					PlanElement pe = BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, agentInterim,
+							scenario, pathF );
 					
 					
 					BikeSharingBikes bsb = (BikeSharingBikes) scenario.getScenarioElement("bikeSharingBikes");
@@ -667,14 +502,12 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					agentInterim.getEvents().processEvent(new AgentStopsWaitingForBikeEvent(
 							now, agentInterim.getId(), Id.create(startLink.getId().toString(), ActivityFacility.class)));
 					runner.planComparison(agentInterim);
-					return agentInterim;
 				}
 			
 			}
-		return null;
 	}
 	
-	public BasicPlanAgentImpl handleWaitingReturn(double now, List<WaitingData> waitingList2)
+	private void handleWaitingReturn( double now, List<WaitingData> waitingList2 )
 	{
 		if (waitingList2!= null)
 			if(waitingList2.size()>0)
@@ -744,8 +577,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						}
 						Link startLink2 = scenario.getNetwork().getLinks().get(walksTo);
 						Link endLink2 = scenario.getNetwork().getLinks().get(walksFrom);
-						PlanElement pe2 = BSRunner.createLeg(startLink2, endLink2, TransportMode.walk, now+1, false, agentInterim,
-								scenario, pathF, pathCalculator);
+						PlanElement pe2 = BSRunner.createLeg(startLink2, endLink2, TransportMode.walk, now+1, agentInterim,
+								scenario, pathF );
 						Leg leg = (Leg)pe2;
 						leg.setTravelTime(leg.getTravelTime()*1000);
 						if (leg.getTravelTime() < 2500) {leg.setTravelTime(2500);}
@@ -755,14 +588,12 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						agentInterim.setStateToAbort(now);
 					}
 					runner.planComparison(agentInterim);
-					return agentInterim;
 				}
 			}
-		return null;
 	}
 	/***************************************************************************/
-	public void handleRelocation (double now, 
-			BikeSharingFacilities facilities, BikeSharingBikes b, Scenario scenario)
+	private void handleRelocation( double now,
+						 BikeSharingFacilities facilities, BikeSharingBikes b, Scenario scenario )
 	/***************************************************************************/
 	{
 		int needRelocation = 0;
@@ -897,4 +728,132 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	public final double getWeight() {
 		return transitAgentDelegate.getWeight();
 	}
+
+	public Scenario getScenario(){
+		return basicAgentDelegate.getScenario();
+	}
+
+	public EventsManager getEvents(){
+		return basicAgentDelegate.getEvents();
+	}
+
+	@Override
+	public Id<Link> getCurrentLinkId(){
+		return driverAgentDelegate.getCurrentLinkId();
+	}
+
+	@Override
+	public Facility<? extends Facility<?>> getCurrentFacility(){
+		return basicAgentDelegate.getCurrentFacility();
+	}
+
+	@Override
+	public Facility<? extends Facility<?>> getDestinationFacility(){
+		return basicAgentDelegate.getDestinationFacility();
+	}
+
+	@Override
+	public State getState(){
+		return basicAgentDelegate.getState();
+	}
+
+	@Override
+	public double getActivityEndTime(){
+		return basicAgentDelegate.getActivityEndTime();
+	}
+
+	@Override
+	public void setStateToAbort( double now ){
+		basicAgentDelegate.setStateToAbort( now );
+	}
+
+	@Override
+	public Double getExpectedTravelTime(){
+		return basicAgentDelegate.getExpectedTravelTime();
+	}
+
+	@Override
+	public Double getExpectedTravelDistance(){
+		return basicAgentDelegate.getExpectedTravelDistance();
+	}
+
+	@Override
+	public void notifyArrivalOnLinkByNonNetworkMode( Id<Link> linkId ){
+		basicAgentDelegate.notifyArrivalOnLinkByNonNetworkMode( linkId );
+	}
+
+	@Override
+	public Id<Link> getDestinationLinkId(){
+		return basicAgentDelegate.getDestinationLinkId();
+	}
+
+	@Override
+	public String getMode(){
+		return basicAgentDelegate.getMode();
+	}
+
+	@Override
+	public Id<Link> chooseNextLinkId(){
+		return driverAgentDelegate.chooseNextLinkId();
+	}
+
+	@Override
+	public void notifyMoveOverNode( Id<Link> newLinkId ){
+		driverAgentDelegate.notifyMoveOverNode( newLinkId );
+	}
+
+	@Override
+	public boolean isWantingToArriveOnCurrentLink(){
+		return driverAgentDelegate.isWantingToArriveOnCurrentLink();
+	}
+
+	@Override
+	public Id<Person> getId(){
+		return basicAgentDelegate.getId();
+	}
+
+	@Override
+	public PlanElement getCurrentPlanElement(){
+		return basicAgentDelegate.getCurrentPlanElement();
+	}
+
+	@Override
+	public PlanElement getNextPlanElement(){
+		return basicAgentDelegate.getNextPlanElement();
+	}
+
+	@Override
+	public PlanElement getPreviousPlanElement(){
+		return basicAgentDelegate.getPreviousPlanElement();
+	}
+
+	@Override
+	public Plan getCurrentPlan(){
+		return basicAgentDelegate.getCurrentPlan();
+	}
+
+//	public int getCurrentPlanElementIndex(BasicPlanAgentImpl basicAgentDelegate2) {
+//		return basicAgentDelegate2.getCurrentPlanElementIndex();
+//	}
+
+	@Override
+	public Person getPerson(){
+		return basicAgentDelegate.getPerson();
+	}
+
+	@Override
+	public void setVehicle( MobsimVehicle veh ){
+		basicAgentDelegate.setVehicle( veh );
+	}
+
+	@Override
+	public MobsimVehicle getVehicle(){
+		return basicAgentDelegate.getVehicle();
+	}
+
+	@Override
+	public Id<Vehicle> getPlannedVehicleId(){
+		return basicAgentDelegate.getPlannedVehicleId();
+	}
+
 }
