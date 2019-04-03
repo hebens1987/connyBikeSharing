@@ -67,13 +67,13 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 	private final static Logger log = Logger.getLogger(BikesharingPersonDriverAgentImpl.class);
 
-	static Scenario scenario; 
+	static Scenario scenario = null; 
 	
 	private static LeastCostPathCalculator pathCalculator;
 	
-	BikeSharingFacilities bsFac;
+	BikeSharingFacilities bsFac = null;
 	
-	BikeSharingBikes bSharingVehicles;
+	BikeSharingBikes bSharingVehicles = null;
 
 //	public Plan getModifiablePlan(){
 //		return basicAgentDelegate.getModifiablePlan();
@@ -191,6 +191,10 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	public Plan getCurrentPlan(){
 		return basicAgentDelegate.getCurrentPlan();
 	}
+	
+	public int getCurrentPlanElementIndex(BasicPlanAgentImpl basicAgentDelegate2) {
+		return basicAgentDelegate2.getCurrentPlanElementIndex();
+	}
 
 	@Override
 	public Person getPerson(){
@@ -212,11 +216,11 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		return basicAgentDelegate.getPlannedVehicleId();
 	}
 
-	private final PlanBasedDriverAgentImpl driverAgentDelegate ;
+	private PlanBasedDriverAgentImpl driverAgentDelegate;
 	private static Map<Id<Person>, BikeAgent> agentsC = new HashMap<Id<Person>, BikeAgent>();
 	private  static Map<Id<Person>, BikeAgent> agentsE = new HashMap<Id<Person>, BikeAgent>();
-	static LeastCostPathCalculatorFactory pathF ;
-	private TransitAgentImpl transitAgentDelegate ;
+	static LeastCostPathCalculatorFactory pathF = null;
+	private TransitAgentImpl transitAgentDelegate = null ;
 
 	/***************************************************************************/
 	/**
@@ -226,6 +230,12 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	 * and creates re-planning possibility during the ongoing mobsim
 	 * this means planElements get exchanged or enhanced 
 	 * **/
+	
+	public BikesharingPersonDriverAgentImpl(BasicPlanAgentImpl basicPlanAgent)
+	{
+		this.basicAgentDelegate = basicPlanAgent;
+	}
+	
 	public BikesharingPersonDriverAgentImpl(
 			final Plan plan, 
 			final Netsim simulation, 
@@ -554,7 +564,10 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					BSRunner runner =  new BSRunner();
 					runner.planComparison(agentInterim);
 					Activity nextAct = null;
-					int index = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
+					
+					BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl( agentInterim );
+					final int index= agent2.getCurrentPlanElementIndex( agentInterim ) ;
+					//int index = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
 
 
 					BikeSharingFacility thisFac = waitingList.get(0).bsFac;
@@ -681,7 +694,9 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						
 						Id<Link> walksFrom = startLink.getId();
 
-						int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
+						BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agentInterim);
+						final int actIndex= agent2.getCurrentPlanElementIndex(agentInterim) ;
+						//int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
 						List<PlanElement> agentInterimsPlan = agentInterim.getCurrentPlan().getPlanElements();
 						
 						Id<Link> walksTo = null;

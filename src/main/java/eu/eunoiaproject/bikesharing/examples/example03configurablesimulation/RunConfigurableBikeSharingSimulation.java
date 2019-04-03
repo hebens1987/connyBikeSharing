@@ -58,7 +58,7 @@ public class RunConfigurableBikeSharingSimulation {
 	public static void main(final String... args) 
 	/***************************************************************************/
 	{
-		final Config config = prepareConfig( args, InputCase.fromArgs );
+		final Config config = prepareConfig( args, InputCase.raster );
 
 		final Scenario sc = prepareScenario( config );
 
@@ -134,12 +134,12 @@ public class RunConfigurableBikeSharingSimulation {
 
 		config.global().setNumberOfThreads( 1 );
 		
-					//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
+		//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
 
-					config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
-							EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
+		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
+					EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
 
-					config.travelTimeCalculator().setSeparateModes( true ); 
+		config.travelTimeCalculator().setSeparateModes( true ); 
 		failIfExists( config.controler().getOutputDirectory() );
 
 		// ---

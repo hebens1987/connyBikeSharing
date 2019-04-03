@@ -18,6 +18,7 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.WithinDayAgentUtils;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
@@ -175,11 +176,13 @@ public class NoParkingAvailable {
 			bsInteractWait5.setType("wait");
 			bsInteractWait5.setStartTime(now + 12*60);
 			bsInteractWait.setFacilityId(bsInteractPe.getFacilityId());
-			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait5 );
-			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait4 );
-			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait3 );
-			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait2 );
-			list.add( WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) +1, bsInteractWait );
+			BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate);
+			final int currentPlanElementIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate) ;
+			list.add( currentPlanElementIndex +1, bsInteractWait5 );
+			list.add( currentPlanElementIndex +1, bsInteractWait4 );
+			list.add( currentPlanElementIndex +1, bsInteractWait3 );
+			list.add( currentPlanElementIndex +1, bsInteractWait2 );
+			list.add( currentPlanElementIndex +1, bsInteractWait );
 			WaitingListHandling.addAgentToWaitingListOfStation(scenario, station, basicAgentDelegate, false, now);
 		}
 		
@@ -254,19 +257,19 @@ public class NoParkingAvailable {
 			
 			//create new Plan
 			BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( scenario.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
-			switch( bikeSharingConfig.getRunType() ) {
-				case standard:
+			//switch( bikeSharingConfig.getRunType() ) {
+			//	case standard:
 					//			for (int i = 0; i < planElements.size(); i++ )
 					//			{
 					//				basicAgentDelegate.setPlanElement(i, planElements.get(i));
 					//			}
-					throw new RuntimeException("this is not possible.  But I also do not see why it should be needed, since the code already operates on the agent's " +
-										     "planElements. kai, apr'19") ;
-				case debug:
-					break;
-				default:
-					throw new RuntimeException("not implemented") ;
-			}
+			//		throw new RuntimeException("this is not possible.  But I also do not see why it should be needed, since the code already operates on the agent's " +
+			//							     "planElements. kai, apr'19") ;
+			//	case debug:
+			//		break;
+			//	default:
+			//		throw new RuntimeException("not implemented") ;
+			//}
 
 			Id<Person> pers = basicAgentDelegate.getPerson().getId();
 			log.info("Agent with ID:;" + basicAgentDelegate.getPerson().getId()+ ";did not get a Parking Spot and choose -->;" + whatToChoose);
