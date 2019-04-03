@@ -1,12 +1,11 @@
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
+import com.google.inject.Inject;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.events.Event;
-import org.matsim.api.core.v01.events.LinkEnterEvent;
-import org.matsim.api.core.v01.events.LinkLeaveEvent;
 import org.matsim.api.core.v01.events.PersonDepartureEvent;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
@@ -53,7 +52,7 @@ public class RunConfigurableBikeSharingSimulationTest{
 	private static class Checker implements BasicEventHandler, ShutdownListener {
 		int iteration = 0 ;
 		int cnt = 0 ;
-
+		@Inject Config config ;
 		@Override public void handleEvent( Event event ){
 			if ( iteration == 1 ) {
 //				if( !(event instanceof LinkEnterEvent || event instanceof LinkLeaveEvent) ){
@@ -73,6 +72,11 @@ public class RunConfigurableBikeSharingSimulationTest{
 					}
 					cnt ++ ;
 					log.warn("cnt=" + cnt ) ;
+				}
+			}
+			if ( iteration == config.controler().getLastIteration() ) {
+				if( event instanceof  PersonDepartureEvent ) {
+					System.err.println( event.toString() );
 				}
 			}
 		}
