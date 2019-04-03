@@ -28,7 +28,7 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 		final Config config = prepareConfig( null, InputCase.raster );
 
-		config.controler().setLastIteration( 1 );
+		config.controler().setLastIteration(10);
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
