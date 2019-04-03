@@ -208,19 +208,19 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		return basicAgentDelegate.getPlannedVehicleId();
 	}
 
-	private PlanBasedDriverAgentImpl driverAgentDelegate;
-	private Map<Id<Person>, BikeAgent> agentsC = new HashMap<Id<Person>, BikeAgent>();
-	private Map<Id<Person>, BikeAgent> agentsE = new HashMap<Id<Person>, BikeAgent>();
-	private LeastCostPathCalculatorFactory pathF = null;
-	private TransitAgentImpl transitAgentDelegate = null ;
+	private final PlanBasedDriverAgentImpl driverAgentDelegate;
+	private final Map<Id<Person>, BikeAgent> agentsC = new HashMap<Id<Person>, BikeAgent>();
+	private final Map<Id<Person>, BikeAgent> agentsE = new HashMap<Id<Person>, BikeAgent>();
+	private final LeastCostPathCalculatorFactory pathF ;
+	private final TransitAgentImpl transitAgentDelegate ;
 
-	private Scenario scenario = null;
+	private final Scenario scenario ;
 
-	private LeastCostPathCalculator pathCalculator;
+	private final BikeSharingFacilities bsFac ;
 
-	private BikeSharingFacilities bsFac = null;
+	private final BikeSharingBikes bSharingVehicles ;
 
-	private BikeSharingBikes bSharingVehicles = null;
+	private final LeastCostPathCalculator pathCalculator ;
 
 
 
@@ -233,10 +233,10 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	 * this means planElements get exchanged or enhanced 
 	 * **/
 	
-	public BikesharingPersonDriverAgentImpl(BasicPlanAgentImpl basicPlanAgent)
-	{
-		this.basicAgentDelegate = basicPlanAgent;
-	}
+//	public BikesharingPersonDriverAgentImpl(BasicPlanAgentImpl basicPlanAgent)
+//	{
+//		this.basicAgentDelegate = basicPlanAgent;
+//	}
 	
 	public BikesharingPersonDriverAgentImpl(
 			final Plan plan, 
@@ -249,6 +249,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 //		super(plan, simulation);
 
 		scenario = simulation.getScenario();
+		this.pathF = pathF ;
 
 		this.basicAgentDelegate = new BasicPlanAgentImpl( plan, scenario, simulation.getEventsManager(), simulation.getSimTimer() ) ;
 		this.driverAgentDelegate = new PlanBasedDriverAgentImpl( this.basicAgentDelegate ) ;
@@ -259,6 +260,14 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		this.transitAgentDelegate = new TransitAgentImpl( basicAgentDelegate );
 		this.basicAgentDelegate.setVehicle(veh);
 		this.basicAgentDelegate.getModifiablePlan() ; // this lets the agent make a full copy of the plan, which can then be modified
+
+		this.pathCalculator = pathCalculator ;
+
+		this.bsFac = (BikeSharingFacilities)
+					   scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
+		this.bSharingVehicles =(BikeSharingBikes)
+							 scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
+
 	}
 	
 //	public BasicPlanAgentImpl getPlanAgent (BikesharingPersonDriverAgentImpl impl)
@@ -328,10 +337,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 			thisElemX.setEndTime(now);
 		}
 		
-		this.bsFac = (BikeSharingFacilities)
-				scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
-		this.bSharingVehicles =(BikeSharingBikes)
-				scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
 		handleRelocation (now, bsFac, bSharingVehicles,scenario);
 		
 		if (actPlanMode.equals(EBConstants.MODE_FF))
@@ -562,9 +567,11 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					runner.planComparison(agentInterim);
 					Activity nextAct = null;
 					
-					BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl( agentInterim );
-					final int index= agent2.getCurrentPlanElementIndex( agentInterim ) ;
+//					BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl( agentInterim );
+//					final int index= agent2.getCurrentPlanElementIndex( agentInterim ) ;
 					//int index = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
+
+					int index = agentInterim.getCurrentPlan().getPlanElements().indexOf( agentInterim.getCurrentPlanElement() ) ;
 
 
 					BikeSharingFacility thisFac = waitingList.get(0).bsFac;
@@ -691,9 +698,12 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						
 						Id<Link> walksFrom = startLink.getId();
 
-						BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agentInterim);
-						final int actIndex= agent2.getCurrentPlanElementIndex(agentInterim) ;
+//						BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agentInterim);
+//						final int actIndex= agent2.getCurrentPlanElementIndex(agentInterim) ;
 						//int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( agentInterim );
+
+						int actIndex = agentInterim.getCurrentPlan().getPlanElements().indexOf( agentInterim.getCurrentPlanElement() ) ;
+
 						List<PlanElement> agentInterimsPlan = agentInterim.getCurrentPlan().getPlanElements();
 						
 						Id<Link> walksTo = null;

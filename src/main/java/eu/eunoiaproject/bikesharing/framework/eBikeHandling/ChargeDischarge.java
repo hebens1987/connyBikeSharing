@@ -63,8 +63,11 @@ public class ChargeDischarge {
 			soc = (soc  - (duration/dur_full_empty_h)); //reduce soc in a linear way
 			if ((soc < 0) && (agent != null))
 			{
-				BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agent);
-				int index = agent2.getCurrentPlanElementIndex(agent) ;
+//				BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(agent);
+//				int index = agent2.getCurrentPlanElementIndex(agent) ;
+
+				int index = agent.getCurrentPlan().getPlanElements().indexOf( agent.getCurrentPlanElement() ) ;
+
 				Leg legTest = (Leg)agent.getNextPlanElement(); // XXXXX Hebenstreit: ist das beides das Gleiche?
 				Leg leg = (Leg)agent.getCurrentPlan().getPlanElements().get(index+1);
 				System.out.println("No battery support for " + agent.getPerson().getId() + " since: " + (-soc * dur_full_empty_h) + " hours (dur_full_empty: " + dur_full_empty_h + ") (leg travelTime: " + leg.getTravelTime());
