@@ -109,7 +109,7 @@ public class RunConfigurableBikeSharingSimulation {
 				throw new RuntimeException("not implemented") ;
 		}
 		
-
+		
 		OutputDirectoryLogging.catchLogEntries();
 		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
 
@@ -154,6 +154,8 @@ public class RunConfigurableBikeSharingSimulation {
 			default:
 				throw new RuntimeException( "not implemented" ) ;
 		}
+		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
+		
 		return config;
 	}
 

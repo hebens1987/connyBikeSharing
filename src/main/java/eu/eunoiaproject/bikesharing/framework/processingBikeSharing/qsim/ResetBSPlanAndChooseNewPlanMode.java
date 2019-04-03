@@ -3,15 +3,28 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim;
 import java.util.List;
 import java.util.Random;
 
+import javax.inject.Named;
+
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.TransportMode;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.gbl.MatsimRandom;
+import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.PersonUtils;
+import org.matsim.core.population.routes.GenericRouteImpl;
+import org.matsim.core.population.routes.LinkNetworkRouteImpl;
+import org.matsim.core.population.routes.NetworkRoute;
+import org.matsim.core.router.RoutingModule;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.population.algorithms.PlanAlgorithm;
+
+import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routing.bikeSharing.EBikeSharingRoutingModule;
 
 /**
  * Changes the transportation mode of all legs in a plan to a randomly chosen
@@ -51,6 +64,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 
 	private String changeToRandomLegMode(final List<PlanElement> tour, final Plan plan) 
 	{
+		final String currentMode = plan.getType();
 		String newMode = "non";
 		if (tour.size() > 1) {
 			boolean forbidCar = false;
@@ -60,8 +74,6 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					forbidCar = true;
 				}
 			}
-			final String currentMode = plan.getType();
-
 
 			while (true) {
 				int newModeIdx = chooseModeOtherThan(currentMode);
@@ -128,6 +140,27 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					}
 				}
 			}
+//			for(int i = 1; i < list.size()-1; i++)
+//			{
+//				Id<Link> firstLink = null;
+//				Id<Link> lastLink = null;
+//				while (list.get(i) instanceof Leg)
+//				{
+//					if (firstLink == null)
+//					{
+//						firstLink = ((Leg)list.get(i)).getRoute().getStartLinkId();
+//					}
+//					lastLink = ((Leg)list.get(i)).getRoute().getEndLinkId();
+//					list.remove(i);
+//				}
+//				{
+//					Leg leg = new LegImpl (mode);
+//					NetworkRoute route = new LinkNetworkRouteImpl(firstLink, lastLink);
+//					leg.setRoute(route);
+//					list.add(i,leg);
+//					i++;	
+//				}
+//			}
 
 		
 		Activity old = null;

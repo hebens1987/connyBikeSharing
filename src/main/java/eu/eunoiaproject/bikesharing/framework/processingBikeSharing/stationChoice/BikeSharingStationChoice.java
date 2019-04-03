@@ -578,9 +578,9 @@ public class BikeSharingStationChoice
 		}
 		
 		List<BikeSharingFacility> bsList = new ArrayList<BikeSharingFacility>(bs);
-		for (int i = 0; i < bsList.size(); i++) //ensures that no stations is twice or more in list
+		for (int i = 0; i < bsList.size()-1; i++) //ensures that no stations is twice or more in list
 		{
-			for (int j = 0; j < bsList.size(); j++)
+			for (int j = 0; j < bsList.size()-1; j++)
 			{
 				if (i != j)
 				{

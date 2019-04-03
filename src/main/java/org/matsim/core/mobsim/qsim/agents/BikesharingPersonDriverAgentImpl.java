@@ -728,15 +728,15 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						}
 						Link startLink2 = scenario.getNetwork().getLinks().get(walksTo);
 						Link endLink2 = scenario.getNetwork().getLinks().get(walksFrom);
-						PlanElement pe2 = BSRunner.createLeg(startLink2, endLink2, TransportMode.walk, now, false, agentInterim,
+						PlanElement pe2 = BSRunner.createLeg(startLink2, endLink2, TransportMode.walk, now+1, false, agentInterim,
 								scenario, pathF, pathCalculator);
-						
 						Leg leg = (Leg)pe2;
 						leg.setTravelTime(leg.getTravelTime()*1000);
 						if (leg.getTravelTime() < 2500) {leg.setTravelTime(2500);}
 						leg.getRoute().setTravelTime(leg.getTravelTime());
 						agentInterimsPlan.add(actIndex+1, pe2);
 						log.warn("Agent with ID:;" + agentInterim.getId() + ";...did not find a parking; and walks home with low utility");
+						agentInterim.setStateToAbort(now);
 					}
 					runner.planComparison(agentInterim);
 					return agentInterim;
