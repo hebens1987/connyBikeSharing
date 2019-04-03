@@ -67,14 +67,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 	private final static Logger log = Logger.getLogger(BikesharingPersonDriverAgentImpl.class);
 
-	static Scenario scenario = null; 
-	
-	private static LeastCostPathCalculator pathCalculator;
-	
-	BikeSharingFacilities bsFac = null;
-	
-	BikeSharingBikes bSharingVehicles = null;
-
 //	public Plan getModifiablePlan(){
 //		return basicAgentDelegate.getModifiablePlan();
 //	}
@@ -217,10 +209,20 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	}
 
 	private PlanBasedDriverAgentImpl driverAgentDelegate;
-	private static Map<Id<Person>, BikeAgent> agentsC = new HashMap<Id<Person>, BikeAgent>();
-	private  static Map<Id<Person>, BikeAgent> agentsE = new HashMap<Id<Person>, BikeAgent>();
-	static LeastCostPathCalculatorFactory pathF = null;
+	private Map<Id<Person>, BikeAgent> agentsC = new HashMap<Id<Person>, BikeAgent>();
+	private Map<Id<Person>, BikeAgent> agentsE = new HashMap<Id<Person>, BikeAgent>();
+	private LeastCostPathCalculatorFactory pathF = null;
 	private TransitAgentImpl transitAgentDelegate = null ;
+
+	private Scenario scenario = null;
+
+	private LeastCostPathCalculator pathCalculator;
+
+	private BikeSharingFacilities bsFac = null;
+
+	private BikeSharingBikes bSharingVehicles = null;
+
+
 
 	/***************************************************************************/
 	/**
@@ -246,13 +248,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	{
 //		super(plan, simulation);
 
-		BikesharingPersonDriverAgentImpl.scenario = simulation.getScenario();
-		BikesharingPersonDriverAgentImpl.pathCalculator = pathCalculator;
-		BikesharingPersonDriverAgentImpl.pathF = pathF;
+		scenario = simulation.getScenario();
 
-		Gbl.assertNotNull( plan );
-		Gbl.assertNotNull( scenario );
-		Gbl.assertNotNull( simulation );
 		this.basicAgentDelegate = new BasicPlanAgentImpl( plan, scenario, simulation.getEventsManager(), simulation.getSimTimer() ) ;
 		this.driverAgentDelegate = new PlanBasedDriverAgentImpl( this.basicAgentDelegate ) ;
 
@@ -264,17 +261,17 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		this.basicAgentDelegate.getModifiablePlan() ; // this lets the agent make a full copy of the plan, which can then be modified
 	}
 	
-	public BasicPlanAgentImpl getPlanAgent (BikesharingPersonDriverAgentImpl impl)
-	{
-		return this.basicAgentDelegate;
-	}
-
-	// -----------------------------------------------------------------------------------------------------------------------------
-
-	public void setMode(String mode)
-	{
-		
-	}
+//	public BasicPlanAgentImpl getPlanAgent (BikesharingPersonDriverAgentImpl impl)
+//	{
+//		return this.basicAgentDelegate;
+//	}
+//
+//	// -----------------------------------------------------------------------------------------------------------------------------
+//
+//	public void setMode(String mode)
+//	{
+//
+//	}
 	@Override
 	public void endLegAndComputeNextState(final double now) 
 	/***************************************************************************/
