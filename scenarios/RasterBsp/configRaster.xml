@@ -42,13 +42,16 @@
 		<!-- Module that shifts activity end times randomly -->
 		<!-- uses maximum shift of module "TimeAllocationMutator" -->
 
-		<param name="ModuleProbability_4" value="0.1" />
+		<!--  <param name="ModuleProbability_4" value="0.1" />
 		<param name="Module_4" value="ChangeTripMode" />
-		<param name="ModuleDisableAfterIteration_4" value="&niters;" />
+		<param name="ModuleDisableAfterIteration_4" value="&niters;" />-->
 		<!-- ChangeLegMode changes all legs of a plan to a different mode-->
 		<!-- Randomly picks one person plan and changes its mode of transport -->
 		<!-- default uses car and pt -->
 		<!-- Info unter: http://archiv.ivt.ethz.ch/docs/students/sa274.pdf -->
+		
+		<param name="ModuleProbability_4" value="0.1" />
+		<param name="Module_4" value="ResetBSPlan" />
 		
 	</module>
 	

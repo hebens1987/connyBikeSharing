@@ -1,7 +1,7 @@
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.ResetBSPlanStrategy;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.ResetBSPlanAndChooseNewPlanModeModuleStrategy;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.EBikeSharingQsimFactory;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.IKK_BikeTravelDisutilityFactory;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSBikeRoutingModule;
@@ -21,6 +21,7 @@ import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.replanning.PlanStrategy;
 import org.matsim.core.router.LeastCostPathCalculatorModule;
 import org.matsim.core.router.MainModeIdentifier;
 import org.matsim.core.router.MainModeIdentifierImpl;
@@ -55,10 +56,9 @@ public class ImplementationModule extends AbstractModule {
 		    this.bind(SingleModeNetworksCache.class).asEagerSingleton();
 		    this.addTravelDisutilityFactoryBinding(TransportMode.pt).to(TUG_WalkTravelDisutilityFactory.class);
 //		    PlanCalcScoreConfigGroup plansCalc = (PlanCalcScoreConfigGroup) config.getModule(PlanCalcScoreConfigGroup.GROUP_NAME);
-			this.addPlanStrategyBinding("ResetBSPlanStrategy").to(ResetBSPlanStrategy.class ) ;
+			this.addPlanStrategyBinding("ResetBSPlan").to((Class<? extends PlanStrategy>) ResetBSPlanAndChooseNewPlanModeModuleStrategy.class ) ;
 			//XXXXX Hebenstreit: does this have any effect?
 		
-			
 			//TODO: Hebenstreit - own Travel Time for Bike Sharing (eventually own Disutility for E-BikeSharing!!!)
 			
 			this.addTravelDisutilityFactoryBinding(EBConstants.MODE ).to(TUG_WalkTravelDisutilityFactory.class);  

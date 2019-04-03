@@ -95,12 +95,24 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			   }
 			   else
 			   {
-				   bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")); 
-				   bikeSafetyOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "safety")); 
-				   bikeSlopeOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "slope")); 
-				   bikeComfortOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "comfort"));                      
-				   bikeSurroundingOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "surrounding"));  
-				   bikeAmountOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "amount"));  
+				   if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null) 
+				   {
+					   bikeSpeedOfInfrastructure = 0.00001;
+					   bikeSafetyOfInfrastructure = 5;
+					   bikeSlopeOfInfrastructure = 5;
+					   bikeComfortOfInfrastructure = 5;               
+					   bikeSurroundingOfInfrastructure = 5;
+					   bikeAmountOfInfrastructure = 5;  
+				   }
+				   else
+				   {
+					   bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")); 
+					   bikeSafetyOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "safety")); 
+					   bikeSlopeOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "slope")); 
+					   bikeComfortOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "comfort"));                      
+					   bikeSurroundingOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "surrounding"));  
+					   bikeAmountOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "amount"));  
+				   }
 			   }
 	                                                 
 			   double velocityperson = bikeSpeedOfPerson;
