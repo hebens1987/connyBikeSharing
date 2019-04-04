@@ -2,7 +2,6 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.choiceStrat
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
@@ -35,9 +34,6 @@ import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoic
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAtt;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BSAttribsAgent;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAgent;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
 
@@ -70,7 +66,7 @@ public class NoParkingAvailable {
 		
 		LinkNetworkRouteImpl route = (LinkNetworkRouteImpl) 
 				((Leg)basicAgentDelegate.getNextPlanElement()).getRoute();
-		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
+		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice( bikeSharingContext );
 
 		BSAtt att = BSAttribsAgent.getPersonAttributes( basicAgentDelegate.getPerson(), scenario);
 		double searchRadius =  att.searchRadius;

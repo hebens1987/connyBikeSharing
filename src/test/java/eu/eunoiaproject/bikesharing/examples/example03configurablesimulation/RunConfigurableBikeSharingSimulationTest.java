@@ -38,6 +38,8 @@ public class RunConfigurableBikeSharingSimulationTest{
 		config.controler().setLastIteration(10);
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 
+		config.transit().setUseTransit( false );
+
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
 
@@ -105,6 +107,8 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 		config.controler().setLastIteration(10);
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
+
+		config.transit().setUseTransit( false );
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.standard );

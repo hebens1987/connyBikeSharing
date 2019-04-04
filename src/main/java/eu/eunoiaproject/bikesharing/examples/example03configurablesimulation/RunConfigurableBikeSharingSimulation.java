@@ -28,7 +28,9 @@ import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ControlerConfigGroup;
+import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
 import org.matsim.core.controler.Controler;
+import org.matsim.core.controler.ControlerUtils;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
 import org.matsim.core.gbl.MatsimRandom;
@@ -72,6 +74,9 @@ public class RunConfigurableBikeSharingSimulation {
 	}
 
 	static Scenario prepareScenario( Config config ){
+
+		ControlerUtils.checkConfigConsistencyAndWriteToLog( config, "checking config before preparing scenario ..." );
+
 		final Scenario sc = BikeAndEBikeSharingScenarioUtils.loadScenario( config );
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( sc.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
 		switch( bikeSharingConfig.getRunType() ) {
@@ -133,9 +138,19 @@ public class RunConfigurableBikeSharingSimulation {
 		//Does not use the implemented routing modules anymore - just uses Network Route
 		//Can I use a combination? TODO:
 		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
-					EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK, EBConstants.BS_WALK_FF) ) ) ;
-		//config.qsim().setMainModes( new HashSet<>( Arrays.asList( 
+			  EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK, EBConstants.BS_WALK_FF) ) ) ;
+		//config.qsim().setMainModes( new HashSet<>( Arrays.asList(
 		//		TransportMode.car, TransportMode.walk,EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
+		{
+			PlansCalcRouteConfigGroup.ModeRoutingParams params = new PlansCalcRouteConfigGroup.ModeRoutingParams( TransportMode.pt );
+			params.setTeleportedModeSpeed( 0. );
+			config.plansCalcRoute().addModeRoutingParams( params );
+			// this will clear all pre-existing teleportation routing as a side effect!!!!! :-(
+		}
+
+		config.plansCalcRoute().setNetworkModes(  new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
+			  EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK, EBConstants.BS_WALK_FF) ) ) ;
+
 		
 		config.travelTimeCalculator().setSeparateModes( true ); 
 		failIfExists( config.controler().getOutputDirectory() );
@@ -144,21 +159,23 @@ public class RunConfigurableBikeSharingSimulation {
 
 		config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
 
-		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
-		switch( bikeSharingConfig.getRunType() ) {
-			case standard:
-				config.transitRouter().setMaxBeelineWalkConnectionDistance( 10. );
-				break;
-			case debug:
-				config.controler().setLastIteration( 1 );
+		// the following does not work (any more) since the setting of the run type can only be done _after_ this method has returned the config!  kai, apr'19
+//		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+//		switch( bikeSharingConfig.getRunType() ) {
+//			case standard:
+//				config.transitRouter().setMaxBeelineWalkConnectionDistance( 10. );
+//				break;
+//			case debug:
+//				config.controler().setLastIteration( 1 );
+//
+//				config.transit().setUseTransit( false );
+////				config.transit().setTransitScheduleFile( null );
+////				config.transit().setVehiclesFile( null );
+//				break;
+//			default:
+//				throw new RuntimeException( "not implemented" ) ;
+//		}
 
-				config.transit().setUseTransit( false );
-//				config.transit().setTransitScheduleFile( null );
-//				config.transit().setVehiclesFile( null );
-				break;
-			default:
-				throw new RuntimeException( "not implemented" ) ;
-		}
 		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
 		
 		return config;

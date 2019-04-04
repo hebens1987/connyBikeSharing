@@ -24,6 +24,7 @@ import org.matsim.core.mobsim.qsim.TeleportationEngine;
 import org.matsim.core.mobsim.qsim.agents.PopulationAgentSource;
 import org.matsim.core.mobsim.qsim.pt.TransitQSimEngine;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine;
+import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
@@ -33,6 +34,8 @@ import org.matsim.core.router.util.TravelTime;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import org.matsim.pt.router.TransitRouterConfig;
+import org.matsim.pt.router.TransitRouterImpl;
 //import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 
 /**
@@ -49,10 +52,10 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 
 	@Inject private  Scenario sc;
 	@Inject private  EventsManager eventsManager;
-	@Inject public LeastCostPathCalculatorFactory pathCalculatorFactory ;
+	@Inject private LeastCostPathCalculatorFactory pathCalculatorFactory ;
 	@Inject private Map<String,TravelDisutilityFactory> travelDisutilityFactories ;
-	@Inject public Map<String,TravelTime> travelTimes ;
-//	public LeastCostPathCalculator lcp;
+	@Inject private Map<String,TravelTime> travelTimes ;
+	@Inject private TripRouter tripRouter ;
 	
 	
 
@@ -139,9 +142,16 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 			LeastCostPathCalculator routeAlgo = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt );;
 			builder.setWalkPathCalculator( routeAlgo ) ;
 		}
+		{
+			TransitRouterConfig ctr = new TransitRouterConfig(sc.getConfig());
+			builder.setTransitRouter( new TransitRouterImpl(ctr, sc.getTransitSchedule()) ) ;
+			// (yyyy the current code operates directly at the level of the transit router, rather than using the trip router.  accepting this for the time being. kai,
+			// apr'19)
+		}
 		builder.setQSim( qSim ) ;
 		builder.setObjectAttributesSingleton( IKK_ObjectAttributesSingleton.getInstance( confBC, false ) ) ;
-		BikeSharingContext context = builder.build();;
+		builder.setTripRouter( tripRouter ) ;
+		BikeSharingContext context = builder.build();
 
 		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( context );
 

@@ -10,8 +10,6 @@ import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoic
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability.Probability;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSTravelTime;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.*;
@@ -23,8 +21,6 @@ import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.*;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
-import org.matsim.core.gbl.Gbl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.PopulationFactoryImpl;
@@ -34,7 +30,6 @@ import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.population.routes.RouteFactoryImpl;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculator.Path;
-import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.facilities.ActivityFacilitiesFactory;
@@ -85,7 +80,6 @@ public class BSRunner {
 	{
 		this.bikeSharingContext = bikeSharingContext;
 		this.scenario = bikeSharingContext.getqSim().getScenario();;
-		TransitRouterImpl trImpl = bSharingVehicles.generatePTRouterForBS(scenario);
 
 		//------------------------------------------
 		TakingReturningMethodology trMet = new TakingReturningMethodology();
@@ -137,7 +131,7 @@ public class BSRunner {
 
 			//System.out.println(toFac.getType());
 			StationAndType[] sat = new StationAndType[2];
-			BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
+			BikeSharingStationChoice bsChoice = new BikeSharingStationChoice( bikeSharingContext );
 			ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
 			if (toFac.getCoord() != null)
 			{
@@ -448,18 +442,19 @@ public class BSRunner {
 	
 	/***************************************************************************/
 	public static List<PlanElement> createPTLegs(
-			Coord start, 
-			Coord destination,
-			double now, 
-			Person person,
-			Scenario scenario,
-			Id<Link> startLinkId,
-			Id<Link> endLinkId)
+		  Coord start,
+		  Coord destination,
+		  double now,
+		  Person person,
+		  Scenario scenario,
+		  Id<Link> startLinkId,
+		  Id<Link> endLinkId, BikeSharingContext bikeSharingContext )
 	/***************************************************************************/
 	{
 		BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
 				scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
-		TransitRouterImpl pt = bSharingVehicles.trImpl;
+
+		TransitRouterImpl pt = bikeSharingContext.getTransitRouter();;
 		List<Leg> trip = pt.calcRoute(start, destination, now, person);
 		
 		if ((trip == null) || (trip.size() == 1 && trip.get(0).getMode().equals(TransportMode.transit_walk)))
@@ -865,10 +860,8 @@ public class BSRunner {
 		List<PlanElement> fifthLeg;
 		if (bikeSharingOptionSelection == 3)
 		{
-			BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
-					scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
-			TransitRouterImpl pt = bSharingVehicles.trImpl;
-			trip = createPTLegs(fromFacility.getCoord(),toFacility.getCoord(),departureTime,person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
+			trip = createPTLegs(fromFacility.getCoord(),toFacility.getCoord(),departureTime,person, scenario, fromFacility.getLinkId(), toFacility.getLinkId(),
+				  bikeSharingContext );
 
 			if (trip == null)
 			{
@@ -917,7 +910,8 @@ public class BSRunner {
 			if (start == null || end == null)
 			{
 				trip = createPTLegs(
-						fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId() );
+						fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId(),
+					  bikeSharingContext );
 				
 				if (trip== null)
 				{
@@ -926,7 +920,8 @@ public class BSRunner {
 			}
 			else if (startBSFac == null || endBSFac == null)
 			{
-				trip = createPTLegs(fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId() );
+				trip = createPTLegs(fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId(),
+					  bikeSharingContext );
 				if (trip == null)
 				{
 					trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate, bikeSharingContext ) );
@@ -949,7 +944,8 @@ public class BSRunner {
 				}
 				double departureTimeTempB = ((Leg) thirdLeg.get(0)).getDepartureTime() + ((Leg) thirdLeg.get(0)).getTravelTime()+EBConstants.TIME_RETURN;
 				PlanElement fourth = CreateSubtrips.createInteractionReturnBS( end.station, thirdLeg, departureTimeTempB-EBConstants.TIME_RETURN);
-				fifthLeg = createPTLegs(end.station.getCoord(), toFacility.getCoord(), departureTimeTempB, person, scenario, end.station.getLinkId(), toFacility.getLinkId());
+				fifthLeg = createPTLegs(end.station.getCoord(), toFacility.getCoord(), departureTimeTempB, person, scenario, end.station.getLinkId(), toFacility.getLinkId(),
+					  bikeSharingContext );
 				if (fifthLeg == null)
 				{
 					fifthLeg = peToPeList(createLeg(fromLink, startStationLink, EBConstants.BS_WALK, departureTimeTempB, basicAgentDelegate, bikeSharingContext ) );
@@ -963,7 +959,8 @@ public class BSRunner {
 		{
 			Link startStationLink = scenario.getNetwork().getLinks().get(start.station.getLinkId());
 			Link endStationLink = scenario.getNetwork().getLinks().get(end.station.getLinkId());	
-			firstLeg = createPTLegs(fromFacility.getCoord(),start.station.getCoord(),departureTime,person, scenario, fromFacility.getLinkId(), start.station.getLinkId());
+			firstLeg = createPTLegs(fromFacility.getCoord(),start.station.getCoord(),departureTime,person, scenario, fromFacility.getLinkId(), start.station.getLinkId(),
+				  bikeSharingContext );
 			//TODO: Hebenstreit
 			if (firstLeg == null)
 			{
@@ -991,7 +988,8 @@ public class BSRunner {
 		{
 			bikeSharingOptionSelection = 3;
 			//log.warn("Es konnte kein Bike-Sharing Typ ausgewählt werden! Agent nutzt nun ÖV oder walk(2)");
-			trip = createPTLegs(fromFacility.getCoord(),toFacility.getCoord(),departureTime,person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
+			trip = createPTLegs(fromFacility.getCoord(),toFacility.getCoord(),departureTime,person, scenario, fromFacility.getLinkId(), toFacility.getLinkId(),
+				  bikeSharingContext );
 			if (trip == null)
 			{
 				trip = peToPeList(createLeg(fromLink,toLink,EBConstants.BS_WALK, departureTime, basicAgentDelegate, bikeSharingContext ) );
@@ -1072,7 +1070,7 @@ public class BSRunner {
 			//TODO: NO BS --> ChangeMode to Full-PT-Trip
 						
 			List<PlanElement> ptInsertion = createPTLegs(thisAct.getCoord(), nextAct.getCoord(), 
-					now, basicAgentDelegate.getPerson(), scenario, thisAct.getLinkId(), nextAct.getLinkId());
+					now, basicAgentDelegate.getPerson(), scenario, thisAct.getLinkId(), nextAct.getLinkId(), bikeSharingContext );
 			
 			Leg legInsteadOfPt = null;
 			Activity some = null;
@@ -1184,7 +1182,8 @@ public class BSRunner {
 				((Leg)int1_int2.get(0)).getRoute().setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
 				interact2.setStartTime(((Leg)int1_int2.get(0)).getDepartureTime()+((Leg)int1_int2.get(0)).getTravelTime());
 				interact2.setEndTime(interact2.getStartTime()+EBConstants.TIME_RETURN);
-				int2_act2 = createPTLegs (int2.getCoord(), act2.getCoord(), now, basicAgentDelegate.getPerson(), scenario, int2.getId(), act2.getLinkId());
+				int2_act2 = createPTLegs(int2.getCoord(), act2.getCoord(), now, basicAgentDelegate.getPerson(), scenario, int2.getId(), act2.getLinkId(),
+					  bikeSharingContext );
 				if (int2_act2 == null) 
 				{
 					int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
@@ -1199,7 +1198,8 @@ public class BSRunner {
 			// walk from Interact2 to Act2
 			else if (routingType == 2)
 			{
-				act1_int1 = createPTLegs (startLink.getCoord(), int1.getCoord(), now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), int1.getId());
+				act1_int1 = createPTLegs(startLink.getCoord(), int1.getCoord(), now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), int1.getId(),
+					  bikeSharingContext );
 				if (act1_int1 == null) 
 				{
 					act1_int1 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate, bikeSharingContext ) );

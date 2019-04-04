@@ -2,7 +2,9 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes
 
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
 import org.matsim.core.mobsim.qsim.QSim;
+import org.matsim.core.router.TripRouter;
 import org.matsim.core.router.util.LeastCostPathCalculator;
+import org.matsim.pt.router.TransitRouterImpl;
 
 public class BikeSharingContext{
 	public QSim getqSim(){
@@ -17,12 +19,22 @@ public class BikeSharingContext{
 		return instance;
 	}
 
+	public TripRouter getTripRouter(){
+		return tripRouter;
+	}
+	@Deprecated // should try to use trip router instead.  kai, apr'19
+	public TransitRouterImpl getTransitRouter(){
+		return transitRouter;
+	}
+
 	static class Builder {
 		private LeastCostPathCalculator standardBikePathCalculator;
 		private LeastCostPathCalculator sharedBikePathCalculator;
 		private QSim qSim;
 		private LeastCostPathCalculator walkPathCalculator;
 		private IKK_ObjectAttributesSingleton instance;
+		private TripRouter tripRouter;
+		private TransitRouterImpl transitRouter;
 
 		Builder setStandardBikePathCalculator( LeastCostPathCalculator calc ) {
 			standardBikePathCalculator = calc ;
@@ -33,7 +45,7 @@ public class BikeSharingContext{
 			return this ;
 		}
 		BikeSharingContext build() {
-			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, qSim, walkPathCalculator, instance ) ;
+			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, qSim, walkPathCalculator, instance, tripRouter, transitRouter ) ;
 		}
 
 		Builder setQSim( QSim qSim ){
@@ -50,6 +62,14 @@ public class BikeSharingContext{
 			this.instance = instance;
 			return this ;
 		}
+
+		void setTripRouter( TripRouter tripRouter ){
+			this.tripRouter = tripRouter;
+		}
+
+		public void setTransitRouter( TransitRouterImpl transitRouter ){
+			this.transitRouter = transitRouter;
+		}
 	}
 
 	private LeastCostPathCalculator standardBikePathCalculator ;
@@ -57,14 +77,19 @@ public class BikeSharingContext{
 	private final QSim qSim;
 	private final LeastCostPathCalculator walkPathCalculator;
 	private final IKK_ObjectAttributesSingleton instance;
+	private final TripRouter tripRouter;
+	private final TransitRouterImpl transitRouter;
 
 	private BikeSharingContext( LeastCostPathCalculator standardBikePathCalculator, LeastCostPathCalculator sharedBikePathCalculator, QSim qSim,
-					    LeastCostPathCalculator walkPathCalculator, IKK_ObjectAttributesSingleton instance ){
+					    LeastCostPathCalculator walkPathCalculator, IKK_ObjectAttributesSingleton instance, TripRouter tripRouter,
+					    TransitRouterImpl transitRouter ){
 		this.standardBikePathCalculator = standardBikePathCalculator;
 		this.sharedBikePathCalculator = sharedBikePathCalculator;
 		this.qSim = qSim;
 		this.walkPathCalculator = walkPathCalculator;
 		this.instance = instance;
+		this.tripRouter = tripRouter;
+		this.transitRouter = transitRouter;
 	}
 
 	public LeastCostPathCalculator getStandardBikePathCalculator(){

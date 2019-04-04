@@ -235,7 +235,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					if (thisBikeFF == null)
 					{
 						//log.warn("Not FF-Bike was found");
-						List<PlanElement> pe1 = BSRunner.createPTLegs(thisAct.getCoord(), nextAct.getCoord(), now, this.basicAgentDelegate.getPerson(), scenario, thisAct.getLinkId(), nextAct.getLinkId());
+						List<PlanElement> pe1 = BSRunner.createPTLegs(thisAct.getCoord(), nextAct.getCoord(), now, this.basicAgentDelegate.getPerson(), scenario, thisAct.getLinkId(), nextAct.getLinkId(),
+							  bikeSharingContext );
 						if (pe1 == null)
 						{
 							PlanElement peWalk = BSRunner.createLeg(one, three, EBConstants.BS_WALK_FF, now, this.basicAgentDelegate,
@@ -456,7 +457,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					
 					
 					BikeSharingBikes bsb = (BikeSharingBikes) scenario.getScenarioElement("bikeSharingBikes");
-					List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord(), now, agentInterim.getPerson(), scenario, startLink.getId(), endLink.getId()); 
+					List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord(), now, agentInterim.getPerson(), scenario, startLink.getId(), endLink.getId(),
+						  bikeSharingContext );
 					Leg walkLeg = (Leg)pe;
 					
 					if (pe2 == null || pe2.size() == 1)

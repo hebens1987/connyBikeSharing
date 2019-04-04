@@ -118,7 +118,7 @@ public class NoBikeAvailable
 		}
 		
 		double waitingTime = 0;
-		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
+		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice( bikeSharingContext );
 		BSAtt att = BSAttribsAgent.getPersonAttributes( basicAgentDelegate.getPerson(), scenario);
 		double searchRadius =  att.searchRadius;
 		double maxSearchRadius =  att.maxSearchRadius;
@@ -364,7 +364,8 @@ public class NoBikeAvailable
 			else if (dist > 3500)
 			{
 				//log.warn("PT_0:  " + basicAgentDelegate.getPerson().getId());
-				List<PlanElement> p0 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId());
+				List<PlanElement> p0 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId(),
+					  bikeSharingContext );
 				if (p0 == null)
 				{
 					Leg p0a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
@@ -395,7 +396,8 @@ public class NoBikeAvailable
 			{
 				//PT_LEG
 				//log.warn("PT_2:  " + basicAgentDelegate.getPerson().getId());
-				List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId());
+				List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId(),
+					  bikeSharingContext );
 				if (pe2 == null)
 				{
 					Leg pe2a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,

@@ -42,7 +42,7 @@ public class BikeSharingBikes implements MatsimToplevelContainer {
 //	public  Map<Id<Vehicle>, BikesE> ptRouter =
 //			new LinkedHashMap< >();
 	
-	public TransitRouterImpl trImpl = null;
+//	public TransitRouterImpl trImpl = null;
 
 //	private ObjectAttributes EAttributes = new ObjectAttributes();
 //	private  ObjectAttributes Attributes = new ObjectAttributes();
@@ -69,17 +69,17 @@ public class BikeSharingBikes implements MatsimToplevelContainer {
 		bikesFFOrig.put(ffbike.getBikeId() , ffbike);
 	}
 	
-	public TransitRouterImpl generatePTRouterForBS (Scenario sc)
-	{
-		if (this.trImpl == null)
-		{
-			TransitRouterConfig ctr = new TransitRouterConfig(sc.getConfig());
-			this.trImpl = new TransitRouterImpl(ctr, sc.getTransitSchedule());
-		}
-		
-		return this.trImpl;
-	}
-
+//	public TransitRouterImpl generatePTRouterForBS (Scenario sc)
+//	{
+//		if (this.trImpl == null)
+//		{
+//			TransitRouterConfig ctr = new TransitRouterConfig(sc.getConfig());
+//			this.trImpl = new TransitRouterImpl(ctr, sc.getTransitSchedule());
+//		}
+//
+//		return this.trImpl;
+//	}
+//
 //	public Map<Id<Vehicle>, BikesE> getOrigEFacilities() {
 //		return ebikeOrig;
 //	}
