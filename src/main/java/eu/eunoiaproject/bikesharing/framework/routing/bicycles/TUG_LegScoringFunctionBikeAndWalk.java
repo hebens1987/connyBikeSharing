@@ -24,6 +24,7 @@ import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
 import org.matsim.core.gbl.Gbl;
 import org.matsim.core.population.LegImpl;
+import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParametersForPerson;
@@ -76,11 +77,15 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	/***************************************************************************/
 	{
 		travelTime = newLegX.getTravelTime();
+		LinkNetworkRouteImpl nr = (LinkNetworkRouteImpl)newLegX.getRoute();
+		String routeD = newLegX.getRoute().getRouteDescription();
+		if (routeD == null) routeD = nr.getRouteDescription();
 		double travelTime2 = newLegX.getRoute().getTravelTime();
+		double distanceOrig = newLegX.getRoute().getDistance();
 		double[] timeDist = {0,0};
 		double feltTravelTime = 0;
 		double distance = 0;
-		String routeD = newLegX.getRoute().getRouteDescription();
+
 	    if (routeD!=null)
 	    {
 	    	TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
@@ -99,13 +104,8 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	        		Link link= network.getLinks().get(act);
 	        		//System.out.println(link.getId());
 	        		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null);
-	    			if (j == 0 || j == linksOfRoute.length-1)
-	    			{
-	    				timeDist[0] = timeDist[0]/2;
-	    				timeDist[1] = timeDist[1]/2;
-	    			}
-	        		feltTravelTime = feltTravelTime + timeDist[0];
-	        		distance = distance + timeDist[1];
+	        		feltTravelTime += timeDist[0];
+	        		distance += timeDist[1];
 	    		}
 	    	}
 	    	else
@@ -117,6 +117,16 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    	}
 	    }
 	    
+	    double min = travelTime/2;
+	    double max = travelTime*2;
+	    if (feltTravelTime < min)
+	    {
+	    	feltTravelTime = min;
+	    }
+	    if (feltTravelTime > max)
+	    {
+	    	feltTravelTime = max;
+	    }
 	    timeDist[0] = feltTravelTime;
 	    timeDist[1] = distance;
 	    return timeDist;

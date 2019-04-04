@@ -282,7 +282,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			   double[] percTavelTimeAndTravelLength = new double[2];
 			   percTavelTimeAndTravelLength[0] = perceivedTravelTime;
 			   percTavelTimeAndTravelLength[1] = lenOfLink * factor;
-			   return percTavelTimeAndTravelLength; 
+			   return percTavelTimeAndTravelLength; //does perceive length and duration differently
             
 	   }
 

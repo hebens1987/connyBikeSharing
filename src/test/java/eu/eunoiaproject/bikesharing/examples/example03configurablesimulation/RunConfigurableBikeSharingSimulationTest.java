@@ -19,7 +19,7 @@ import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.events.ShutdownEvent;
 import org.matsim.core.controler.listener.ShutdownListener;
 import org.matsim.core.events.handler.BasicEventHandler;
-import org.matsim.testcases.MatsimTestUtils;
+//import org.matsim.testcases.MatsimTestUtils;
 
 import javax.inject.Singleton;
 
