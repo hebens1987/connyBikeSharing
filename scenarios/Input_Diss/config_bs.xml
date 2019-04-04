@@ -8,8 +8,8 @@
 	</module>
 	
 	<module name="transit">
-		<param name="transitScheduleFile" value="/Users/kainagel/Downloads/conny/Input_Diss/Schedule_Wien_Gesamt2.xml.gz" />
-		<param name="vehiclesFile" value="/Users/kainagel/Downloads/conny/Input_Diss/vehicles_March2019.xml.gz" />
+		<param name="transitScheduleFile" value="./scenarios/Input_Diss/Schedule_Wien_Gesamt2.xml" />
+		<param name="vehiclesFile" value="./scenarios/Input_Diss/vehicles_March2019.xml" />
 		<param name="transitModes" value="pt" /> <!-- ,pt -->
 		<param name="useTransit" value="true" />
 	</module>
@@ -20,8 +20,8 @@
 	
 
 <module name="bicycleAttributes">	
-		<param name="bicyclelinkAttributesInput" value="/Users/kainagel/Downloads/conny/Input_Diss/attFiles/BikeAttribv2.xml.gz"/>
-		<param name="personCycleAttributesInput" value="/Users/kainagel/Downloads/conny/Input_Diss/attFiles/PersonAttribsv2.xml.gz"/>
+		<param name="bicyclelinkAttributesInput" value="./scenarios/Input_Diss/attFiles/BikeAttribv2.xml"/>
+		<param name="personCycleAttributesInput" value="./scenarios/Input_Diss/attFiles/PersonAttribsv2.xml"/>
 		<param name="bikeTypeGroup_Input" value="1,2,3,4"/>
 		<param name="duAmountBiketype_Input" value="0.1,0.2,0.1,0.1"/>
 		<param name="duSlopeBiketype_Input" value="0.1,0.15,0.1,0"/>
@@ -34,8 +34,8 @@
 	</module>
 	
 	<module name="bikeSharingFacilities">	
-		<param name="facilitiesFile" value="/Users/kainagel/Downloads/conny/Input_Diss/bike-sharing-facilities_gleichverteilt.xml.gz"/>
-		<param name="bikeSharingBikes" value="/Users/kainagel/Downloads/conny/Input_Diss/Bicycles_gv.xml.gz"/>
+		<param name="facilitiesFile" value="./scenarios/Input_Diss/bike-sharing-facilities_gleichverteilt.xml"/>
+		<param name="bikeSharingBikes" value="./scenarios/Input_Diss/Bicycles_gv.xml"/>
 		<param name="useProbability" value="false"/>
 		<param name="probabilityTake" value="0.024"/>
 		<param name="probabilityReturn" value="0.025"/>
@@ -54,15 +54,15 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="/Users/kainagel/Downloads/conny/Input_Diss/network_March2019.xml.gz" />
+		<param name="inputNetworkFile" value="./scenarios/Input_Diss/network_March2019.xml" />
 	</module> 
 
 	<module name="plans">
-		<param name="inputPlansFile" value="/Users/kainagel/Downloads/conny/Input_Diss/1.plans.xml" /> <!-- demand_01perc_priv.xml.gz -->
+		<param name="inputPlansFile" value="./scenarios/Input_Diss/0.plans.xml" /> <!-- demand_01perc_priv.xml -->
 	</module>
 
 	<module name="controler">
-		<param name="outputDirectory" value="/Users/kainagel/Downloads/conny/Output/29March2019" />
+		<param name="outputDirectory" value="./scenarios/Output/29March2019" />
 		<param name="firstIteration" value="0" />
 		<param name="lastIteration" value="60" />
 		<param name="eventsFileFormat" value="xml" />
