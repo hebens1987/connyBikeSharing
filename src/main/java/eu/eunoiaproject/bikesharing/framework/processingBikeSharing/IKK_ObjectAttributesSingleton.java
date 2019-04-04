@@ -12,12 +12,12 @@ public class IKK_ObjectAttributesSingleton {
 	private static IKK_ObjectAttributesSingleton instance = null;
 	
 	
-	ObjectAttributes bikeLinkAttributes;
-	ObjectAttributes usergroupAttributes;
-	ObjectAttributes personAttributes;
-	ObjectAttributes intermodalSpeedValues;
-	ObjectAttributes intermodalSpeedBoundary;
-	ObjectAttributes intermodalSpeedGroupNumber;
+	private ObjectAttributes bikeLinkAttributes;
+	private ObjectAttributes usergroupAttributes;
+	private ObjectAttributes personAttributes;
+	private ObjectAttributes intermodalSpeedValues;
+	private ObjectAttributes intermodalSpeedBoundary;
+	private ObjectAttributes intermodalSpeedGroupNumber;
 	
 	/***************************************************************************/
 	private IKK_ObjectAttributesSingleton()
