@@ -150,21 +150,21 @@ public class TUG_BSEBikeRoutingModule implements RoutingModule {
 				path.links.add(scenario.getNetwork().getLinks().get(toFacility.getLinkId()));
 				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, person, null)
 						+ btt.getLinkTravelTime(path.links.get(path.links.size()-1), departureTime, person, null);
-				travelTime = path.travelTime + travelTimeAddOn;
+				travelTime = path.travelTime + travelTimeAddOn/2;
 			}
 
 			else
 			{
 				path.links.add(scenario.getNetwork().getLinks().get(fromFacility.getLinkId()));
 				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, person, null);
-				travelTime = path.travelTime + travelTimeAddOn;
+				travelTime = path.travelTime + travelTimeAddOn/2;
 				
 			}
 		}
 		//path.links.add(0, scenario.getNetwork().getLinks().get(fromFacility.getLinkId()));
 		//path.links.add(scenario.getNetwork().getLinks().get(toFacility.getLinkId()));
 		
-		NetworkRoute route = new LinkNetworkRouteImpl(startLinkId, endLinkId);
+		LinkNetworkRouteImpl route = new LinkNetworkRouteImpl(startLinkId, endLinkId);
 		String routeDescr = "";
 		String startLinkIdPath = path.links.get(0).getId().toString();
 		String endLinkIdPath = path.links.get(path.links.size()-1).getId().toString();

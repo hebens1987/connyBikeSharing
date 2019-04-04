@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bikeSharingBikes SYSTEM "bikesharingbikes_v1.dtd">
+
+<bikeSharingBikes>
+
+<ebike bikeId="e1_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_1bs_pt"/>
+<ebike bikeId="e1_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_1bs_pt"/>
+<ebike bikeId="e1_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_1bs_pt"/>
+<ebike bikeId="e1_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_1bs_pt"/>
+<ebike bikeId="e1_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_1bs_pt"/>
+<ebike bikeId="e10_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_10bs"/>
+<ebike bikeId="e10_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_10bs"/>
+<ebike bikeId="e10_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_10bs"/>
+<ebike bikeId="e10_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_10bs"/>
+<ebike bikeId="e103_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_103bs"/>
+<ebike bikeId="e103_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_103bs"/>
+<ebike bikeId="e103_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_103bs"/>
+<ebike bikeId="e103_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_103bs"/>
+<ebike bikeId="e104_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_104bs"/>
+<ebike bikeId="e104_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_104bs"/>
+<ebike bikeId="e104_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_104bs"/>
+<ebike bikeId="e104_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_104bs"/>
+<ebike bikeId="e105_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_105bs"/>
+<ebike bikeId="e105_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_105bs"/>
+<ebike bikeId="e105_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_105bs"/>
+<ebike bikeId="e105_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_105bs"/>
+<ebike bikeId="e105_5" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_105bs"/>
+<ebike bikeId="e106_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_106bs"/>
+<ebike bikeId="e106_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_106bs"/>
+<ebike bikeId="e106_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_106bs"/>
+<ebike bikeId="e106_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_106bs"/>
+<ebike bikeId="e11_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_11bs_pt"/>
+<ebike bikeId="e11_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_11bs_pt"/>
+<ebike bikeId="e11_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_11bs_pt"/>
+<ebike bikeId="e11_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_11bs_pt"/>
+<ebike bikeId="e12_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_12bs_pt"/>
+<ebike bikeId="e12_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_12bs_pt"/>
+<ebike bikeId="e12_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_12bs_pt"/>
+<ebike bikeId="e17_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_17bs_pt"/>
+<ebike bikeId="e17_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_17bs_pt"/>
+<ebike bikeId="e17_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_17bs_pt"/>
+<ebike bikeId="e17_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_17bs_pt"/>
+<ebike bikeId="e2_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_2bs_pt"/>
+<ebike bikeId="e2_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_2bs_pt"/>
+<ebike bikeId="e2_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_2bs_pt"/>
+<ebike bikeId="e2_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_2bs_pt"/>
+<ebike bikeId="e2_5" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_2bs_pt"/>
+<ebike bikeId="e3_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_3bs_pt"/>
+<ebike bikeId="e3_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_3bs_pt"/>
+<ebike bikeId="e3_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_3bs_pt"/>
+<ebike bikeId="e4_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_4bs_pt"/>
+<ebike bikeId="e4_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_4bs_pt"/>
+<ebike bikeId="e4_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_4bs_pt"/>
+<ebike bikeId="e4_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_4bs_pt"/>
+<ebike bikeId="e5_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_5bs"/>
+<ebike bikeId="e5_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_5bs"/>
+<ebike bikeId="e5_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_5bs"/>
+<ebike bikeId="e5_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_5bs"/>
+<ebike bikeId="e6_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_6bs"/>
+<ebike bikeId="e6_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_6bs"/>
+<ebike bikeId="e6_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_6bs"/>
+<ebike bikeId="e6_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_6bs"/>
+<ebike bikeId="e7_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_7bs"/>
+<ebike bikeId="e7_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_7bs"/>
+<ebike bikeId="e7_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_7bs"/>
+<ebike bikeId="e7_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_7bs"/>
+<ebike bikeId="e7_5" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_7bs"/>
+<ebike bikeId="e8_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_8bs"/>
+<ebike bikeId="e8_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_8bs"/>
+<ebike bikeId="e8_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_8bs"/>
+<ebike bikeId="e8_4" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_8bs"/>
+<ebike bikeId="e9_1" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_9bs"/>
+<ebike bikeId="e9_2" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_9bs"/>
+<ebike bikeId="e9_3" stateOfCharge="1" ohmicResistance="0.0151" voltage="36" batteryChargeCapacity="2900" kmFullToEmpty="60" stationId="e_9bs"/>
+<bike bikeId="c11" stationId="c1"/>
+<bike bikeId="c12" stationId="c1"/>
+<bike bikeId="c13" stationId="c1"/>
+<bike bikeId="c14" stationId="c1"/>
+<bike bikeId="c15" stationId="c1"/>
+<bike bikeId="c21" stationId="c2pt"/>
+<bike bikeId="c22" stationId="c2pt"/>
+<bike bikeId="c23" stationId="c2pt"/>
+<bike bikeId="c24" stationId="c2pt"/>
+<bike bikeId="c25" stationId="c2pt"/>
+<bike bikeId="c31" stationId="c3pt"/>
+<bike bikeId="c32" stationId="c3pt"/>
+<bike bikeId="c33" stationId="c3pt"/>
+<bike bikeId="c34" stationId="c3pt"/>
+<bike bikeId="c35" stationId="c3pt"/>
+
+
+</bikeSharingBikes>

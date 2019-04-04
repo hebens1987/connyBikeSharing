@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE transitSchedule SYSTEM "http://www.matsim.org/files/dtd/transitSchedule_v1.dtd">
+
+<transitSchedule>
+	<transitStops>
+		<stopFacility id="221a" x="550" y="1270" linkRefId="11111a" name="221_11111a" isBlocking="false"/>
+		<stopFacility id="222a" x="530" y="1955" linkRefId="11113a" name="222_11113a" isBlocking="false"/>
+		<stopFacility id="223a" x="1520" y="1975" linkRefId="11115a" name="223_11115a" isBlocking="false"/>
+		<stopFacility id="224a" x="2185" y="1960" linkRefId="11117a" name="224_11117a" isBlocking="false"/>
+		<stopFacility id="225a" x="2225" y="1025" linkRefId="11119a" name="225_11119a" isBlocking="false"/>
+		<stopFacility id="221b" x="555" y="1270" linkRefId="11111b" name="221_11111b" isBlocking="false"/>
+		<stopFacility id="222b" x="535" y="1955" linkRefId="11113b" name="222_11113b" isBlocking="false"/>
+		<stopFacility id="223b" x="1525" y="1975" linkRefId="11115b" name="223_11115b" isBlocking="false"/>
+		<stopFacility id="224b" x="2190" y="1960" linkRefId="11117b" name="224_11117b" isBlocking="false"/>
+		<stopFacility id="225b" x="2230" y="1025" linkRefId="11119b" name="225_11119b" isBlocking="false"/>
+	</transitStops>
+
+	<transitLine id="Bus_1">
+		<transitRoute id="bus1_hin">
+			<transportMode>bus</transportMode>
+			<routeProfile>
+				<stop refId="221a" departureOffset="00:00:00" awaitDeparture="true"/>
+				<stop refId="222a" arrivalOffset="00:07:00" departureOffset="00:07:15" awaitDeparture="true"/>
+				<stop refId="223a" arrivalOffset="00:14:00" departureOffset="00:14:15"  awaitDeparture="true"/>
+				<stop refId="224a" arrivalOffset="00:21:00" departureOffset="00:21:15" awaitDeparture="true"/>
+				<stop refId="225a" arrivalOffset="00:28:00" awaitDeparture="true"/>
+			</routeProfile>
+			<route>
+				<link refId="11111a"/>
+				<link refId="11112a"/>
+				<link refId="11113a"/>
+				<link refId="11114a"/>
+				<link refId="11115a"/>
+				<link refId="11116a"/>
+				<link refId="11117a"/>
+				<link refId="11118a"/>
+				<link refId="11119a"/>
+			</route>
+			<departures>
+				<departure id="10b" departureTime="07:40:00" vehicleRefId="tr_1" />
+				<departure id="11b" departureTime="07:50:00" vehicleRefId="tr_2" />
+				<departure id="12b" departureTime="08:00:00" vehicleRefId="tr_3" />
+				<departure id="13b" departureTime="08:10:00" vehicleRefId="tr_4" />
+				<departure id="13c" departureTime="08:20:00" vehicleRefId="tr_5" />
+				<departure id="25a" departureTime="15:50:00" vehicleRefId="tr_6" />				
+				<departure id="25b" departureTime="16:00:00" vehicleRefId="tr_7" />
+				<departure id="25c" departureTime="16:10:00" vehicleRefId="tr_8" />
+				<departure id="26b" departureTime="16:20:00" vehicleRefId="tr_9" />
+			</departures>
+		</transitRoute>
+		<transitRoute id="bus1_rueck">
+			<transportMode>bus</transportMode>
+			<routeProfile>
+				<stop refId="225b" departureOffset="00:07:20" awaitDeparture="true"/>
+				<stop refId="224b" arrivalOffset="00:14:20" departureOffset="00:14:50" awaitDeparture="true"/>
+				<stop refId="223b" arrivalOffset="00:21:20" departureOffset="00:21:50" awaitDeparture="true"/>
+				<stop refId="222b" arrivalOffset="00:28:20" departureOffset="00:28:50" awaitDeparture="true"/>
+				<stop refId="221b" arrivalOffset="00:36:20" awaitDeparture="true"/>
+			</routeProfile>
+			<route>
+				<link refId="11119b"/>
+				<link refId="11118b"/>
+				<link refId="11117b"/>
+				<link refId="11116b"/>
+				<link refId="11115b"/>
+				<link refId="11114b"/>
+				<link refId="11113b"/>
+				<link refId="11112b"/>
+				<link refId="11111b"/>
+			</route>
+			<departures>
+				<departure id="10b" departureTime="07:40:00" vehicleRefId="tr_10" />
+				<departure id="11b" departureTime="07:50:00" vehicleRefId="tr_11" />
+				<departure id="12b" departureTime="08:00:00" vehicleRefId="tr_12" />
+				<departure id="13b" departureTime="08:10:00" vehicleRefId="tr_13" />
+				<departure id="13c" departureTime="08:20:00" vehicleRefId="tr_14" />
+				<departure id="25a" departureTime="15:50:00" vehicleRefId="tr_15" />				
+				<departure id="25b" departureTime="16:00:00" vehicleRefId="tr_16" />
+				<departure id="25c" departureTime="16:10:00" vehicleRefId="tr_17" />
+				<departure id="26b" departureTime="16:20:00" vehicleRefId="tr_18" />
+		</departures>
+		</transitRoute>
+	</transitLine>
+</transitSchedule>

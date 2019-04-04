@@ -53,39 +53,30 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			Link link, double time, Person person, Vehicle vehicle, String mode) 
 	/***************************************************************************/
 	{   
-				//String test = bikeConfigGroup.getValue("bicyclelinkAttributesInput");
-		 		//System.out.println(test); //Hebenstreit - bikeConfigGroup --> NullPointer
-		   		double bikeSpeedOfPerson = 0;
+			double travelTime = 0;
+			if ((mode.equals(EBConstants.BS_BIKE))|| (mode.equals(EBConstants.BS_BIKE_FF)))
+			{
+				TUG_BSTravelTime wtt = new TUG_BSTravelTime (bikeConfigGroup);
+				travelTime = wtt.getLinkTravelTime(link, time, person, vehicle);
+			}
+			else if (mode.equals(TransportMode.bike))
+			{
+				TUG_BikeTravelTime wtt = new TUG_BikeTravelTime(bikeConfigGroup);
+				travelTime = wtt.getLinkTravelTime(link, time, person, vehicle);
+			}
+			else if (mode.equals(EBConstants.BS_E_BIKE))
+			{
+				TUG_EBSTravelTime wtt = new TUG_EBSTravelTime(bikeConfigGroup);
+				travelTime = wtt.getLinkTravelTime(link, time, person, vehicle);
+			}
+				
+			double lenOfLink = link.getLength();
+
 		   		int routingType = -1;
-			   // Einlesen aus Person_Attributes 
-		   		
-		   		if (personAttributes == null)
+
+				if (personAttributes.getAttribute(person.getId().toString(), "routingType") != null)
 				{
-					bikeSpeedOfPerson = 16/3.6;
-				}
-				else
-				{
-					if ((mode.equals(EBConstants.BS_BIKE))||(mode.equals(EBConstants.BS_BIKE_FF)))
-					{
-						bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")); // m/s
-						bikeSpeedOfPerson = bikeSpeedOfPerson/1.125;
-						if (bikeSpeedOfPerson > 20/3.6) {bikeSpeedOfPerson = 20/3.6;}
-					}
-					else if (mode.equals(EBConstants.BS_E_BIKE))
-					{
-						bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")); // m/s
-						if (bikeSpeedOfPerson < 5.56)
-						{
-							bikeSpeedOfPerson = 5.56;
-						}	
-					}
-						
-					else
-					{
-						bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")) ;
-						//String bikeTypeOfPerson = ((String) personAttributes.getAttribute(person.getId().toString(), "bikeType"));  
-						routingType = ((int) personAttributes.getAttribute(person.getId().toString(), "routingType"));
-					}
+					routingType = ((int) personAttributes.getAttribute(person.getId().toString(), "routingType"));
 				}
 
 			   // Einlesen aus Bike_Attributes
@@ -96,25 +87,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			   double bikeSurroundingOfInfrastructure = -1;
 			   double bikeAmountOfInfrastructure = -1;
 
-			   if ((bikeLinkAttributes == null) || (personAttributes == null))
-			   {
-				   double[] percTravelTimeAndTravelLength = new double[2];
-				   double travelTimeOrig = 0;
-				   double lenOfLink = link.getLength();
-				   if (link.getAllowedModes().contains(TransportMode.bike))
-				   {
-					   travelTimeOrig = lenOfLink/bikeSpeedOfPerson; //no infra type defined, set default to 15 km/h
-				   }
-				   else
-				   {
-					   travelTimeOrig = lenOfLink/1.1; //agent walks the bike
-				   }
-				   percTravelTimeAndTravelLength[0] = travelTimeOrig;
-				   percTravelTimeAndTravelLength[1] = lenOfLink;
-				   return percTravelTimeAndTravelLength;
-			   }
-			   else
-			   {
+			   
 				   if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null) 
 				   {
 					   bikeSpeedOfInfrastructure = 0.00001;
@@ -133,15 +106,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 					   bikeSurroundingOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "surrounding"));  
 					   bikeAmountOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "amount"));  
 				   }
-			   }
-	                                                 
-			   double velocityperson = bikeSpeedOfPerson;
-			   double velocityinfrastructure = bikeSpeedOfInfrastructure/3.6;
-			   double v = 0;
-			   
-			   if(velocityinfrastructure <= velocityperson){v=velocityinfrastructure;}
-			   else {v=velocityperson;}
-			                     
+                                                	                     
 			   // Einlesen aus Config (siehe TravelDisutil): FEHLT NOCH: TODO: Hebenstreit
 			   String [] amountShare = null;
 			   String [] slopeShare = null;
@@ -219,15 +184,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 				   }
 			   	}
 
-			   if(velocityinfrastructure <= velocityperson)
-			   		{v=velocityinfrastructure;}
-			   else 
-			   		{v=velocityperson;}
 
-                   
-			   TUG_BikeTravelTime wtt = new TUG_BikeTravelTime(bikeConfigGroup);
-			   double travelTime = wtt.getLinkTravelTime(link, time, person, vehicle);
-			   double lenOfLink = link.getLength();
 			   //double du_Type = 0;
 	                                                       
 			   double safetyFactor = 1;
@@ -247,11 +204,11 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 	                               
 			   //---- slope (speed) ----
 			   if (bikeSlopeOfInfrastructure <= 2.5) { speedChange = +0.5;}
-			   else if ((bikeSlopeOfInfrastructure > 2.5) && (bikeSlopeOfInfrastructure <=3.5)){ speedChange = +0.33;}
-			   else if ((bikeSlopeOfInfrastructure > 3.5) && (bikeSlopeOfInfrastructure <=4.5)){ speedChange = +0.15;}
-			   else if ((bikeSlopeOfInfrastructure > 4.5) && (bikeSlopeOfInfrastructure <=5.5)){ speedChange = 0;}
-			   else if ((bikeSlopeOfInfrastructure > 5.5) && (bikeSlopeOfInfrastructure <=6.5)){ speedChange = -0.15;}
-			   else if ((bikeSlopeOfInfrastructure > 6.5) && (bikeSlopeOfInfrastructure <=7.5)){ speedChange = -0.33;}
+			   else if ((bikeSlopeOfInfrastructure > 2.5) && (bikeSlopeOfInfrastructure <=3.5)){ speedChange = 0.9;}
+			   else if ((bikeSlopeOfInfrastructure > 3.5) && (bikeSlopeOfInfrastructure <=4.5)){ speedChange = 0.95;}
+			   else if ((bikeSlopeOfInfrastructure > 4.5) && (bikeSlopeOfInfrastructure <=5.5)){ speedChange = 1;}
+			   else if ((bikeSlopeOfInfrastructure > 5.5) && (bikeSlopeOfInfrastructure <=6.5)){ speedChange = 1.05;}
+			   else if ((bikeSlopeOfInfrastructure > 6.5) && (bikeSlopeOfInfrastructure <=7.5)){ speedChange = 1.10;}
 			   else { speedChange = -0.5;}
 	                                                  		   
 			   // ---- comfort ----
@@ -294,16 +251,14 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			   //log.info("###### CHANGES: " + changes);     
 
 
-			   perceivedTravelTime = (lenOfLink/(v + speedChange))* changes;	  
+			   perceivedTravelTime = travelTime * changes * speedChange;	  
 			   //TODO: Hebenstreit - wenn Slope einen bestimmten Wert überschreiten --> Berücksichtigen von SL
 			   
 			   //log.info("###### FeltTravelTime link: " + link.getId() + "  pers:  " + person.getId() + "    " + feltTravelTime);     
 			   //log.info("######     TravelTime link: " + link.getId() + "  pers:  " + person.getId() + "    " + travelTime);  
 
-			   double travelTimeOrig = lenOfLink/v;
-			   double factor = perceivedTravelTime/travelTimeOrig;
 			   double[] percTavelTimeAndTravelLength = new double[2];
-			   percTavelTimeAndTravelLength[0] = travelTimeOrig;//perceivedTravelTime;
+			   percTavelTimeAndTravelLength[0] = travelTime;//perceivedTravelTime;
 			   percTavelTimeAndTravelLength[1] = lenOfLink;
 			   return percTavelTimeAndTravelLength; //does perceive length and duration differently
             

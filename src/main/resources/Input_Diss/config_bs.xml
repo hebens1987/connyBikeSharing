@@ -1,0 +1,185 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v1.dtd">
+<config>
+
+	<module name="TimeAllocationMutator" >
+		<!-- Default:1800.0; Defines how many seconds a time mutation can maximally shift a time. -->
+		<param name="mutationRange" value="300.0" /> <!-- 15 min -->
+	</module>
+	
+	<module name="transit">
+		<param name="transitScheduleFile" value="C:/Users/hebens/Documents/Input_Diss/Schedule_Wien_Gesamt2.xml" />
+		<param name="vehiclesFile" value="C:/Users/hebens/Documents/Input_Diss/vehicles_March2019.xml" />
+		<param name="transitModes" value="pt" /> <!-- ,pt -->
+		<param name="useTransit" value="true" />
+	</module>
+
+	<module name="changeLegMode">
+		<param name="modes" value="pt,car,walk,bike,eBikeSharing" /> <!-- eBikeSharing -->
+	</module>
+	
+
+<module name="bicycleAttributes">	
+		<param name="bicyclelinkAttributesInput" value="C:/Users/hebens/Documents/Input_Diss/attFiles/BikeAttribv2.xml"/>
+		<param name="personCycleAttributesInput" value="C:/Users/hebens/Documents/Input_Diss/attFiles/PersonAttribsv2.xml"/>
+		<param name="bikeTypeGroup_Input" value="1,2,3,4"/>
+		<param name="duAmountBiketype_Input" value="0.1,0.2,0.1,0.1"/>
+		<param name="duSlopeBiketype_Input" value="0.1,0.15,0.1,0"/>
+		<param name="duSurroundingBiketype_Input" value="0.2,0.15,0.1,0.1"/>	
+		<param name="duSafetyBiketype_Input" value="0.2,0.4,0.6,0.6"/>	
+		<param name="duComfortBiketype_Input" value="0.3,0.1,0.1,0.2"/>	
+		<param name="searchRadius_forBS" value="400,420,440,380"/>
+		<param name="maxSearchRadius_forBS" value="600,640,680,600"/>
+		<param name="maxTripLength_forBS" value="6000,6500,7000,7500"/>		
+	</module>
+	
+	<module name="bikeSharingFacilities">	
+		<param name="facilitiesFile" value="C:/Users/hebens/Documents/Input_Diss/bike-sharing-facilities_gleichverteilt.xml"/>
+		<param name="bikeSharingBikes" value="C:/Users/hebens/Documents/Input_Diss/Bicycles_gv.xml"/>
+		<param name="useProbability" value="false"/>
+		<param name="probabilityTake" value="0.024"/>
+		<param name="probabilityReturn" value="0.025"/>
+		<param name="relocationInterval" value="1800"/> <!-- in seconds -->
+	</module>
+
+	<module name="global">
+		<param name="randomSeed" value="99" />
+		<param name="coordinateSystem" value="Atlantis" />
+		<param name="numberOfThreads" value="1" />
+	</module>
+	
+	<module name="linkStats" >
+		<param name="averageLinkStatsOverIterations" value="1" />
+		<param name="writeLinkStatsInterval" value="5" />
+	</module>
+
+	<module name="network">
+		<param name="inputNetworkFile" value="C:/Users/hebens/Documents/Input_Diss/network_March2019.xml" />
+	</module> 
+
+	<module name="plans">
+		<param name="inputPlansFile" value="C:/Users/hebens/Documents/Input_Diss/1.plans.xml" /> <!-- demand_01perc_priv.xml -->
+	</module>
+
+	<module name="controler">
+		<param name="outputDirectory" value="C:/Users/hebens/Documents/Output/29March2019" />
+		<param name="firstIteration" value="0" />
+		<param name="lastIteration" value="60" />
+		<param name="eventsFileFormat" value="xml" />
+		<param name="writeEventsInterval" value="1" />
+		<param name="writePlansInterval" value="1" /> 
+		<param name="mobsim" value="qsim"/>
+	</module>
+	
+		<module name="JDEQSim">
+		<param name="flowCapacityFactor" value="0.02"/>
+		<param name="storageCapacityFactor" value="0.05"/>
+		</module>
+
+	<module name="qsim">
+		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
+		<param name="startTime" value="00:00:00" />
+		<param name="endTime" value="30:00:00" />
+		<param name="vehiclesSource" value="defaultVehicle" />
+		<!--<param name="linkDynamics" value="PassingQ" />-->
+		<param name="mainMode" value="car,subway,train,tram,bus" /> <!--bus,subway,tram,train-->
+		<param name="flowCapacityFactor" value="0.048" />
+		<param name="storageCapacityFactor" value="0.05" />
+		<param name="vehicleBehavior" value="wait" />
+		<param name="numberOfThreads" value="1" />
+	</module>
+	
+	<module name="planCalcScore">
+		<param name="learningRate" value="1.0" />
+		<param name="BrainExpBeta" value="2.0" />
+		
+		<param name="lateArrival" value="-10" />
+		<param name="earlyDeparture" value="-0" />
+		<param name="performing" value="+9" />
+		<param name="waiting" value="-0" />
+		<param name="waitingPt" value="-0.0" />
+		<param name="marginalUtilityOfMoney" value="1.0" />
+
+		<param name="activityType_home"            value="home" />
+		<param name="activityPriority_home"        value="1" />
+		<param name="activityTypicalDuration_home" value="12:00:00" />
+		<param name="activityMinimalDuration_home" value="08:00:00" />
+
+		<param name="activityType_work"            value="work" />
+		<param name="activityPriority_work"        value="1" />
+		<param name="activityTypicalDuration_work" value="08:00:00" />
+		<param name="activityMinimalDuration_work" value="04:00:00" />
+		<param name="activityLatestStartTime_work" value="16:00:00" />
+		<param name="activityEarliestEndTime_work" value="" />
+
+		<param name="activityType_shop"            value="shopping" />
+		<param name="activityPriority_shop"        value="1" />
+		<param name="activityTypicalDuration_shop" value="00:45:00" />
+		<param name="activityMinimalDuration_shop" value="00:15:00" />
+		<param name="activityLatestStartTime_shop" value="" />
+		<param name="activityEarliestEndTime_shop" value="" />
+		
+		<param name="activityType_bsWalkInteract" value="bs_walk interaction" />
+		<param name="scoringThisActivityAtAll_bsWalkInteract" value="false" />
+
+
+		<param name="traveling_car" value="-2.5" /> <!-- - 2.5 -->
+		<param name="monetaryDistanceRate_car" value="-0.00025" /> <!-- -0.00025 -->
+		<param name="constant_car" value="-3.1" /> <!-- - 3.1 -->
+		
+		<param name="traveling_pt" value="-3.00" /> <!-- 3.15 -->
+		<param name="marginalUtlOfDistance_pt" value="-0.0002"/> <!-- 0.0002 -->
+		<param name="constant_pt" value="-0.85" /> <!-- 0.85 -->
+		<param name="utilityOfLineSwitch" value="-1.0" />
+		
+		<param name="traveling_bike" value="-10" />
+		<param name="marginalUtlOfDistance_bike" value="-0.000226"/>
+		<param name="constant_bike" value="-2.5" />
+		
+		<param name="traveling_walk" value="-0.5" />
+		<param name="marginalUtlOfDistance_walk" value="-0.00015"/>
+		<param name="constant_walk" value="-1.15" />
+		
+		<param name="traveling_bs" value="-1" />
+		<param name="marginalUtlOfDistance_bs" value="-0.00001"/>
+		<param name="constant_bs" value="-0.5" />
+		
+		<param name="traveling_ebs" value="-1" />
+		<param name="marginalUtlOfDistance_ebs" value="-0.00001"/>
+		<param name="constant_ebs" value="-0.5" />
+		
+		<param name="traveling_bs_walk" value="-0.5" />
+		<param name="marginalUtlOfDistance_bs_walk" value="-0.00015"/>
+		<param name="constant_bs_walk" value="-1.15" />
+		
+		<param name="traveling_transit_walk" value="-0.5" />
+		<param name="marginalUtlOfDistance_transit_walk" value="-0.00015"/>
+		<param name="constant_transit_walk" value="-1.15" />
+	</module>
+
+
+	<module name="strategy">
+		<param name="maxAgentPlanMemorySize" value="4" /> <!-- 0 means unlimited -->
+		
+		<param name="ModuleProbability_1" value="0.6" /> <!-- 0.8-->
+		<param name="Module_1" value="SelectExpBeta" />
+
+		<param name="ModuleProbability_2" value="0.15" />
+		<param name="Module_2" value="ReRoute" />
+		<param name="ModuleDisableAfterIteration_2" value="49" /><!-- 68, auf 30 ändern-->
+		
+		<param name="ModuleProbability_3" value="0.1" />
+		<param name="Module_3" value="TimeAllocationMutator" />
+		<param name="ModuleDisableAfterIteration_3" value="44" /> <!-- 40, auf 26 ändern-->
+
+		<param name="ModuleProbability_4" value="0.2" /> 
+		<param name="Module_4" value="ResetBSPlan" />
+		<param name="ModuleDisableAfterIteration_4" value="54" /><!-- 72, auf 34 ändern-->
+	</module>
+	
+	<module name="travelTimeCalculator">
+		<param name="analyzedModes" value="car,bike,walk,eBikeSharing"/>
+		<param name="separateModes" value="true"/>
+	</module>
+	
+</config>

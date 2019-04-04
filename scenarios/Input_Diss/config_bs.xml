@@ -58,7 +58,7 @@
 	</module> 
 
 	<module name="plans">
-		<param name="inputPlansFile" value="/Users/kainagel/Downloads/conny/Input_Diss/0.plans.xml.gz" /> <!-- demand_01perc_priv.xml.gz -->
+		<param name="inputPlansFile" value="/Users/kainagel/Downloads/conny/Input_Diss/1.plans.xml" /> <!-- demand_01perc_priv.xml.gz -->
 	</module>
 
 	<module name="controler">
