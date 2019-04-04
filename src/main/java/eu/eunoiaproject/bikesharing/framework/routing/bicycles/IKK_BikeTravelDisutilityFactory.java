@@ -28,7 +28,7 @@ public class IKK_BikeTravelDisutilityFactory implements TravelDisutilityFactory 
 	public TravelDisutility createTravelDisutility(TravelTime timeCalculator)
 	/***************************************************************************/
 	{
-		return new TUG_BikeTravelDisutility(bikeConfigGroup, cnScoringGroup); 
+		return new TUG_BikeTravelDisutility(bikeConfigGroup );
 	}
 
 }

@@ -10,7 +10,7 @@ import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_EBSTravelTime;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_LegScoringFunctionBikeAndWalkFactory;
+import eu.eunoiaproject.bikesharing.framework.scoring.TUG_LegScoringFunctionBikeAndWalkFactory;
 import eu.eunoiaproject.bikesharing.framework.routing.bikeSharing.EBikeSharingRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelDisutilityFactory;
@@ -29,7 +29,7 @@ import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.router.SingleModeNetworksCache;
 import org.matsim.pt.router.TransitRouterModule;
 
-public class ImplementationModule extends AbstractModule {
+class ImplementationModule extends AbstractModule {
 	
 	private final Config config;
 

@@ -21,17 +21,14 @@ package eu.eunoiaproject.bikesharing.framework.routing.bicycles;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Node;
-import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
-import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.router.Dijkstra;
 import org.matsim.core.router.EmptyStageActivityTypes;
 import org.matsim.core.router.RoutingModule;
@@ -44,7 +41,6 @@ import com.google.inject.Inject;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelDisutility;
 
 
 import java.util.ArrayList;
@@ -91,7 +87,7 @@ public class TUG_BSEBikeRoutingModule implements RoutingModule {
 		BicycleConfigGroup config = (BicycleConfigGroup) scenario.getConfig().getModule("bicycleAttributes");
 		PlanCalcScoreConfigGroup conf2 = (PlanCalcScoreConfigGroup) scenario.getConfig().getModule("planCalcScore");
 		TUG_EBSTravelTime btt = new TUG_EBSTravelTime(config);
-		TUG_EBSTravelDisutility btd = new TUG_EBSTravelDisutility(config, conf2);
+		TUG_EBSTravelDisutility btd = new TUG_EBSTravelDisutility(config );
 		double travelTime = 0;
 		
 		LeastCostPathCalculator routeAlgo = new Dijkstra(scenario.getNetwork(), btd, btt);
@@ -231,4 +227,3 @@ public class TUG_BSEBikeRoutingModule implements RoutingModule {
 	}
 	
 }
-	

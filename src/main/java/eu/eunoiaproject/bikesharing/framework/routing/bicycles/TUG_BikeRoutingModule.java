@@ -24,7 +24,6 @@ import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Node;
-import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -42,9 +41,7 @@ import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.facilities.Facility;
 import com.google.inject.Inject;
 
-import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelDisutility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +88,7 @@ public class TUG_BikeRoutingModule implements RoutingModule {
 		BicycleConfigGroup config = (BicycleConfigGroup) scenario.getConfig().getModule("bicycleAttributes");
 		PlanCalcScoreConfigGroup conf2 = (PlanCalcScoreConfigGroup) scenario.getConfig().getModule("planCalcScore");
 		TUG_BikeTravelTime btt = new TUG_BikeTravelTime(config);
-		TUG_BikeTravelDisutility btd = new TUG_BikeTravelDisutility(config, conf2);
+		TUG_BikeTravelDisutility btd = new TUG_BikeTravelDisutility(config );
 		double travelTime = 0;
 		
 		LeastCostPathCalculator routeAlgo = new Dijkstra(scenario.getNetwork(), btd, btt);
@@ -231,4 +228,3 @@ public class TUG_BikeRoutingModule implements RoutingModule {
 	}
 	
 }
-	

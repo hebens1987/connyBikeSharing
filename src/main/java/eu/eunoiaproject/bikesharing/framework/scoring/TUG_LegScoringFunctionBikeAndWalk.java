@@ -1,87 +1,63 @@
-package eu.eunoiaproject.bikesharing.framework.routing.bicycles;
+package eu.eunoiaproject.bikesharing.framework.scoring;
 
 
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.log4j.Logger;
-import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.api.core.v01.population.PlanElement;
-import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.config.Config;
-import org.matsim.core.config.ConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
-import org.matsim.core.gbl.Gbl;
-import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
-import org.matsim.core.scoring.functions.CharyparNagelScoringParametersForPerson;
-import org.matsim.core.scoring.functions.ModeUtilityParameters;
-import org.matsim.core.utils.geometry.CoordUtils;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 
 
-public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring 
+class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 {	
 	@Inject
 	BicycleConfigGroup bikeConfigGroup;
 	
 	//private Config config;
-	Person person;
-	Scenario scenario; 
-	Config config;
-	ModeParams ModeParams;
-	PlanCalcScoreConfigGroup cn;
-	CharyparNagelScoringParameters cnParams;
-	
+	private Person person;
+	private PlanCalcScoreConfigGroup cn;
+
 	//TODO: VerknÃ¼pfen von LegScoringFunctionBikeAndWalk mit IKK_WalkTravelDisutility und IKK_BikeTravelDisutility
 	//oder Verbessern von LegScoringFunctionBikeAndWalk --> einarbeiten von IKK_WalkTravelDisutility und IKK_BikeTravelDisutility
 	
 	/***************************************************************************/
 	public TUG_LegScoringFunctionBikeAndWalk(
-			CharyparNagelScoringParameters params, 
-			Config config,
-			Network network, 
-			Person person, 
-			BicycleConfigGroup bikeConfigGroup,
-			Scenario scenario)
+		  CharyparNagelScoringParameters params,
+		  Config config,
+		  Network network,
+		  Person person,
+		  BicycleConfigGroup bikeConfigGroup )
 	/***************************************************************************/
 	{
 		super(params, network);
 		this.person = person;
-		this.config = config;
 		this.network = network;
 		this.bikeConfigGroup = bikeConfigGroup;
-		this.scenario = scenario;
 		this.cn = (PlanCalcScoreConfigGroup) config.getModule("planCalcScore");
-		this.cnParams = params;
-		
+
 	}
 	
-	/***************************************************************************/	
-	double [] getLegDistAndTime(Leg newLegX, double travelTime)
+	/***************************************************************************/
+	private double [] getLegDistAndTime( Leg newLegX )
 	/***************************************************************************/
 	{
-		travelTime = newLegX.getTravelTime();
+		double travelTime = newLegX.getTravelTime();
 		LinkNetworkRouteImpl nr = (LinkNetworkRouteImpl)newLegX.getRoute();
 		String routeD = newLegX.getRoute().getRouteDescription();
 		if (routeD == null) routeD = nr.getRouteDescription();
-		double travelTime2 = newLegX.getRoute().getTravelTime();
-		double distanceOrig = newLegX.getRoute().getDistance();
 		double[] timeDist = {0,0};
 		double feltTravelTime = 0;
 		double distance = 0;
@@ -122,8 +98,8 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    	}
 	    }
 	    
-	    double min = travelTime/2;
-	    double max = travelTime*2;
+	    double min = travelTime /2;
+	    double max = travelTime *2;
 	    if (feltTravelTime < min)
 	    {
 	    	feltTravelTime = min;
@@ -152,7 +128,7 @@ public class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 								|| leg.getMode().equals(EBConstants.BS_E_BIKE )
 												|| leg.getMode().equals(TransportMode.bike)) //only pt,transit_walk and car shall not run into
 		{
-			double[] arr = getLegDistAndTime(leg, leg.getTravelTime());
+			double[] arr = getLegDistAndTime(leg );
 			
 	    	if (arr != null)
 	    	{

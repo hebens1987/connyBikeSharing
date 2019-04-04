@@ -147,6 +147,7 @@ public class RunConfigurableBikeSharingSimulation {
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
 		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
+				config.transitRouter().setMaxBeelineWalkConnectionDistance( 10. );
 				break;
 			case debug:
 				config.controler().setLastIteration( 1 );

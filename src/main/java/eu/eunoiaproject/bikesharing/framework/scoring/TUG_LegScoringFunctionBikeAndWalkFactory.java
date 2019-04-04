@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.routing.bicycles;
+package eu.eunoiaproject.bikesharing.framework.scoring;
 
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Person;
@@ -49,7 +49,7 @@ public class TUG_LegScoringFunctionBikeAndWalkFactory implements ScoringFunction
 		scoringFunctionSum.addScoringFunction(
 	    new TUG_LegScoringFunctionBikeAndWalk( params.getScoringParameters(person),
 	    								 this.scenario.getConfig(),
-	    								 (NetworkImpl)this.scenario.getNetwork(), person, bikeConfigGroup, scenario));
+	    								 (NetworkImpl)this.scenario.getNetwork(), person, bikeConfigGroup ) );
 		scoringFunctionSum.addScoringFunction(
 				new CharyparNagelLegScoring(
 						params.getScoringParameters( person ),

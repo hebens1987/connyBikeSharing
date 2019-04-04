@@ -1,19 +1,20 @@
-package eu.eunoiaproject.bikesharing.framework.routing.bicycles;
+package eu.eunoiaproject.bikesharing.framework.scoring;
 
 
-
+import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
+import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_EBSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 import org.matsim.api.core.v01.TransportMode;
-//import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.vehicles.Vehicle;
 
-import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
-import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+//import org.apache.log4j.Logger;
 
 /**
 * in this class the felt travel time - used for scoring is calculated
@@ -24,33 +25,28 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGro
 */
 
 
-public class TUG_BikeFeltTravelTime implements TravelTime
+class TUG_BikeFeltTravelTime implements TravelTime
 {
-	int linkCount=0;
-	double individualDis; 
 	//private final static Logger log = Logger.getLogger(TUG_BikeFeltTravelTime.class);
-	ObjectAttributes bikeLinkAttributes;
-	ObjectAttributes usergroupAttributes;
-	ObjectAttributes personAttributes;
-	BicycleConfigGroup bikeConfigGroup;
-	TUG_FeltTravelTime ftt;
-    
+	private ObjectAttributes bikeLinkAttributes;
+	private ObjectAttributes personAttributes;
+	private BicycleConfigGroup bikeConfigGroup;
+
 	
 	/***************************************************************************/
-	TUG_BikeFeltTravelTime(
+	public TUG_BikeFeltTravelTime(
 			BicycleConfigGroup bikeConfigGroup) 
 	/***************************************************************************/
 	{
 			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup, false);
 			bikeLinkAttributes = bts.getBikeLinkAttributes();
-			usergroupAttributes = bts.getUsergroupAttributes();
-			personAttributes = bts.getPersonAttributes();
+		personAttributes = bts.getPersonAttributes();
 			this.bikeConfigGroup = bikeConfigGroup;
 	}
 	
 	/***************************************************************************/
-	public double [] getLinkTravelDisutility(
-			Link link, double time, Person person, Vehicle vehicle, String mode) 
+	double [] getLinkTravelDisutility(
+		  Link link, double time, Person person, Vehicle vehicle, String mode )
 	/***************************************************************************/
 	{   
 			double travelTime = 0;
@@ -80,8 +76,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 				}
 
 			   // Einlesen aus Bike_Attributes
-			   double bikeSpeedOfInfrastructure = -1; 
-			   double bikeSafetyOfInfrastructure = -1;
+		double bikeSafetyOfInfrastructure = -1;
 			   double bikeSlopeOfInfrastructure = -1;
 			   double bikeComfortOfInfrastructure = -1;
 			   double bikeSurroundingOfInfrastructure = -1;
@@ -90,7 +85,6 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			   
 				   if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null) 
 				   {
-					   bikeSpeedOfInfrastructure = 0.00001;
 					   bikeSafetyOfInfrastructure = 5;
 					   bikeSlopeOfInfrastructure = 5;
 					   bikeComfortOfInfrastructure = 5;               
@@ -99,8 +93,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 				   }
 				   else
 				   {
-					   bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")); 
-					   bikeSafetyOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "safety")); 
+					   bikeSafetyOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "safety"));
 					   bikeSlopeOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "slope")); 
 					   bikeComfortOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "comfort"));                      
 					   bikeSurroundingOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "surrounding"));  

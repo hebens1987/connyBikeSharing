@@ -17,7 +17,6 @@ import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.QSimConfigGroup;
-import org.matsim.core.gbl.Gbl;
 import org.matsim.core.mobsim.framework.Mobsim;
 import org.matsim.core.mobsim.qsim.ActivityEngine;
 import org.matsim.core.mobsim.qsim.QSim;
@@ -130,7 +129,7 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		}
 		{
 			TravelTime btt = new TUG_BSTravelTime(confBC);
-			TravelDisutility btd = 	new TUG_BikeTravelDisutility(confBC, pcsConf);
+			TravelDisutility btd = 	new TUG_BikeTravelDisutility(confBC );
 			LeastCostPathCalculator calc = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt ) ;
 			builder.setSharedBikePathCalculator( calc ) ;
 		}
