@@ -11,6 +11,7 @@ import org.matsim.core.router.util.TravelTime;
 import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.vehicles.Vehicle;
 
+import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 
@@ -49,7 +50,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 	
 	/***************************************************************************/
 	public double [] getLinkTravelDisutility(
-			Link link, double time, Person person, Vehicle vehicle) 
+			Link link, double time, Person person, Vehicle vehicle, String mode) 
 	/***************************************************************************/
 	{   
 				//String test = bikeConfigGroup.getValue("bicyclelinkAttributesInput");
@@ -57,15 +58,34 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 		   		double bikeSpeedOfPerson = 0;
 		   		int routingType = -1;
 			   // Einlesen aus Person_Attributes 
-				if (personAttributes == null)
+		   		
+		   		if (personAttributes == null)
 				{
 					bikeSpeedOfPerson = 16/3.6;
 				}
 				else
 				{
-					bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")) ;
-					//String bikeTypeOfPerson = ((String) personAttributes.getAttribute(person.getId().toString(), "bikeType"));  
-					routingType = ((int) personAttributes.getAttribute(person.getId().toString(), "routingType"));
+					if ((mode.equals(EBConstants.BS_BIKE))||(mode.equals(EBConstants.BS_BIKE_FF)))
+					{
+						bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")); // m/s
+						bikeSpeedOfPerson = bikeSpeedOfPerson/1.125;
+						if (bikeSpeedOfPerson > 20/3.6) {bikeSpeedOfPerson = 20/3.6;}
+					}
+					else if (mode.equals(EBConstants.BS_E_BIKE))
+					{
+						bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")); // m/s
+						if (bikeSpeedOfPerson < 5.56)
+						{
+							bikeSpeedOfPerson = 5.56;
+						}	
+					}
+						
+					else
+					{
+						bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")) ;
+						//String bikeTypeOfPerson = ((String) personAttributes.getAttribute(person.getId().toString(), "bikeType"));  
+						routingType = ((int) personAttributes.getAttribute(person.getId().toString(), "routingType"));
+					}
 				}
 
 			   // Einlesen aus Bike_Attributes
@@ -199,8 +219,10 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 				   }
 			   	}
 
-			   if(velocityinfrastructure <= velocityperson){v=velocityinfrastructure;}
-			   else {v=velocityperson;}
+			   if(velocityinfrastructure <= velocityperson)
+			   		{v=velocityinfrastructure;}
+			   else 
+			   		{v=velocityperson;}
 
                    
 			   TUG_BikeTravelTime wtt = new TUG_BikeTravelTime(bikeConfigGroup);
@@ -216,11 +238,11 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 	                               
 			   //---- safety ----
 			   if (bikeSafetyOfInfrastructure <= 2.5) { safetyFactor = 0.5;}
-			   else if ((bikeSafetyOfInfrastructure > 2.5) && (bikeSafetyOfInfrastructure <=3.5)){ safetyFactor = 0.75;}
-			   else if ((bikeSafetyOfInfrastructure > 3.5) && (bikeSafetyOfInfrastructure <=4.5)){ safetyFactor = 0.875;}
+			   else if ((bikeSafetyOfInfrastructure > 2.5) && (bikeSafetyOfInfrastructure <=3.5)){ safetyFactor = 0.9;}
+			   else if ((bikeSafetyOfInfrastructure > 3.5) && (bikeSafetyOfInfrastructure <=4.5)){ safetyFactor = 0.95;}
 			   else if ((bikeSafetyOfInfrastructure > 4.5) && (bikeSafetyOfInfrastructure <=5.5)){ safetyFactor = 1;}
-			   else if ((bikeSafetyOfInfrastructure > 5.5) && (bikeSafetyOfInfrastructure <=6.5)){ safetyFactor = 1.125;}
-			   else if ((bikeSafetyOfInfrastructure > 6.5) && (bikeSafetyOfInfrastructure <=7.5)){ safetyFactor = 1.25;}
+			   else if ((bikeSafetyOfInfrastructure > 5.5) && (bikeSafetyOfInfrastructure <=6.5)){ safetyFactor = 1.05;}
+			   else if ((bikeSafetyOfInfrastructure > 6.5) && (bikeSafetyOfInfrastructure <=7.5)){ safetyFactor = 1.5;}
 			   else { safetyFactor = 1.35;}
 	                               
 			   //---- slope (speed) ----
@@ -234,17 +256,17 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 	                                                  		   
 			   // ---- comfort ----
 			   if (bikeComfortOfInfrastructure <= 2.5) { comfortFactor = 0.5;}
-			   else if ((bikeComfortOfInfrastructure > 2.5) && (bikeComfortOfInfrastructure <=3.5)){ comfortFactor = 0.75;}
-			   else if ((bikeComfortOfInfrastructure > 3.5) && (bikeComfortOfInfrastructure <=4.5)){ comfortFactor = 0.875;}
+			   else if ((bikeComfortOfInfrastructure > 2.5) && (bikeComfortOfInfrastructure <=3.5)){ comfortFactor = 0.9;}
+			   else if ((bikeComfortOfInfrastructure > 3.5) && (bikeComfortOfInfrastructure <=4.5)){ comfortFactor = 0.95;}
 			   else if ((bikeComfortOfInfrastructure > 4.5) && (bikeComfortOfInfrastructure <=5.5)){ comfortFactor = 1;}
-			   else if ((bikeComfortOfInfrastructure > 5.5) && (bikeComfortOfInfrastructure <=6.5)){ comfortFactor = 1.125;}
-			   else if ((bikeComfortOfInfrastructure > 6.5) && (bikeComfortOfInfrastructure <=7.5)){ comfortFactor = 1.25;}
+			   else if ((bikeComfortOfInfrastructure > 5.5) && (bikeComfortOfInfrastructure <=6.5)){ comfortFactor = 1.05;}
+			   else if ((bikeComfortOfInfrastructure > 6.5) && (bikeComfortOfInfrastructure <=7.5)){ comfortFactor = 1.1;}
 			   else { comfortFactor = 1.35;}
 	                            		   
 			   // ---- surrounding ----
 			   if (bikeSurroundingOfInfrastructure <= 2.5) { surroundingFactor = 0.5;}
-			   else if ((bikeSurroundingOfInfrastructure > 2.5) && (bikeSurroundingOfInfrastructure <=3.5)){ surroundingFactor = 0.80;}
-			   else if ((bikeSurroundingOfInfrastructure > 3.5) && (bikeSurroundingOfInfrastructure <=4.5)){ surroundingFactor = 0.92;}
+			   else if ((bikeSurroundingOfInfrastructure > 2.5) && (bikeSurroundingOfInfrastructure <=3.5)){ surroundingFactor = 0.90;}
+			   else if ((bikeSurroundingOfInfrastructure > 3.5) && (bikeSurroundingOfInfrastructure <=4.5)){ surroundingFactor = 0.95;}
 			   else if ((bikeSurroundingOfInfrastructure > 4.5) && (bikeSurroundingOfInfrastructure <=5.5)){ surroundingFactor = 1;}
 			   else if ((bikeSurroundingOfInfrastructure > 5.5) && (bikeSurroundingOfInfrastructure <=6.5)){ surroundingFactor = 1.05;}
 			   else if ((bikeSurroundingOfInfrastructure > 6.5) && (bikeSurroundingOfInfrastructure <=7.5)){ surroundingFactor = 1.1;}
@@ -252,7 +274,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 	                               
 			   // ---- surrounding ----
 			   if (bikeAmountOfInfrastructure <= 2.5) { amountFactor = 0.75;}
-			   else if ((bikeAmountOfInfrastructure > 2.5) && (bikeAmountOfInfrastructure <=3.5)){ amountFactor = 0.825;}
+			   else if ((bikeAmountOfInfrastructure > 2.5) && (bikeAmountOfInfrastructure <=3.5)){ amountFactor = 0.9;}
 			   else if ((bikeAmountOfInfrastructure > 3.5) && (bikeAmountOfInfrastructure <=4.5)){ amountFactor = 0.95;}
 			   else if ((bikeAmountOfInfrastructure > 4.5) && (bikeAmountOfInfrastructure <=5.5)){ amountFactor = 1;}
 			   else if ((bikeAmountOfInfrastructure > 5.5) && (bikeAmountOfInfrastructure <=6.5)){ amountFactor = 1.05;}
@@ -271,6 +293,7 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			   			+ (amountFactor * am));
 			   //log.info("###### CHANGES: " + changes);     
 
+
 			   perceivedTravelTime = (lenOfLink/(v + speedChange))* changes;	  
 			   //TODO: Hebenstreit - wenn Slope einen bestimmten Wert überschreiten --> Berücksichtigen von SL
 			   
@@ -280,8 +303,8 @@ public class TUG_BikeFeltTravelTime implements TravelTime
 			   double travelTimeOrig = lenOfLink/v;
 			   double factor = perceivedTravelTime/travelTimeOrig;
 			   double[] percTavelTimeAndTravelLength = new double[2];
-			   percTavelTimeAndTravelLength[0] = perceivedTravelTime;
-			   percTavelTimeAndTravelLength[1] = lenOfLink * factor;
+			   percTavelTimeAndTravelLength[0] = travelTimeOrig;//perceivedTravelTime;
+			   percTavelTimeAndTravelLength[1] = lenOfLink;
 			   return percTavelTimeAndTravelLength; //does perceive length and duration differently
             
 	   }
