@@ -43,6 +43,12 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 		Scenario scenario = prepareScenario( config ) ;
 
+		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
+		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
+		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
+		//		Das liest die Object Attributes files ein und dami sich das nicht unzählich wiederholt macht es das nur wenns nicht null ist...
+		//		Damit es Test cases mit unterschiedlichem inpun läuft hab ich es verändert... ist nicht hübsch aber tit was es soll (zuvor hat testcase 2 auf attribute von testcase 1 zugegriffen)
+
 		Controler controler = prepareControler( scenario ) ;
 
 		controler.addOverridingModule( new AbstractModule(){
@@ -105,6 +111,12 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 		Scenario scenario = prepareScenario( config ) ;
 
+		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
+		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
+		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
+		//		Das liest die Object Attributes files ein und dami sich das nicht unzählich wiederholt macht es das nur wenns nicht null ist...
+		//		Damit es Test cases mit unterschiedlichem inpun läuft hab ich es verändert... ist nicht hübsch aber tit was es soll (zuvor hat testcase 2 auf attribute von testcase 1 zugegriffen)
+
 		Controler controler = prepareControler( scenario ) ;
 
 		controler.addOverridingModule( new AbstractModule(){
@@ -130,6 +142,12 @@ public class RunConfigurableBikeSharingSimulationTest{
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.standard );
 
 		Scenario scenario = prepareScenario( config ) ;
+
+		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
+		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
+		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
+		//		Das liest die Object Attributes files ein und dami sich das nicht unzählich wiederholt macht es das nur wenns nicht null ist...
+		//		Damit es Test cases mit unterschiedlichem inpun läuft hab ich es verändert... ist nicht hübsch aber tit was es soll (zuvor hat testcase 2 auf attribute von testcase 1 zugegriffen)
 
 		Controler controler = prepareControler( scenario ) ;
 
