@@ -117,7 +117,7 @@ public class RunConfigurableBikeSharingSimulation {
 		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
 
 
-		BikeScenarioUtils.loadConfig(configFile );
+//		BikeScenarioUtils.loadConfig(configFile );
 		// yyyyyy what is this?  Why is it loading the configFile twice?
 
 		final Config config = BikeAndEBikeSharingScenarioUtils.loadConfig( configFile );

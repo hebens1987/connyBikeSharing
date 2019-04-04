@@ -4,6 +4,7 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes
 import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelDisutility;
@@ -139,9 +140,8 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 			LeastCostPathCalculator routeAlgo = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt );;
 			builder.setWalkPathCalculator( routeAlgo ) ;
 		}
-		{
-			builder.setQSim( qSim ) ;
-		}
+		builder.setQSim( qSim ) ;
+		builder.setObjectAttributesSingleton( IKK_ObjectAttributesSingleton.getInstance( confBC, false ) ) ;
 		BikeSharingContext context = builder.build();;
 
 		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( context );

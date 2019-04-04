@@ -1,5 +1,6 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes;
 
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 
@@ -12,11 +13,16 @@ public class BikeSharingContext{
 		return walkPathCalculator ;
 	}
 
+	public IKK_ObjectAttributesSingleton getInstance(){
+		return instance;
+	}
+
 	static class Builder {
 		private LeastCostPathCalculator standardBikePathCalculator;
 		private LeastCostPathCalculator sharedBikePathCalculator;
 		private QSim qSim;
 		private LeastCostPathCalculator walkPathCalculator;
+		private IKK_ObjectAttributesSingleton instance;
 
 		Builder setStandardBikePathCalculator( LeastCostPathCalculator calc ) {
 			standardBikePathCalculator = calc ;
@@ -27,7 +33,7 @@ public class BikeSharingContext{
 			return this ;
 		}
 		BikeSharingContext build() {
-			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, qSim, walkPathCalculator ) ;
+			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, qSim, walkPathCalculator, instance ) ;
 		}
 
 		Builder setQSim( QSim qSim ){
@@ -39,19 +45,26 @@ public class BikeSharingContext{
 			this.walkPathCalculator = routeAlgo;
 			return this ;
 		}
+
+		Builder setObjectAttributesSingleton( IKK_ObjectAttributesSingleton instance ){
+			this.instance = instance;
+			return this ;
+		}
 	}
 
 	private LeastCostPathCalculator standardBikePathCalculator ;
 	private LeastCostPathCalculator sharedBikePathCalculator ;
 	private final QSim qSim;
 	private final LeastCostPathCalculator walkPathCalculator;
+	private final IKK_ObjectAttributesSingleton instance;
 
 	private BikeSharingContext( LeastCostPathCalculator standardBikePathCalculator, LeastCostPathCalculator sharedBikePathCalculator, QSim qSim,
-					    LeastCostPathCalculator walkPathCalculator ){
+					    LeastCostPathCalculator walkPathCalculator, IKK_ObjectAttributesSingleton instance ){
 		this.standardBikePathCalculator = standardBikePathCalculator;
 		this.sharedBikePathCalculator = sharedBikePathCalculator;
 		this.qSim = qSim;
 		this.walkPathCalculator = walkPathCalculator;
+		this.instance = instance;
 	}
 
 	public LeastCostPathCalculator getStandardBikePathCalculator(){
