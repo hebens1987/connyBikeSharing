@@ -55,8 +55,7 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 	@Inject private LeastCostPathCalculatorFactory pathCalculatorFactory ;
 	@Inject private Map<String,TravelDisutilityFactory> travelDisutilityFactories ;
 	@Inject private Map<String,TravelTime> travelTimes ;
-	@Inject private TripRouter tripRouter ;
-	
+	@Inject private BikeSharingContext context ;
 	
 
 	@Override
@@ -113,46 +112,6 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		//qSim.addDepartureHandler(new QNetsimEngineRunner());
 		//qSim.addDepartureHandler(qnet);
 		
-		
-		
-
-		//bsBikes.generatePTRouterForBS(sc);
-
-		BicycleConfigGroup confBC = (BicycleConfigGroup) qSim.getScenario().getConfig().getModule("bicycleAttributes");
-		PlanCalcScoreConfigGroup pcsConf = (PlanCalcScoreConfigGroup)
-									 qSim.getScenario().getConfig().getModule("planCalcScore");
-
-		BikeSharingContext.Builder builder = new BikeSharingContext.Builder() ;
-		{
-			TravelTime travelTime = travelTimes.get( TransportMode.bike );
-			TravelDisutilityFactory travelDisutilityFactory = travelDisutilityFactories.get( TransportMode.bike );
-			TravelDisutility travelDisutility = travelDisutilityFactory.createTravelDisutility( travelTime );
-			LeastCostPathCalculator standardBikePathCalculator = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), travelDisutility, travelTime );
-			builder.setStandardBikePathCalculator( standardBikePathCalculator ) ;
-		}
-		{
-			TravelTime btt = new TUG_BSTravelTime(confBC);
-			TravelDisutility btd = 	new TUG_BikeTravelDisutility(confBC );
-			LeastCostPathCalculator calc = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt ) ;
-			builder.setSharedBikePathCalculator( calc ) ;
-		}
-		{
-			TravelTime btt = new TUG_WalkTravelTime( confBC );
-			TravelDisutility btd = new TUG_WalkTravelDisutility( confBC, pcsConf );
-			LeastCostPathCalculator routeAlgo = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt );;
-			builder.setWalkPathCalculator( routeAlgo ) ;
-		}
-		{
-			TransitRouterConfig ctr = new TransitRouterConfig(sc.getConfig());
-			builder.setTransitRouter( new TransitRouterImpl(ctr, sc.getTransitSchedule()) ) ;
-			// (yyyy the current code operates directly at the level of the transit router, rather than using the trip router.  accepting this for the time being. kai,
-			// apr'19)
-		}
-		builder.setQSim( qSim ) ;
-		builder.setObjectAttributesSingleton( IKK_ObjectAttributesSingleton.getInstance( confBC, false ) ) ;
-		builder.setTripRouter( tripRouter ) ;
-		BikeSharingContext context = builder.build();
-
 		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( context );
 
 		PopulationAgentSource agentSource = new PopulationAgentSource(sc.getPopulation(), agentFactory, qSim);

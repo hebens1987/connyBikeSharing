@@ -11,18 +11,13 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGro
 
 public class TUG_WalkTravelDisutilityFactory implements TravelDisutilityFactory {
 
-		
-	@Inject
-	BicycleConfigGroup bikeConfigGroup;
-	@Inject
-	PlanCalcScoreConfigGroup cnScoringGroup;
-	
+
 	/***************************************************************************/
 	@Override
 	public TravelDisutility createTravelDisutility(TravelTime timeCalculator) 
 	/***************************************************************************/
 	{
-			return new TUG_WalkTravelDisutility(bikeConfigGroup, cnScoringGroup);
+			return new TUG_WalkTravelDisutility();
 	
 	}
 	

@@ -24,13 +24,13 @@ import org.matsim.vehicles.Vehicle;
 public class TUG_EBSTravelDisutility implements TravelDisutility
 {
 	//private final static Logger log = Logger.getLogger(TUG_BikeTravelDisutility.class);
-	ObjectAttributes bikeLinkAttributes;
-	ObjectAttributes usergroupAttributes;
-	ObjectAttributes personAttributes;
-	BicycleConfigGroup bikeConfigGroup;
+	private ObjectAttributes bikeLinkAttributes;
+	private ObjectAttributes usergroupAttributes;
+	private ObjectAttributes personAttributes;
+	private BicycleConfigGroup bikeConfigGroup;
 
 	/***************************************************************************/
-	public TUG_EBSTravelDisutility(
+	TUG_EBSTravelDisutility(
 		  BicycleConfigGroup bikeConfigGroup )
 	/***************************************************************************/
 	{

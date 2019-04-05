@@ -20,32 +20,15 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGro
 
 public class TUG_WalkTravelDisutility implements TravelDisutility {
 
-	int linkCount=0;
-	double individualDis;   
 	private final static Logger log = Logger.getLogger(TUG_WalkTravelDisutility.class);
 
-	ObjectAttributes personAttributes;
-	BicycleConfigGroup bikeConfigGroup;  
-	PlanCalcScoreConfigGroup cnScoringGroup; // Hebenstreit: ist das hier das Richtige?
-    
-	/***************************************************************************/
-	public TUG_WalkTravelDisutility(
-			BicycleConfigGroup bikeConfigGroup, 
-			PlanCalcScoreConfigGroup cnScoringGroup) 
-	/***************************************************************************/
-	{	
-			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup, false);
-			personAttributes = bts.getPersonAttributes();
-	}
-    
 	/***************************************************************************/
 	@Override
 	public double getLinkTravelDisutility(
 			Link link, double time, Person person, Vehicle vehicle) 
 	/***************************************************************************/
-	{                     
-		double disutility = link.getLength();
-		return disutility;
+	{
+		return link.getLength();
 	}
 
 	/***************************************************************************/

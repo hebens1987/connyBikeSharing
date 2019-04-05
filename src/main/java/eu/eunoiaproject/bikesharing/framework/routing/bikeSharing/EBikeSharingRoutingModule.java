@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.StationAndType;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
@@ -60,37 +61,26 @@ import java.util.List;
  */
 public class EBikeSharingRoutingModule implements RoutingModule {
 	private final StageActivityTypes stageTypes = EmptyStageActivityTypes.INSTANCE;
-	
-	private final BikeSharingFacilities bikeSharingFacilitiesAll;
-	private final BikeSharingFacilities bikeSharingFacilities;
-	private final BikeSharingFacilities ebikeSharingFacilities;
-	private final BikeSharingBikes allBikes;
-	private double searchRadius;
-	CreateSubtrips c;
-	int varifyer = 0;
-	public final RoutingModule ptRouting;
-	@Inject Scenario scenario;
-	public final RoutingModule bsRouting;
-	public final RoutingModule bseRouting;
-	public final RoutingModule bsWalkRouting;
-	private final BikeSharingFacilities ebikeSharingFacilitiesWithPTInteraction;
-	private final BikeSharingFacilities bikeSharingFacilitiesWithPTInteraction;
+
+	private CreateSubtrips c;
+	private final RoutingModule ptRouting;
+	private final RoutingModule bsRouting;
+	private final RoutingModule bseRouting;
+	private final RoutingModule bsWalkRouting;
 	private static final Logger log = Logger.getLogger(EBikeSharingRoutingModule.class);
-	
+
+	private Scenario scenario;
+	private BikeSharingContext context;
+
 	/***************************************************************************/
 	@Inject
 	public EBikeSharingRoutingModule(
-			final Scenario scenario,
-			@Named( TransportMode.pt )
-			final RoutingModule ptRouting,
-			@Named (EBConstants.BS_BIKE)
-			final RoutingModule bsRouting,
-			@Named (EBConstants.BS_E_BIKE)
-			final RoutingModule bseRouting,
-			@Named (EBConstants.BS_WALK)
-			final RoutingModule bsWalkRouting,
-			@Named (EBConstants.MODE)
-			final RoutingModule ebsRouting)
+		  final Scenario scenario,
+		  @Named(TransportMode.pt) final RoutingModule ptRouting,
+		  @Named(EBConstants.BS_BIKE) final RoutingModule bsRouting,
+		  @Named(EBConstants.BS_E_BIKE) final RoutingModule bseRouting,
+		  @Named(EBConstants.BS_WALK) final RoutingModule bsWalkRouting,
+		  BikeSharingContext context )
 	/***************************************************************************/
 	{
 		this(	scenario,
@@ -98,46 +88,39 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 				ptRouting,
 				bsRouting,
 				bseRouting,
-				bsWalkRouting,
-				ebsRouting);
+				bsWalkRouting
+		    );
 	
 		this.scenario = scenario; //TODO: RADIEN RICHTIG STELLEN
+		this.context = context;
 	}
 
 	/***************************************************************************/
-	public EBikeSharingRoutingModule(
-			Scenario scenario,
-			final BikeSharingBikes bikesAll,
-			final RoutingModule ptRouting,
-			final RoutingModule bsRouting,
-			final RoutingModule bseRouting,
-			final RoutingModule bsWalkRouting,
-			final RoutingModule ebs2Routing) 
+	private EBikeSharingRoutingModule(
+		  Scenario scenario,
+		  final BikeSharingBikes bikesAll,
+		  final RoutingModule ptRouting,
+		  final RoutingModule bsRouting,
+		  final RoutingModule bseRouting,
+		  final RoutingModule bsWalkRouting )
 	/***************************************************************************/
 	{
-		this.bikeSharingFacilitiesAll = (BikeSharingFacilities) 
-				scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
-		this.allBikes = bikesAll;
 		this.ptRouting = ptRouting;
 		this.bsRouting = bsRouting;
 		this.bsWalkRouting = bsWalkRouting;
 		this.bseRouting = bseRouting;
 		this.c = new CreateSubtrips();
 		this.scenario = scenario;
-		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
-		this.bikeSharingFacilities = bsChoice.bikeSharingFacilities2;
-		this.ebikeSharingFacilities = bsChoice.ebikeSharingFacilities2;
-		this.ebikeSharingFacilitiesWithPTInteraction = bsChoice.bikeSharingFacilitiesPt2;
-		this.bikeSharingFacilitiesWithPTInteraction = bsChoice.ebikeSharingFacilitiesPt2;
+		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice( context );
 	}
 	
-	public List<PlanElement> getMyTrip( //TODO: Hebenstreit
-			List<PlanElement> first,
-			PlanElement second,
-			List<PlanElement> third,
-			PlanElement fourth,
-			List<PlanElement> fifth,
-			List<PlanElement> trip)	
+	private List<PlanElement> getMyTrip( //TODO: Hebenstreit
+							 List<PlanElement> first,
+							 PlanElement second,
+							 List<PlanElement> third,
+							 PlanElement fourth,
+							 List<PlanElement> fifth,
+							 List<PlanElement> trip )
 	{
 		trip.addAll(first);
 		trip.add(second);
@@ -168,14 +151,12 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 	{
 		List<PlanElement> trip = new ArrayList<PlanElement>();
 
-		Activity act = null; //Hebenstreit
-		
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();
-		
-		
-		
-		boolean ptUsage = false; //TODO: define ptUsage - due to the different possible types:
+
+
+
+//		boolean ptUsage = false; //TODO: define ptUsage - due to the different possible types:
 		// because of a very long trip length (intermodal)
 		// because no station near at departure or arrival facility
 		// there are the following options:
@@ -193,7 +174,7 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 		BSAtt att = BSAttribsAgent.getPersonAttributes( person, scenario);
 		
 
-		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
+		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice( context );
 		StationAndType[] startAndEnd = bsChoice.getInitialStations(
 				fromFacility.getCoord(), toFacility.getCoord(), att.searchRadius,
 				att.maxSearchRadius, att.maxBSTripLength, fromFacility.getId(), toFacility.getId());

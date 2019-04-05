@@ -21,25 +21,26 @@ package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAndEBikeSharingScenarioUtils;
+import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.*;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ControlerConfigGroup;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlansCalcRouteConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.ControlerUtils;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
 import org.matsim.core.gbl.MatsimRandom;
-import org.matsim.core.utils.io.UncheckedIOException;
-import org.matsim.pt.transitSchedule.api.TransitScheduleReader;
+import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.facilities.ActivityFacilities;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 
-import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 
@@ -77,24 +78,74 @@ public class RunConfigurableBikeSharingSimulation {
 
 		ControlerUtils.checkConfigConsistencyAndWriteToLog( config, "checking config before preparing scenario ..." );
 
-		final Scenario sc = BikeAndEBikeSharingScenarioUtils.loadScenario( config );
-		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( sc.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+		// to make sure log entries are writen in log file
+		OutputDirectoryLogging.catchLogEntries();
+		final Scenario sc1 = ScenarioUtils.createScenario( config );
+		//		configurePopulationFactory( sc );
+		ScenarioUtils.loadScenario( sc1 );
+		final Config config1 = sc1.getConfig();
+
+		final EBikeSharingConfigGroup confGroup = (EBikeSharingConfigGroup)
+				config1.getModule(EBikeSharingConfigGroup.GROUP_NAME );
+		new BikeSharingFacilitiesReader( sc1 ).parse(confGroup.getFacilitiesFile() );
+
+
+		final BikeSharingFacilities bsFacilities = (BikeSharingFacilities)
+			sc1.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
+		if ( confGroup.getFacilitiesAttributesFile() != null ) {
+			new ObjectAttributesXmlReader( bsFacilities.getFacilitiesAttributes() ).parse(
+					confGroup.getFacilitiesAttributesFile() );
+		}
+
+
+		new BikeSharingBikesReader( sc1 ).parse(confGroup.getBikeSharingBikes() );
+
+		final BikeSharingBikes bsBikes = (BikeSharingBikes) sc1.getScenarioElement( BikeSharingBikes.ELEMENT_NAME );
+
+
+		final ActivityFacilities actFacilities = sc1.getActivityFacilities();
+		if ( BikeAndEBikeSharingScenarioUtils.intersects(
+					actFacilities.getFacilities().keySet(),
+					bsFacilities.getFacilities().keySet() ))
+		{
+			throw new RuntimeException( "ids of bike sharing stations and activity facilities overlap. This will cause problems!"+
+					" Make sure Ids do not overlap, for instance by appending \"bs-\" at the start of all bike sharing facilities." );
+		}
+
+		if ( BikeAndEBikeSharingScenarioUtils.intersects(
+				bsBikes.getFacilities().keySet(),
+				bsFacilities.getFacilities().keySet() ))
+		{
+			throw new RuntimeException( "ids of bike sharing bikes and bike sharing facilities overlap. This will cause problems!"+
+				" Make sure Ids do not overlap, for instance by appending \"bs-\" at the start of all bike sharing facilities." );
+		}
+
+		if ( BikeAndEBikeSharingScenarioUtils.intersects(
+				bsBikes.getFacilities().keySet(),
+				actFacilities.getFacilities().keySet() ))
+		{
+			throw new RuntimeException( "ids of bike sharing bikes and activity facilities overlap. This will cause problems!"+
+				" Make sure Ids do not overlap, for instance by appending \"bs-\" at the start of all bike sharing facilities." );
+		}
+
+		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( sc1.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
 		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
-				loadTransitInScenario( sc );
 				break;
 			case debug:
-				sc.getPopulation().getPersons().entrySet().removeIf( entry -> MatsimRandom.getRandom().nextDouble() < 0.9 ) ;
+				sc1.getPopulation().getPersons().entrySet().removeIf( entry -> MatsimRandom.getRandom().nextDouble() < 0.9 ) ;
 				break;
 			default:
 				throw new RuntimeException( "not implemented" ) ;
 		}
 
 		// ---
-		return sc;
+		return sc1;
 	}
 
 	static Config prepareConfig( String [] args, InputCase user ){
+		OutputDirectoryLogging.catchLogEntries();
+
 		String configFile ;
 		switch( user ) {
 			case fromArgs:
@@ -115,113 +166,93 @@ public class RunConfigurableBikeSharingSimulation {
 				throw new RuntimeException("not implemented") ;
 		}
 		
-		
-		OutputDirectoryLogging.catchLogEntries();
-		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
+		final Config config = ConfigUtils.loadConfig( configFile ) ;
+
+		{
+			PlanCalcScoreConfigGroup.ActivityParams params1 = new PlanCalcScoreConfigGroup.ActivityParams( "bs_walk interaction" ) ;
+			params1.setScoringThisActivityAtAll( false );
+			config.planCalcScore().addActivityParams( params1 );
+		}
 
 
-//		BikeScenarioUtils.loadConfig(configFile );
-		// yyyyyy what is this?  Why is it loading the configFile twice?
+		if ( config.planCalcScore().getActivityParams( EBConstants.INTERACTION_TYPE_BS + "_r" ) == null )
+		{
 
-		final Config config = BikeAndEBikeSharingScenarioUtils.loadConfig( configFile );
-		//config.addCoreModules();
-		config.addModule( new BicycleConfigGroup() );
+			final PlanCalcScoreConfigGroup.ActivityParams params_t = new PlanCalcScoreConfigGroup.ActivityParams(EBConstants.INTERACTION_TYPE_BS + "_t" );
+			params_t.setScoringThisActivityAtAll(false);
+			config.planCalcScore().addActivityParams( params_t );
+
+			final PlanCalcScoreConfigGroup.ActivityParams params_r = new PlanCalcScoreConfigGroup.ActivityParams(EBConstants.INTERACTION_TYPE_BS + "_r" );
+			params_r.setScoringThisActivityAtAll(false);
+			config.planCalcScore().addActivityParams( params_r );
+
+			final PlanCalcScoreConfigGroup.ActivityParams bsWalkInteract = new PlanCalcScoreConfigGroup.ActivityParams("s_walk interaction");
+			bsWalkInteract.setScoringThisActivityAtAll(false);
+			// yyyyyy never set???
+		}
+
+
+		if ( config.planCalcScore().getActivityParams( EBConstants.INTERACTION_TYPE_FF ) == null )
+		{
+			// not so nice... // why not?  kai
+			final PlanCalcScoreConfigGroup.ActivityParams params1 = new PlanCalcScoreConfigGroup.ActivityParams( EBConstants.INTERACTION_TYPE_FF );
+			params1.setTypicalDuration( 60 );
+
+			params1.setOpeningTime( 0 );
+			params1.setClosingTime( 0 );
+			// yyyyyy why opening/closing time 0?  Will mean that the activity is always heavily penalized (since outside opening times).
+
+			config.planCalcScore().addActivityParams( params1 );
+		}
+
+		if ( config.planCalcScore().getActivityParams( "wait" ) == null )
+		{
+			// not so nice... // why not?  kai
+			final PlanCalcScoreConfigGroup.ActivityParams params1 = new PlanCalcScoreConfigGroup.ActivityParams( "wait" );
+			params1.setTypicalDuration( 60 );
+			params1.setOpeningTime( 0 );
+			params1.setClosingTime( 0 );
+			// yyyyyy why opening/closing time 0?  Will mean that the activity is always heavily penalized (since outside opening times).
+
+			config.planCalcScore().addActivityParams( params1 );
+		}
+
+		ConfigUtils.addOrGetModule( config, BicycleConfigGroup.GROUP_NAME, BicycleConfigGroup.class ) ;
+		ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+		ConfigUtils.addOrGetModule( config, EBikeSharingConfigGroup.GROUP_NAME, EBikeSharingConfigGroup.class ) ;
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
 
 		config.global().setNumberOfThreads( 8 );
 		
-		
-		
-		//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
-
 		//Does not use the implemented routing modules anymore - just uses Network Route
 		//Can I use a combination? TODO:
-		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
-			  EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK, EBConstants.BS_WALK_FF) ) ) ;
-		//config.qsim().setMainModes( new HashSet<>( Arrays.asList(
-		//		TransportMode.car, TransportMode.walk,EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
+		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike,
+			  EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK, EBConstants.BS_WALK_FF ) ) ) ;
+
+		{
+			PlansCalcRouteConfigGroup.ModeRoutingParams params = new PlansCalcRouteConfigGroup.ModeRoutingParams( TransportMode.walk );
+			params.setTeleportedModeSpeed( 3.0 / 3.6 ); // 3.0 km/h --> m/s
+			config.plansCalcRoute().addModeRoutingParams( params );
+			// yy this will clear all pre-existing teleportation routing as a side effect!!!!! :-(
+			// yyyyyy need walk teleported to make the transit router config happy :-(
+		}
 		{
 			PlansCalcRouteConfigGroup.ModeRoutingParams params = new PlansCalcRouteConfigGroup.ModeRoutingParams( TransportMode.pt );
-			params.setTeleportedModeSpeed( 0. );
+			params.setTeleportedModeFreespeedFactor( 2.0 );
 			config.plansCalcRoute().addModeRoutingParams( params );
-			// this will clear all pre-existing teleportation routing as a side effect!!!!! :-(
 		}
 
-		config.plansCalcRoute().setNetworkModes(  new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
-			  EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK, EBConstants.BS_WALK_FF) ) ) ;
+		config.plansCalcRoute().setNetworkModes( Collections.singleton( TransportMode.car ) ) ;
+		// (all other routing is defined explicity later)
 
-		
-		config.travelTimeCalculator().setSeparateModes( true ); 
-		failIfExists( config.controler().getOutputDirectory() );
-
-		// ---
+		config.travelTimeCalculator().setSeparateModes( true );
 
 		config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
 
-		// the following does not work (any more) since the setting of the run type can only be done _after_ this method has returned the config!  kai, apr'19
-//		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
-//		switch( bikeSharingConfig.getRunType() ) {
-//			case standard:
-//				config.transitRouter().setMaxBeelineWalkConnectionDistance( 10. );
-//				break;
-//			case debug:
-//				config.controler().setLastIteration( 1 );
-//
-//				config.transit().setUseTransit( false );
-////				config.transit().setTransitScheduleFile( null );
-////				config.transit().setVehiclesFile( null );
-//				break;
-//			default:
-//				throw new RuntimeException( "not implemented" ) ;
-//		}
-
-		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
+		config.plansCalcRoute().setInsertingAccessEgressWalk(true );
 		
 		return config;
-	}
-
-	/***************************************************************************/
-	private static void failIfExists(final String outdir) 
-	/***************************************************************************/
-	{
-		final File file = new File( outdir +"/" );
-		if ( file.exists() && file.list().length > 0 ) {
-			new UncheckedIOException( "Directory "+outdir+" exists and is not empty!" );
-		}
-	}
-
-	/***************************************************************************/
-	private static final void loadTransitInScenario( final Scenario scenario ) 
-	/***************************************************************************/
-	{
-		final Config config = scenario.getConfig();
-		// if actual simulation of transit is disabled, the transit schedule
-		// is not loaded automatically: we need to do it by hand
-		if ( !config.transit().isUseTransit() ) {
-			if ( config.transit().getTransitScheduleFile() == null ) {
-				log.info( "no schedule file defined in config: not loading any schedule information" );
-				return;
-			}
-
-			log.info( "read schedule from "+config.transit().getTransitScheduleFile() );
-			new TransitScheduleReader( scenario ).readFile( config.transit().getTransitScheduleFile() );
-
-			// this is not necessary in the vast majority of applications.
-			if ( config.transit().getTransitLinesAttributesFile() != null ) {
-				log.info("loading transit lines attributes from " + config.transit().getTransitLinesAttributesFile());
-				new ObjectAttributesXmlReader( scenario.getTransitSchedule().getTransitLinesAttributes() ).parse(
-						config.transit().getTransitLinesAttributesFile() );
-			}
-			if ( config.transit().getTransitStopsAttributesFile() != null ) {
-				log.info("loading transit stop facilities attributes from " + config.transit().getTransitStopsAttributesFile() );
-				new ObjectAttributesXmlReader( scenario.getTransitSchedule().getTransitStopsAttributes() ).parse(
-						config.transit().getTransitStopsAttributesFile() );
-			}
-		}
-		else {
-			log.info( "Transit will be simulated." );
-		}
 	}
 
 }

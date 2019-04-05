@@ -1,5 +1,6 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing;
 
+import com.google.inject.Inject;
 import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
@@ -20,7 +21,8 @@ public class IKK_ObjectAttributesSingleton {
 	private ObjectAttributes intermodalSpeedGroupNumber;
 	
 	/***************************************************************************/
-	private IKK_ObjectAttributesSingleton()
+	@Inject
+	IKK_ObjectAttributesSingleton()
 	/***************************************************************************/
 	{
 		

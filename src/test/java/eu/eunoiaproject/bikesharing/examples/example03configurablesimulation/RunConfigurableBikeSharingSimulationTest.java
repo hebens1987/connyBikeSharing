@@ -7,13 +7,16 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGro
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.events.Event;
 import org.matsim.api.core.v01.events.PersonDepartureEvent;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.events.ShutdownEvent;
@@ -25,13 +28,14 @@ import javax.inject.Singleton;
 
 import static eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.RunConfigurableBikeSharingSimulation.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RunConfigurableBikeSharingSimulationTest{
 	private static final Logger log = Logger.getLogger( RunConfigurableBikeSharingSimulationTest.class ) ;
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	@Test
-	public void testOne() {
+	public void testARasterWOTransit() {
 
 		final Config config = prepareConfig( null, InputCase.raster );
 
@@ -39,6 +43,9 @@ public class RunConfigurableBikeSharingSimulationTest{
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 
 		config.transit().setUseTransit( false );
+//		config.transit().setTransitScheduleFile( null );
+//		config.transit().setVehiclesFile( null );
+		config.transitRouter().setMaxBeelineWalkConnectionDistance(5.) ;
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
@@ -67,48 +74,17 @@ public class RunConfigurableBikeSharingSimulationTest{
 		controler.run() ;
 
 	}
-	@Test
-	public void testTwo() {
-
-		//		final Config config = prepareConfig( null, InputCase.connyInputDiss );
-		final Config config = prepareConfig( null, InputCase.inputDiss );
-
-		config.controler().setLastIteration(10);
-		config.controler().setOutputDirectory( utils.getOutputDirectory() );
-
-		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
-		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
-
-		Scenario scenario = prepareScenario( config ) ;
-
-		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
-		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
-		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
-//		Das liest die Object Attributes files ein und dami sich das nicht unzählich wiederholt macht es das nur wenns nicht null ist...
-//		Damit es Test cases mit unterschiedlichem inpun läuft hab ich es verändert... ist nicht hübsch aber tit was es soll (zuvor hat testcase 2 auf attribute von testcase 1 zugegriffen)
-
-		Controler controler = prepareControler( scenario ) ;
-
-		controler.addOverridingModule( new AbstractModule(){
-			@Override
-			public void install(){
-				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
-			}
-		} );
-
-		controler.run() ;
-
-	}
 
 	@Test
-	public void testThree() {
+	public void testBRasterWTransit() {
 
 		final Config config = prepareConfig( null, InputCase.raster );
 
 		config.controler().setLastIteration(10);
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 
-		config.transit().setUseTransit( false );
+		config.transitRouter().setMaxBeelineWalkConnectionDistance(5.) ;
+
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.standard );
@@ -134,13 +110,61 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 	}
 
+	// does not seem to work without. kai, apr'19
+	//
+//	@Test
+//	public void testCDissWOTransit() {
+//
+//		final Config config = prepareConfig( null, InputCase.inputDiss );
+//
+//		config.controler().setLastIteration(10);
+//		config.controler().setOutputDirectory( utils.getOutputDirectory() );
+//
+//		config.transit().setUseTransit( false );
+//
+//		// the following is needed since somehow transit is there even when switched off. ????
+////		config.transit().setTransitScheduleFile( null );
+////		config.transit().setVehiclesFile( null );
+//		config.transitRouter().setMaxBeelineWalkConnectionDistance(5.) ;
+//		{
+//			PlanCalcScoreConfigGroup.ActivityParams params = new PlanCalcScoreConfigGroup.ActivityParams( "pt interaction" ) ;
+//			params.setScoringThisActivityAtAll( false );
+//			config.planCalcScore().addActivityParams( params );
+//		}
+//
+//		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
+//		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.debug );
+//
+//		Scenario scenario = prepareScenario( config ) ;
+//
+//		BicycleConfigGroup bconf =(BicycleConfigGroup)scenario.getConfig().getModule(BicycleConfigGroup.GROUP_NAME);
+//		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bconf,true);//Important otherwise wrong bike objects loaded
+//		// yyyyyy what is this?  why is this?  why is this in the test but not in the upstream code?  kai, apr'19
+////		Das liest die Object Attributes files ein und dami sich das nicht unzählich wiederholt macht es das nur wenns nicht null ist...
+////		Damit es Test cases mit unterschiedlichem inpun läuft hab ich es verändert... ist nicht hübsch aber tit was es soll (zuvor hat testcase 2 auf attribute von testcase 1 zugegriffen)
+//
+//		Controler controler = prepareControler( scenario ) ;
+//
+//		controler.addOverridingModule( new AbstractModule(){
+//			@Override
+//			public void install(){
+//				this.addEventHandlerBinding().to( EventsPrinter.class ) ;
+//			}
+//		} );
+//
+//		controler.run() ;
+//
+//	}
+
 	@Test
-	public void testFour() {
+	public void testDDissWTransit() {
 
 		final Config config = prepareConfig( null, InputCase.inputDiss );
 
 		config.controler().setLastIteration(10);
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
+
+		config.transitRouter().setMaxBeelineWalkConnectionDistance(5.) ;
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
 		bikeSharingConfig.setRunType( BikeSharingConfigGroup.RunType.standard );

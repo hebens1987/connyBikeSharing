@@ -2,10 +2,13 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoi
 
 import java.util.*;
 
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
+import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
+import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
+import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
@@ -21,9 +24,8 @@ import org.matsim.core.mobsim.qsim.agents.BSRunner;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSBikeRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSEBikeRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
+
+import static org.matsim.core.mobsim.qsim.agents.BSRunner.createPTLegs;
 
 /**
  * 
@@ -37,27 +39,25 @@ import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFa
  */
 public class BikeSharingStationChoice
 {
-	Random random;
 	public BikeSharingFacilities ebikeSharingFacilities2;
 	public BikeSharingFacilities  bikeSharingFacilities2;
 	public BikeSharingFacilities  ebikeSharingFacilitiesPt2;
 	public BikeSharingFacilities  bikeSharingFacilitiesPt2;
-	QuadTree<BikeSharingFacility> e_qt ;
-	QuadTree<BikeSharingFacility> e_pt_qt ;
-	QuadTree<BikeSharingFacility> b_qt ;
-	QuadTree<BikeSharingFacility> b_pt_qt;
+	private QuadTree<BikeSharingFacility> e_qt ;
+	private QuadTree<BikeSharingFacility> e_pt_qt ;
+	private QuadTree<BikeSharingFacility> b_qt ;
+	private QuadTree<BikeSharingFacility> b_pt_qt;
 	
-	Scenario scenario;
+	private final BikeSharingContext context;
 
 
 	static final Logger log = Logger.getLogger(BikeSharingStationChoice.class);
 	
 	/***************************************************************************/
-	public BikeSharingStationChoice(
-			Scenario scenario) 
+	public BikeSharingStationChoice( BikeSharingContext context )
 	/***************************************************************************/
 	{	
-		this.scenario = scenario;
+		this.context = context;
 	}
 	
 	/***************************************************************************/
@@ -82,12 +82,12 @@ public class BikeSharingStationChoice
 //			this.bikeSharingFacilities2 = new BikeSharingFacilities();
 			
 			BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
-					scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
+					context.getScenario().getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
 			
-			this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", scenario);
-			this.ebikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("e", scenario);
-			this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", scenario);
-			this.bikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("c", scenario);
+			this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", context.getScenario());
+			this.ebikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("e", context.getScenario());
+			this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", context.getScenario());
+			this.bikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("c", context.getScenario());
 			this.e_qt = ebikeSharingFacilities2.getCurrentQuadTree();
 			this.e_pt_qt = ebikeSharingFacilitiesPt2.getCurrentQuadTree();
 			this.b_qt = bikeSharingFacilities2.getCurrentQuadTree();
@@ -254,11 +254,11 @@ public class BikeSharingStationChoice
 	/***************************************************************************/
 	{
 		BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
-				scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
-		this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", scenario);
-		this.ebikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("e", scenario);
-		this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", scenario);
-		this.bikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("c", scenario);
+				context.getScenario().getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
+		this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", context.getScenario());
+		this.ebikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("e", context.getScenario());
+		this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", context.getScenario());
+		this.bikeSharingFacilities2 = bikeSharingFacilitiesAll.getSpecialFacilities("c", context.getScenario());
 		this.e_qt = ebikeSharingFacilities2.getCurrentQuadTree();
 		this.e_pt_qt = ebikeSharingFacilitiesPt2.getCurrentQuadTree();
 		this.b_qt = bikeSharingFacilities2.getCurrentQuadTree();
@@ -299,16 +299,15 @@ public class BikeSharingStationChoice
 		return startAndEndStation;
 	}
 	/***************************************************************************/
-	public double getFullPtTrip(
-			Facility fromFacF,
-			Facility toFacF,
-			double departureTime,
-			Person person)
+	private double getFullPtTrip(
+		  Facility fromFacF,
+		  Facility toFacF,
+		  double departureTime,
+		  Person person )
 	/***************************************************************************/
 	{
-		BSRunner bsR = new BSRunner();
-		List<PlanElement> ptLegs = bsR.createPTLegs(fromFacF.getCoord(), toFacF.getCoord(), departureTime, person, scenario, fromFacF.getLinkId(), toFacF.getLinkId());
-		
+		List<PlanElement> ptLegs = createPTLegs(fromFacF.getCoord(), toFacF.getCoord(), departureTime, person, context.getScenario(), fromFacF.getLinkId(), toFacF.getLinkId(), context );
+
 		double travelTime = 0;
 		
 		if (ptLegs != null)
@@ -339,12 +338,12 @@ public class BikeSharingStationChoice
 
 	
 	/***************************************************************************/
-	public StationAndType getEgressTrip(
-			Facility fromFacF,
-			Facility toFacF,
-			BikeSharingFacility endStation,
-			double departureTime,
-			Person person)
+	private StationAndType getEgressTrip(
+		  Facility fromFacF,
+		  Facility toFacF,
+		  BikeSharingFacility endStation,
+		  double departureTime,
+		  Person person )
 	/***************************************************************************/
 	{
 		if (endStation == null)
@@ -357,9 +356,8 @@ public class BikeSharingStationChoice
 		boolean isEBikeStation = false;
 
 		BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
-				scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
-		BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
-				scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
+				context.getScenario().getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
+
 		
 		CoordUtils.calcEuclideanDistance(fromFacF.getCoord(), toFacF.getCoord());
 		double x = fromFacF.getCoord().getX() + ((toFacF.getCoord().getX()-fromFacF.getCoord().getX())/2);
@@ -373,7 +371,7 @@ public class BikeSharingStationChoice
 		if (endStation.getStationType().equals("e"))
 		{
 			isEBikeStation = true;
-			this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", scenario);
+			this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", context.getScenario());
 			this.e_pt_qt = ebikeSharingFacilitiesPt2.getCurrentQuadTree();
 			
 			bs.addAll(e_pt_qt.getDisk(x, y, radiusM));
@@ -382,7 +380,7 @@ public class BikeSharingStationChoice
 		}
 		else
 		{
-			this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", scenario);
+			this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", context.getScenario());
 			this.b_pt_qt = bikeSharingFacilitiesPt2.getCurrentQuadTree();
 			bs.addAll(b_pt_qt.getDisk(x, y, radiusM));
 			bs.addAll(b_pt_qt.getDisk(fromFacF.getCoord().getX(), fromFacF.getCoord().getY(), radiusStartEnd));
@@ -417,8 +415,7 @@ public class BikeSharingStationChoice
 			stat.tripDur = Double.POSITIVE_INFINITY;
 			return stat;
 		}
-		TransitRouterImpl pt = bSharingVehicles.trImpl;
-		RoutingModule walk = new TUG_WalkRoutingModule(scenario);
+		RoutingModule walk = new TUG_WalkRoutingModule(context.getScenario());
 		List<? extends PlanElement> egressWalk = walk.calcRoute(endStation, toFacF, departureTime, person);
 		Leg egressWalkLeg = (Leg)egressWalk.get(0);
 		double travelTimeEgressWalk = egressWalkLeg.getTravelTime();
@@ -431,7 +428,7 @@ public class BikeSharingStationChoice
 		for (int i = 0; i < bsList.size()-1; i++)
 		{
 			double durationTemp = Double.POSITIVE_INFINITY;
-			List<Leg> egressPt = pt.calcRoute(fromFacF.getCoord(), bsList.get(i).getCoord(), departureTime, person);
+			List<Leg> egressPt = context.getTransitRouter().calcRoute(fromFacF.getCoord(), bsList.get(i).getCoord(), departureTime, person);
 
 			if (egressPt != null)
 			{
@@ -448,8 +445,8 @@ public class BikeSharingStationChoice
 				travelTimePt = Double.POSITIVE_INFINITY;
 			}
 			
-			RoutingModule bikeE = new TUG_BSEBikeRoutingModule(scenario);
-			RoutingModule bikeC = new TUG_BSBikeRoutingModule(scenario);
+			RoutingModule bikeE = new TUG_BSEBikeRoutingModule(context.getScenario());
+			RoutingModule bikeC = new TUG_BSBikeRoutingModule(context.getScenario());
 			List<? extends PlanElement> bikeElem;
 			if (isEBikeStation)
 			{
@@ -496,18 +493,18 @@ public class BikeSharingStationChoice
 		{
 			isEBikeStation = true;
 		}
-		RoutingModule walk = new TUG_WalkRoutingModule(scenario);
+		RoutingModule walk = new TUG_WalkRoutingModule(context.getScenario());
 		List<?extends PlanElement> accWalk = walk.calcRoute(fromFacF, startStation, departureTime, person);
 		Leg accWalkLeg = (Leg)accWalk.get(0);
 		double travelTimeAccWalk = accWalkLeg.getTravelTime();
 		RoutingModule bike;
 		if (isEBikeStation)
 		{
-			bike = new TUG_BSEBikeRoutingModule(scenario);
+			bike = new TUG_BSEBikeRoutingModule(context.getScenario());
 		}
 		else
 		{
-			bike = new TUG_BSBikeRoutingModule(scenario);
+			bike = new TUG_BSBikeRoutingModule(context.getScenario());
 		}
 		List<? extends PlanElement> bikeElem = bike.calcRoute(startStation, endStation, departureTime+travelTimeAccWalk, person);
 		Leg bikeLeg = (Leg)bikeElem.get(0);
@@ -545,10 +542,8 @@ public class BikeSharingStationChoice
 		}
 		boolean isEBikeStation = false;
 		BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
-				scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
-		BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
-				scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
-		
+				context.getScenario().getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
+
 		CoordUtils.calcEuclideanDistance(fromFacF.getCoord(), toFacF.getCoord());
 		double x = fromFacF.getCoord().getX() + ((toFacF.getCoord().getX()-fromFacF.getCoord().getX())/2);
 		double y = fromFacF.getCoord().getY() + ((toFacF.getCoord().getY()-fromFacF.getCoord().getY())/2);
@@ -561,7 +556,7 @@ public class BikeSharingStationChoice
 		if (startStation.getStationType().equals("e"))
 		{
 			isEBikeStation = true;
-			this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", scenario);
+			this.ebikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("e_pt", context.getScenario());
 			this.e_pt_qt = ebikeSharingFacilitiesPt2.getCurrentQuadTree();
 			
 			bs.addAll(e_pt_qt.getDisk(x, y, radiusM));
@@ -570,7 +565,7 @@ public class BikeSharingStationChoice
 		}
 		else
 		{
-			this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", scenario);
+			this.bikeSharingFacilitiesPt2 = bikeSharingFacilitiesAll.getSpecialFacilities("c_pt", context.getScenario());
 			this.b_pt_qt = bikeSharingFacilitiesPt2.getCurrentQuadTree();
 			bs.addAll(b_pt_qt.getDisk(x, y, radiusM));
 			bs.addAll(b_pt_qt.getDisk(fromFacF.getCoord().getX(), fromFacF.getCoord().getY(), radiusStartEnd));
@@ -606,8 +601,7 @@ public class BikeSharingStationChoice
 			return stat;
 		}
 		
-		TransitRouterImpl pt = bSharingVehicles.trImpl;
-		RoutingModule walk = new TUG_WalkRoutingModule(scenario);
+		RoutingModule walk = new TUG_WalkRoutingModule(context.getScenario());
 		List<? extends PlanElement> accessWalk = walk.calcRoute(fromFacF, startStation, departureTime, person);
 		Leg accessWalkLeg = (Leg)accessWalk.get(0);
 		double travelTimeAccessWalk = accessWalkLeg.getTravelTime();
@@ -618,8 +612,8 @@ public class BikeSharingStationChoice
 		for (int i = 0; i < bsList.size()-1; i++)
 		{
 			double durationTemp = 0;
-			RoutingModule bikeC = new TUG_BSBikeRoutingModule(scenario);
-			RoutingModule bikeE = new TUG_BSEBikeRoutingModule(scenario);
+			RoutingModule bikeC = new TUG_BSBikeRoutingModule(context.getScenario());
+			RoutingModule bikeE = new TUG_BSEBikeRoutingModule(context.getScenario());
 			List<? extends PlanElement> bikeElem;
 			if (isEBikeStation)
 			{
@@ -633,7 +627,7 @@ public class BikeSharingStationChoice
 			Leg bikeLeg = (Leg)bikeElem.get(0);
 			double travelTimeBike = bikeLeg.getRoute().getDistance()/(16/3.6);
 			double travelTimePt = 0;
-			List<Leg> egressPt = pt.calcRoute(bsList.get(i).getCoord(), toFacF.getCoord(), departureTime+travelTimeAccessWalk+travelTimeBike, person);
+			List<Leg> egressPt = context.getTransitRouter().calcRoute(bsList.get(i).getCoord(), toFacF.getCoord(), departureTime+travelTimeAccessWalk+travelTimeBike, person);
 			if (egressPt != null)
 			{
 				for (int j = 0; j < egressPt.size(); j++)
