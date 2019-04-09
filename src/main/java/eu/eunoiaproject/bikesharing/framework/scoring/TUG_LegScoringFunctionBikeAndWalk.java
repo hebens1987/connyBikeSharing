@@ -79,15 +79,16 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	        		act = Id.createLinkId(linkIdToCompare);
 	        		Link link= network.getLinks().get(act);
 	        		//System.out.println(link.getId());
-	        		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null, newLegX.getMode());
-	        		if (j == 0)
+	        		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null, newLegX.getMode(), link.getLength());
+
+	        		if ( (j == 0) )//||(j == linksOfRoute.length-1))
 	        		{
-	        			timeDist[0] = 0;
+	        			timeDist[0] = 0;//timeDist[0]; //Warum wird erstes hier nicht mitgerechnet (Distanz)
+	        			timeDist[1] = 0 ; //timeDist[1];
 	        		}
-	        		if ((j==1) || (j == linksOfRoute.length-1))
+	        		else if (j == linksOfRoute.length-1)
 	        		{
 	        			timeDist[0] = 0;
-	        			timeDist[1] = timeDist[1]/2;
 	        		}
 	        		feltTravelTime += timeDist[0];
 	        		distance += timeDist[1];
@@ -96,7 +97,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    	else
 	    	{
 	    		Link link= network.getLinks().get(Id.create(routeD, Link.class));
-	    		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null, newLegX.getMode());
+	    		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null, newLegX.getMode(),link.getLength()); 
 	    		feltTravelTime = timeDist[0];
 	    		distance = timeDist[1];
 	    	}

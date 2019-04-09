@@ -56,6 +56,7 @@ public class RoutingModuleHelper {
 				path.links.add(0, scenario.getNetwork().getLinks().get(startLinkId));
 				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, person, null);
 				travelTime = travelTimePath + travelTimeAddOn;
+				
 			}
 		
 			if (path.links.get(path.links.size()-1) != endLinkId)
@@ -73,21 +74,8 @@ public class RoutingModuleHelper {
 			Node toFac_fromNode = scenario.getNetwork().getLinks().get(toFacility.getLinkId()).getFromNode();
 			Node toFac_toNode = scenario.getNetwork().getLinks().get(toFacility.getLinkId()).getToNode();
 			
-			if (fromFac_fromNode.getId().equals(toFac_toNode.getId())
-					&& fromFac_toNode.getId().equals(toFac_fromNode.getId()))
-			{
-				distance = CoordUtils.calcEuclideanDistance(fromFacility.getCoord(), toFacility.getCoord());
-				path.links.add(scenario.getNetwork().getLinks().get(fromFacility.getLinkId()));
-				path.links.add(scenario.getNetwork().getLinks().get(toFacility.getLinkId()));
-				if (distance < 0.1)
-				{
-					distance = 5;
-				}
-				double travelTimeAddOn = distance / 4.5;
-				travelTime = travelTimePath + travelTimeAddOn;
-			}
 			
-			else if (startLinkId != endLinkId)
+			if (startLinkId != endLinkId)
 			{
 				path.links.add(scenario.getNetwork().getLinks().get(fromFacility.getLinkId()));
 				path.links.add(scenario.getNetwork().getLinks().get(toFacility.getLinkId()));
@@ -106,36 +94,18 @@ public class RoutingModuleHelper {
 		LinkNetworkRouteImpl route = new LinkNetworkRouteImpl(startLinkId, endLinkId);
 		String routeDescr = "";
 		
-		if (distance >= 5)
-		{
+
 			for (int i = 0; i < path.links.size(); i++) 
 			{
 				routeDescr += path.links.get(i).getId().toString();
+				distance += path.links.get(i).getLength();
 			
 				if (i != path.links.size())
 				{
 					routeDescr += " ";
 				}
 			}
-		}
-		
-		else if (distance < 5)
-		{
-			for (int i = 0; i < path.links.size(); i++) 
-			{
-				routeDescr += path.links.get(i).getId().toString();
-			
-				if (i != path.links.size())
-				{
-					routeDescr += " ";
-				}
-				distance = distance + path.links.get(i).getLength();
-			}
-		}
-		else
-		{
-			routeDescr = "sameLink";
-		}
+	
 		
 		if (travelTime == 0)
 		{

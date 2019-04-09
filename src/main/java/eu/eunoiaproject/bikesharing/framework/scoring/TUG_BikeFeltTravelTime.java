@@ -2,6 +2,7 @@ package eu.eunoiaproject.bikesharing.framework.scoring;
 
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.RoutingModuleHelper;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_EBSTravelTime;
@@ -47,29 +48,28 @@ class TUG_BikeFeltTravelTime implements TravelTime
 	
 	/***************************************************************************/
 	double [] getLinkTravelDisutility(
-		  Link link, double time, Person person, Vehicle vehicle, String mode )
+		  Link link, double time, Person person, Vehicle vehicle, String mode, double travelDistance)
 	/***************************************************************************/
 	{   
-			double travelTime = 0;
-			if ((mode.equals(EBConstants.BS_BIKE))|| (mode.equals(EBConstants.BS_BIKE_FF)))
-			{
-				TUG_BSTravelTime wtt = new TUG_BSTravelTime (bikeConfigGroup);
-				travelTime = wtt.getLinkTravelTime(link, time, person, vehicle);
-			}
-			else if (mode.equals(TransportMode.bike))
-			{
-				TUG_BikeTravelTime wtt = new TUG_BikeTravelTime(bikeConfigGroup);
-				travelTime = wtt.getLinkTravelTime(link, time, person, vehicle);
-			}
-			else if (mode.equals(EBConstants.BS_E_BIKE))
-			{
-				TUG_EBSTravelTime wtt = new TUG_EBSTravelTime(bikeConfigGroup);
-				travelTime = wtt.getLinkTravelTime(link, time, person, vehicle);
-			}
-				
-			double lenOfLink = link.getLength();
-
 		   		int routingType = -1;
+		   		TravelTime tt = null;
+		   		
+		   		if (mode.equals(EBConstants.BS_E_BIKE))
+		   		{
+		   			tt = new TUG_EBSTravelTime(bikeConfigGroup);
+		   		}
+		   		else if ((mode.equals(EBConstants.BS_BIKE))||(mode.equals(EBConstants.BS_BIKE_FF)))
+		   		{
+		   			tt = new TUG_BSTravelTime(bikeConfigGroup);
+		   		}
+		   		else 
+		   		{
+		   			tt = new TUG_BikeTravelTime(bikeConfigGroup);
+		   		}
+		   		double travelTime = tt.getLinkTravelTime(link, time, person, vehicle);
+		   		
+		   		
+		   		
 
 				if (personAttributes.getAttribute(person.getId().toString(), "routingType") != null)
 				{
@@ -77,7 +77,7 @@ class TUG_BikeFeltTravelTime implements TravelTime
 				}
 
 			   // Einlesen aus Bike_Attributes
-		double bikeSafetyOfInfrastructure = -1;
+			   double bikeSafetyOfInfrastructure = -1;
 			   double bikeSlopeOfInfrastructure = -1;
 			   double bikeComfortOfInfrastructure = -1;
 			   double bikeSurroundingOfInfrastructure = -1;
@@ -275,7 +275,7 @@ class TUG_BikeFeltTravelTime implements TravelTime
 
 			   double[] percTavelTimeAndTravelLength = new double[2];
 			   percTavelTimeAndTravelLength[0] = travelTime;//perceivedTravelTime;
-			   percTavelTimeAndTravelLength[1] = lenOfLink;
+			   percTavelTimeAndTravelLength[1] = travelDistance;
 			   
 			   double travelTime1 = perceivedTravelTime;
 			   double travelTimeOrig = travelTime;
