@@ -20,8 +20,9 @@
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAndEBikeSharingScenarioUtils;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeAndEBikeSharingScenarioUtils;
+
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;

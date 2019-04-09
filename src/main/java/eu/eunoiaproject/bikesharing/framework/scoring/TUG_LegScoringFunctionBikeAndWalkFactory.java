@@ -12,7 +12,7 @@ import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParametersForPerson;
 import org.matsim.core.scoring.functions.SubpopulationCharyparNagelScoringParameters;
 
-import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 
 import javax.inject.Inject;
 

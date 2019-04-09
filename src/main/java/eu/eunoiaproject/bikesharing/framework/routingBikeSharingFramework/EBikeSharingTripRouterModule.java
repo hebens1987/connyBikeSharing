@@ -20,10 +20,10 @@
 package eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSEBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_WalkRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSBikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSEBikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_WalkRoutingModule;
 
 //import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;

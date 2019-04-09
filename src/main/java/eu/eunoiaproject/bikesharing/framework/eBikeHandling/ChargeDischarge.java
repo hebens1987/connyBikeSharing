@@ -3,8 +3,10 @@ package eu.eunoiaproject.bikesharing.framework.eBikeHandling;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
+
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikesE;
+
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikesE;
 
 public class ChargeDischarge {
 	

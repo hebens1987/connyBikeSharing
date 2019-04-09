@@ -20,7 +20,7 @@
 package eu.eunoiaproject.bikesharing.framework.events;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.Event;

@@ -29,7 +29,7 @@ import org.matsim.facilities.Facility;
 import org.matsim.vehicles.Vehicle;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
 
 import java.util.ArrayList;
 import java.util.List;

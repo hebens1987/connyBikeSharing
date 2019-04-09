@@ -3,7 +3,13 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental;
 import java.util.List;
 import java.util.Map;
 
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeAgent;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingBikes;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.Bikes;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikesE;
+
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
@@ -18,15 +24,9 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForBikeEve
 import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForFreeBikeSlotEvent;
 import eu.eunoiaproject.bikesharing.framework.events.AgentFoundBikeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.AgentFoundParkingEvent;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.choiceStrategies.NoBikeAvailable;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.choiceStrategies.NoParkingAvailable;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
+
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAgent;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.Bikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikesE;
 
 
 public class TakingReturningMethodology {

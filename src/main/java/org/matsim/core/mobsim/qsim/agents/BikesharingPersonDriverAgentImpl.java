@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -38,18 +36,19 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForBikeEve
 import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForFreeBikeSlotEvent;
 import eu.eunoiaproject.bikesharing.framework.events.AgentWalksWithVerySlowSpeed;
 import eu.eunoiaproject.bikesharing.framework.events.AgentChangesLegAfterAbortWaiting;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.relocation.RelocationHandler;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.TakingReturningMethodology;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.WaitingData;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.WaitingListHandling;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeAgent;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.Bikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikesE;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.EBikeSharingConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeAgent;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingBikes;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.Bikes;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikesE;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.EBikeSharingConfigGroup;
 import eu.eunoiaproject.freeFloatingBS.BikeFFImpl;
 import eu.eunoiaproject.freeFloatingBS.ChooseBikeToTake;
 import eu.eunoiaproject.freeFloatingBS.FFDummyFacility;

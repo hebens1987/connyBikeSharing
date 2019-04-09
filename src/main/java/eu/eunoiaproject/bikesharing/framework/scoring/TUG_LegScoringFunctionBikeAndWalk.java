@@ -18,7 +18,7 @@ import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 
 
 class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring

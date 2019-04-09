@@ -2,8 +2,8 @@ package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import com.google.inject.Inject;
 
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
-import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttributesSingleton;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;

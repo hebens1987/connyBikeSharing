@@ -11,11 +11,12 @@ import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.vehicles.Vehicle;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.Bikes;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikesE;
+
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.Bikes;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikesE;
 
 
 public class TakeABike 

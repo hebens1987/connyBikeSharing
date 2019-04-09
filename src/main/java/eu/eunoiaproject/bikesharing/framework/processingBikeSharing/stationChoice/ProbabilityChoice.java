@@ -1,6 +1,6 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice;
 
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
 
 /**
  *

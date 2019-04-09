@@ -1,10 +1,12 @@
 package eu.eunoiaproject.bikesharing.framework.events;
 
 import org.matsim.api.core.v01.population.Person;
+
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikesE;
+
 import org.matsim.api.core.v01.events.ActivityEndEvent;
 import org.matsim.api.core.v01.events.ActivityStartEvent;
 import org.matsim.api.core.v01.events.Event;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikesE;
 
 
 public class EBikeBatteryGoneEmpty extends Event {

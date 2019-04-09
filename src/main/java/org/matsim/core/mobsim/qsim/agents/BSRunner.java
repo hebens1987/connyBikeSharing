@@ -1,20 +1,27 @@
 package org.matsim.core.mobsim.qsim.agents;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.StationAndType;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BSTypeAndPlanElements;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.qsim.eBikes.BikeSharingContext;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BSTypeAndPlanElements;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.TakingReturningMethodology;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability.Probability;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSTravelTime;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BikeTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_WalkTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_WalkTravelTime;
-import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.*;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_BikeTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_WalkTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_WalkTravelTime;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BSAtt;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BSAttribsAgent;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeAgent;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingBikes;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.EBikeSharingConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.StationAndType;
+
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;

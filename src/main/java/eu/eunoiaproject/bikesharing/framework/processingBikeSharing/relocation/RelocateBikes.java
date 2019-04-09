@@ -2,9 +2,10 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.relocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilityImpl;
+
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilityImpl;
 
 public class RelocateBikes {
 	

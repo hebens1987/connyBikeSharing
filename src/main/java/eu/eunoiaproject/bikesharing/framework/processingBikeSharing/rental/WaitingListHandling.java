@@ -6,9 +6,10 @@ import java.util.List;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
+
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;
 
 
 /***************************************************

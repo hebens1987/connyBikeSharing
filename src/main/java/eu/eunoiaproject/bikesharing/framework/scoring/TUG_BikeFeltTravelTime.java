@@ -2,11 +2,12 @@ package eu.eunoiaproject.bikesharing.framework.scoring;
 
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSTravelTime;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BikeTravelTime;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_EBSTravelTime;
-import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_EBSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttributesSingleton;
+
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
