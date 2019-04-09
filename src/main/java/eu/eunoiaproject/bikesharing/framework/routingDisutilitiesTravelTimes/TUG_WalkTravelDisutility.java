@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.routing.pedestrians;
+package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.network.Link;
@@ -30,8 +30,7 @@ public class TUG_WalkTravelDisutility implements TravelDisutility {
     
 	/***************************************************************************/
 	public TUG_WalkTravelDisutility(
-			BicycleConfigGroup bikeConfigGroup, 
-			PlanCalcScoreConfigGroup cnScoringGroup) 
+			BicycleConfigGroup bikeConfigGroup) 
 	/***************************************************************************/
 	{	
 			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup, false);

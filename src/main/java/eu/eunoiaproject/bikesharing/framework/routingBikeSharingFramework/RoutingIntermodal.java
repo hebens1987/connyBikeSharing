@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.routing.bikeSharing;
+package eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework;
 /**
  *
  * @author Hebenstreit

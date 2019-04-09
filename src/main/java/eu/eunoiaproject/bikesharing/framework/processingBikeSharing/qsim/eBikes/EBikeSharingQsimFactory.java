@@ -5,10 +5,10 @@ import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.IKK_ObjectAttributesSingleton;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSTravelTime;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BikeTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_WalkTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_WalkTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenario.bicycles.BicycleConfigGroup;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
@@ -129,18 +129,18 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		}
 		{
 			TravelTime btt = new TUG_BSTravelTime(confBC);
-			TravelDisutility btd = 	new TUG_BikeTravelDisutility(confBC );
+			TravelDisutility btd = 	new TUG_BikeTravelDisutility(confBC);
 			LeastCostPathCalculator calc = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt ) ;
 			builder.setSharedBikePathCalculator( calc ) ;
 		}
 		{
-			TravelTime btt = new TUG_WalkTravelTime( confBC );
-			TravelDisutility btd = new TUG_WalkTravelDisutility( confBC, pcsConf );
-			LeastCostPathCalculator routeAlgo = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt );;
+			TravelTime btt = new TUG_WalkTravelTime(confBC);
+			TravelDisutility btd = new TUG_WalkTravelDisutility(confBC);
+			LeastCostPathCalculator routeAlgo = pathCalculatorFactory.createPathCalculator(sc.getNetwork(), btd, btt);;
 			builder.setWalkPathCalculator( routeAlgo ) ;
 		}
 		builder.setQSim( qSim ) ;
-		builder.setObjectAttributesSingleton( IKK_ObjectAttributesSingleton.getInstance( confBC, false ) ) ;
+		builder.setObjectAttributesSingleton( IKK_ObjectAttributesSingleton.getInstance(confBC, false) ) ;
 		BikeSharingContext context = builder.build();;
 
 		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( context );

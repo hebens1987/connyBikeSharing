@@ -17,7 +17,7 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
-package eu.eunoiaproject.bikesharing.framework.routing.bikeSharing;
+package eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework;
 
 import com.google.inject.Inject;
 

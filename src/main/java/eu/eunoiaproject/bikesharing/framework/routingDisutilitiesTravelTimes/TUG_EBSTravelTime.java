@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.routing.bicycles;
+package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

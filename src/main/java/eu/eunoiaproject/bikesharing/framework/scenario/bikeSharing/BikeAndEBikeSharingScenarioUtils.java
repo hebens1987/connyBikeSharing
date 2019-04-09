@@ -1,7 +1,7 @@
 package eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.routing.bikeSharing.BikeSharingRouteFactory;
+import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.BikeSharingRouteFactory;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;

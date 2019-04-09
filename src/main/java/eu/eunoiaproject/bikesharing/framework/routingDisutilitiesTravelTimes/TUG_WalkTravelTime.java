@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.routing.pedestrians;
+package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes;
 
 
 import javax.inject.Inject;

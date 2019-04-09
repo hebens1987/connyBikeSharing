@@ -17,7 +17,7 @@
  *                                                                         *
  * *********************************************************************** */
 
-package eu.eunoiaproject.bikesharing.framework.routing.bikeSharing;
+package eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework;
 
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.population.Activity;

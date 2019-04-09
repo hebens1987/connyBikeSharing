@@ -17,13 +17,14 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
-package eu.eunoiaproject.bikesharing.framework.routing.bikeSharing;
+package eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSEBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSBikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSEBikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_WalkRoutingModule;
+
 //import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.controler.AbstractModule;

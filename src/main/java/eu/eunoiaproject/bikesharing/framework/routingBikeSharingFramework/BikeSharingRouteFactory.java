@@ -17,7 +17,7 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
-package eu.eunoiaproject.bikesharing.framework.routing.bikeSharing;
+package eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Id;

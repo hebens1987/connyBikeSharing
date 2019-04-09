@@ -18,9 +18,10 @@ import org.matsim.pt.router.TransitRouterImpl;
 
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.StationAndType;
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BSEBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routing.pedestrians.TUG_WalkRoutingModule;
+
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSBikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BSEBikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_WalkRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingBikes;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenario.bikeSharing.BikeSharingFacility;

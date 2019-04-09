@@ -23,8 +23,8 @@ import org.matsim.core.router.RoutingModule;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.population.algorithms.PlanAlgorithm;
 
-import eu.eunoiaproject.bikesharing.framework.routing.bicycles.TUG_BikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routing.bikeSharing.EBikeSharingRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.EBikeSharingRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.TUG_BikeRoutingModule;
 
 /**
  * Changes the transportation mode of all legs in a plan to a randomly chosen
