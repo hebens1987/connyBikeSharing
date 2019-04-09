@@ -56,6 +56,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	{
 		double travelTime = newLegX.getTravelTime();
 		LinkNetworkRouteImpl nr = (LinkNetworkRouteImpl)newLegX.getRoute();
+		String mode = newLegX.getMode();
 		String routeD = newLegX.getRoute().getRouteDescription();
 		if (routeD == null) routeD = nr.getRouteDescription();
 		double[] timeDist = {0,0};
