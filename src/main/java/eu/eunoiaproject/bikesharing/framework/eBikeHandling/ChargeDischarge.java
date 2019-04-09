@@ -3,6 +3,7 @@ package eu.eunoiaproject.bikesharing.framework.eBikeHandling;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
+import org.matsim.core.population.routes.GenericRouteImpl;
 
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikesE;
 
@@ -70,6 +71,7 @@ public class ChargeDischarge {
 				int index = agent.getCurrentPlan().getPlanElements().indexOf( agent.getCurrentPlanElement() ) ;
 				Leg legTest = (Leg)agent.getNextPlanElement(); // XXXXX Hebenstreit: ist das beides das Gleiche?
 				Leg leg = (Leg)agent.getCurrentPlan().getPlanElements().get(index+1);
+				leg.setRoute(null);//TODO: Hebenstreit
 				System.out.println("No battery support for " + agent.getPerson().getId() + " since: " + (-soc * dur_full_empty_h) + " hours (dur_full_empty: " + dur_full_empty_h + ") (leg travelTime: " + leg.getTravelTime());
 				leg.setTravelTime(leg.getTravelTime()+(-soc * dur_full_empty_h*3600));
 				leg.getRoute().setTravelTime(leg.getTravelTime()+(-soc * dur_full_empty_h*3)); 

@@ -66,13 +66,18 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    if (routeD!=null)
 	    {
 	    	TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
-	    	String[] linksOfRoute;
+	    	String[] linksOfRoute = new String[50000];
 	    	if (routeD.contains(" "))
 	    	{
 	    		linksOfRoute = routeD.split("\\s+");
+	    	}
 	        	
-	    		for (int j = 0; j < linksOfRoute.length; j++)
-	    		{
+	    	else
+	    	{
+	    		linksOfRoute[0] = routeD;
+	    	}
+	    	for (int j = 0; j < linksOfRoute.length; j++)
+	    	{
 
 	        	//link array
 	        		Id<Link> act = null;
@@ -90,33 +95,31 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	        		else if (j == linksOfRoute.length-1)
 	        		{
 	        			timeDist[0] = 0;
+	        			//timeDist[1] = 0;
+	        		}
+	        		else if (j == 1)
+	        		{
+	        			timeDist[0] = 0;
 	        		}
 	        		feltTravelTime += timeDist[0];
 	        		distance += timeDist[1];
-	    		}
-	    	}
-	    	else
-	    	{
-	    		Link link= network.getLinks().get(Id.create(routeD, Link.class));
-	    		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null, newLegX.getMode(),link.getLength()); 
-	    		feltTravelTime = timeDist[0];
-	    		distance = timeDist[1];
 	    	}
 	    }
 	    
 	    double distOrig = newLegX.getRoute().getDistance();
 	    double travelTimeOrig = newLegX.getTravelTime();
+	    
 
 	    
-	    double min = travelTime /2;
-	    double max = travelTime *2;
-	    if (feltTravelTime < min)
+	    double mProS = distance/feltTravelTime;
+
+	    if (mProS < 2)
 	    {
-	    	feltTravelTime = min;
+	    	feltTravelTime = distance/2;
 	    }
-	    if (feltTravelTime > max)
+	    if (mProS > 10)
 	    {
-	    	feltTravelTime = max;
+	    	feltTravelTime = distance/10;
 	    }
 	    timeDist[0] = feltTravelTime;
 	    timeDist[1] = distance;

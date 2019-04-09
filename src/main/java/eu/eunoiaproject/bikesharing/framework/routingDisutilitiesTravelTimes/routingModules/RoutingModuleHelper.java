@@ -26,11 +26,11 @@ public class RoutingModuleHelper {
 	
 	public RoutingModuleHelper (Facility fromFacility, Facility toFacility, 
 		double departureTime, Person person, LeastCostPathCalculator routeAlgo,
-		Scenario scenario, TravelTime btt,String mode)
+		Scenario scenario, TravelTime tt,String mode)
 		{
 		
 			this.peList = adaptPath (fromFacility, toFacility, departureTime, person, routeAlgo,
-				scenario, btt, mode);
+				scenario, tt, mode);
 		}
 	
 	private List<PlanElement> adaptPath (Facility fromFacility, Facility toFacility, 
@@ -45,11 +45,11 @@ public class RoutingModuleHelper {
 		
 		double travelTimePath = path.travelTime;
 		if (travelTimePath == Double.NaN)
-		travelTimePath = -0.1;
+		travelTimePath = 0.0;
 		
 		Id <Link> startLinkId = fromFacility.getLinkId();
 		Id <Link> endLinkId = toFacility.getLinkId();
-		if (path.links.size()>0)
+		/*if (path.links.size()>0)
 		{
 			if (path.links.get(0).getId() != startLinkId)
 			{
@@ -90,7 +90,7 @@ public class RoutingModuleHelper {
 				double travelTimeAddOn = btt.getLinkTravelTime(path.links.get(0), departureTime, person, null);
 				travelTime = travelTimePath + travelTimeAddOn;
 			}
-		}
+		}*/
 		LinkNetworkRouteImpl route = new LinkNetworkRouteImpl(startLinkId, endLinkId);
 		String routeDescr = "";
 		
@@ -100,18 +100,12 @@ public class RoutingModuleHelper {
 				routeDescr += path.links.get(i).getId().toString();
 				distance += path.links.get(i).getLength();
 			
-				if (i != path.links.size())
+				if (i != path.links.size()-1)
 				{
 					routeDescr += " ";
 				}
 			}
-	
-		
-		if (travelTime == 0)
-		{
-			travelTime = path.travelTime;
-		}
-	
+			
 		route.setStartLinkId(startLinkId);
 		route.setEndLinkId(endLinkId);
 		

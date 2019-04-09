@@ -6,6 +6,7 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.rou
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_EBSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TravelTimeHelper;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttributesSingleton;
 
@@ -51,7 +52,7 @@ class TUG_BikeFeltTravelTime implements TravelTime
 		  Link link, double time, Person person, Vehicle vehicle, String mode, double travelDistance)
 	/***************************************************************************/
 	{   
-		   		int routingType = -1;
+			int routingType = -1;
 		   		TravelTime tt = null;
 		   		
 		   		if (mode.equals(EBConstants.BS_E_BIKE))
@@ -68,9 +69,6 @@ class TUG_BikeFeltTravelTime implements TravelTime
 		   		}
 		   		double travelTime = tt.getLinkTravelTime(link, time, person, vehicle);
 		   		
-		   		
-		   		
-
 				if (personAttributes.getAttribute(person.getId().toString(), "routingType") != null)
 				{
 					routingType = ((int) personAttributes.getAttribute(person.getId().toString(), "routingType"));
@@ -274,11 +272,11 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   //log.info("######     TravelTime link: " + link.getId() + "  pers:  " + person.getId() + "    " + travelTime);  
 
 			   double[] percTavelTimeAndTravelLength = new double[2];
-			   percTavelTimeAndTravelLength[0] = travelTime;//perceivedTravelTime;
+			   percTavelTimeAndTravelLength[0] =perceivedTravelTime;//perceivedTravelTime;
 			   percTavelTimeAndTravelLength[1] = travelDistance;
 			   
-			   double travelTime1 = perceivedTravelTime;
-			   double travelTimeOrig = travelTime;
+			   //double travelTime1 = perceivedTravelTime;
+			 //  double travelTimeOrig = travelTime;
 			   
 			   return percTavelTimeAndTravelLength; //does perceive length and duration differently
             

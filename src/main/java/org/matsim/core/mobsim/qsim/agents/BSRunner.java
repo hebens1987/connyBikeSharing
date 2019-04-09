@@ -447,7 +447,6 @@ public class BSRunner {
 	 public final void setAllPlanElement( Plan plan, List<PlanElement> pe) 
 	 /***************************************************************************/
 	 {
-	
 	  plan.getPerson().getSelectedPlan().getPlanElements().clear();
 	  plan.getPerson().getSelectedPlan().getPlanElements().addAll(pe);
 	 }

@@ -47,7 +47,7 @@ public class TUG_EBSTravelDisutility implements TravelDisutility
 		   Link link, double time, Person person, Vehicle vehicle) 
    /***************************************************************************/
    {
-	   double du_Type = TravelDisutilityHelper.getDisutilityForLinkAttributes(
+	   	  double du_Type = TravelDisutilityHelper.getDisutilityForLinkAttributes(
  				bikeLinkAttributes, personAttributes,bikeConfigGroup,link,person);  
 	   
 		   TUG_EBSTravelTime btt = new TUG_EBSTravelTime(bikeConfigGroup);
