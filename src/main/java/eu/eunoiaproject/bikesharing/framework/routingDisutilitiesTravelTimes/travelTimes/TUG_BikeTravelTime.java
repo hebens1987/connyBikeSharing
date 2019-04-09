@@ -48,85 +48,9 @@ public class TUG_BikeTravelTime implements TravelTime
 			Link link, double time, Person person, Vehicle vehicle) 
 	/***************************************************************************/
 	{
-		double v = 0;
-		// bikeSpeed in km/h
-		double lenOfLink = link.getLength();
-		//System.out.println(link.getId().toString());
-		double bikeSpeedOfPerson = 0;
-		if (personAttributes.getAttribute(person.getId().toString(), "bikeSpeed") == null)
-		{
-			bikeSpeedOfPerson = 4.3; //15.5 km/h
-			if (counter < 1)
-			//log.warn("For Person with ID: " + person.getId() + " no specific input personal speed was allocated");
-			counter = 1;
-		}
-		else
-		{
-			bikeSpeedOfPerson = ((double) personAttributes.getAttribute(person.getId().toString(), "bikeSpeed")); // m/s
-		}
+		TravelTimeHelper tth = new TravelTimeHelper();
+		return tth.travelTimeGetter(person, link, personAttributes, bikeLinkAttributes, 8/3.6, 30/3.6, 0);
 		
-		double bikeSpeedOfInfrastructure = 0;
-		if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null)
-		{
-			if (!(link.getAllowedModes().contains(TransportMode.bike)))
-			{
-				if (link.getAllowedModes().contains(TransportMode.walk))
-				{
-					bikeSpeedOfInfrastructure = 1.1; //TODO: Hebenstreit
-					//For Link with ID: " + link.getId() + " using a walk link with very slow speed
-				}
-				
-				else 
-				{ 
-					v = 0.0000001;
-					//For Link with ID: " + link.getId() + " using any other link than mode bike or walk
-				}
-			}
-			else if (link.getAllowedModes().contains(TransportMode.bike))
-			{
-				bikeSpeedOfInfrastructure = 3.0; //TODO: Hebenstreit
-				log.warn("For Link with ID: " + link.getId() + " no specific input link was allocated, using a max value of 3 m/s");
-			}
-		}
-		
-		else
-		{
-			bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed"))/3.6; // m/s
-		}
-		
-		//log.info("BIKETRAVELTIME speed link: " + link.getId() + "pers: " + person.getId() + " person-speed:  " + bikeSpeedOfPerson + " infra-speed: " + bikeSpeedOfInfrastructure);
-		//log.info(Arrays.toString(Thread.currentThread().getStackTrace()));
-
-		double velocityperson = bikeSpeedOfPerson;
-		double velocityinfrastructure = bikeSpeedOfInfrastructure;
-
-
-    	if(velocityinfrastructure <= velocityperson)
-    	{
-    		v=velocityinfrastructure;
-    	}
-    	else
-    	{
-    		v=velocityperson;
-    	}
-    		
-    	if (v == 0) 
-    	{
-    	   v = 1.0;//minimale Geschwindigkeit = 6.5 km/h!
-    	} 
-    	
-    	if (v > 7.5) 
-    	{
-    		v = 7.5;
-    	}
-
-		double traveltime = lenOfLink / v;
-
-    	if( traveltime<=0. ){
-		traveltime = 1. ;
-	}
-
-		return traveltime;
 	}
 }
 

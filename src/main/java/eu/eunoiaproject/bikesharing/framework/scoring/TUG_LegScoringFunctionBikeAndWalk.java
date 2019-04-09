@@ -80,9 +80,13 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	        		Link link= network.getLinks().get(act);
 	        		//System.out.println(link.getId());
 	        		timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null, newLegX.getMode());
-	        		if ((j==0) || (j == linksOfRoute.length-1))
+	        		if (j == 0)
 	        		{
-	        			timeDist[0] = timeDist[0]/2;
+	        			timeDist[0] = 0;
+	        		}
+	        		if ((j==1) || (j == linksOfRoute.length-1))
+	        		{
+	        			timeDist[0] = 0;
 	        			timeDist[1] = timeDist[1]/2;
 	        		}
 	        		feltTravelTime += timeDist[0];
@@ -97,6 +101,10 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    		distance = timeDist[1];
 	    	}
 	    }
+	    
+	    double distOrig = newLegX.getRoute().getDistance();
+	    double travelTimeOrig = newLegX.getTravelTime();
+
 	    
 	    double min = travelTime /2;
 	    double max = travelTime *2;

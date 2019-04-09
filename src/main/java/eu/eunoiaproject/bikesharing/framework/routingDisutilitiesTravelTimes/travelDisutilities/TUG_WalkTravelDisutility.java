@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes;
+package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.network.Link;

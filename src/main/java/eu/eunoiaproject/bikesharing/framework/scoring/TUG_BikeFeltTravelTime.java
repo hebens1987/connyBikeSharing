@@ -173,6 +173,10 @@ class TUG_BikeFeltTravelTime implements TravelTime
 						   {
 						   comf = Double.parseDouble(comfortShare[k]);
 						   }
+						   if (slopeShare != null)
+						   {
+						   sl = Double.parseDouble(comfortShare[k]);
+						   }
 						   break;
 					   }
 				   }
@@ -197,16 +201,16 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   else { safetyFactor = 1.35;}
 	                               
 			   //---- slope (speed) ----
-			   if (bikeSlopeOfInfrastructure <= 2.5) { speedChange = +0.5;}
+			   if (bikeSlopeOfInfrastructure <= 2.5) { speedChange = 0.85;}
 			   else if ((bikeSlopeOfInfrastructure > 2.5) && (bikeSlopeOfInfrastructure <=3.5)){ speedChange = 0.9;}
 			   else if ((bikeSlopeOfInfrastructure > 3.5) && (bikeSlopeOfInfrastructure <=4.5)){ speedChange = 0.95;}
 			   else if ((bikeSlopeOfInfrastructure > 4.5) && (bikeSlopeOfInfrastructure <=5.5)){ speedChange = 1;}
 			   else if ((bikeSlopeOfInfrastructure > 5.5) && (bikeSlopeOfInfrastructure <=6.5)){ speedChange = 1.05;}
 			   else if ((bikeSlopeOfInfrastructure > 6.5) && (bikeSlopeOfInfrastructure <=7.5)){ speedChange = 1.10;}
-			   else { speedChange = -0.5;}
+			   else { speedChange = 1.15;}
 	                                                  		   
 			   // ---- comfort ----
-			   if (bikeComfortOfInfrastructure <= 2.5) { comfortFactor = 0.5;}
+			   if (bikeComfortOfInfrastructure <= 2.5) { comfortFactor = 0.85;}
 			   else if ((bikeComfortOfInfrastructure > 2.5) && (bikeComfortOfInfrastructure <=3.5)){ comfortFactor = 0.9;}
 			   else if ((bikeComfortOfInfrastructure > 3.5) && (bikeComfortOfInfrastructure <=4.5)){ comfortFactor = 0.95;}
 			   else if ((bikeComfortOfInfrastructure > 4.5) && (bikeComfortOfInfrastructure <=5.5)){ comfortFactor = 1;}
@@ -238,14 +242,32 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   //double feltTravelTimeCalc = lenOfLink * (safetyFactor +comfortFactor + surroundingFactor + amountFactor)/ 4 / (v*speedChange);
 	           //ergibt gleiches Ergebnis!
 			   
+			   if (saf+comf+surr+am+sl > 1)
+			   {
+				   saf = saf/(saf+comf+surr+am+sl);
+				   comf = comf/(saf+comf+surr+am+sl);
+				   surr = surr/(saf+comf+surr+am+sl);
+				   am = am/(saf+comf+surr+am+sl);
+				   sl = sl/(saf+comf+surr+am+sl);
+			   }
+			   
 			   double changes = ((safetyFactor * saf)
 			   			+ (comfortFactor * comf )
 			   			+ (surroundingFactor * surr )
-			   			+ (amountFactor * am));
+			   			+ (amountFactor * am)
+			   			+ (speedChange * sl));
 			   //log.info("###### CHANGES: " + changes);     
 
+			   if (changes < 0.85)
+			   {
+				   changes = 0.85;
+			   }
+			   else if (changes > 1.25)
+			   {
+				   changes = 1.25;
+			   }
 
-			   perceivedTravelTime = travelTime * changes * speedChange;	  
+			   perceivedTravelTime = travelTime * changes;	  
 			   //TODO: Hebenstreit - wenn Slope einen bestimmten Wert überschreiten --> Berücksichtigen von SL
 			   
 			   //log.info("###### FeltTravelTime link: " + link.getId() + "  pers:  " + person.getId() + "    " + feltTravelTime);     
@@ -254,6 +276,10 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   double[] percTavelTimeAndTravelLength = new double[2];
 			   percTavelTimeAndTravelLength[0] = travelTime;//perceivedTravelTime;
 			   percTavelTimeAndTravelLength[1] = lenOfLink;
+			   
+			   double travelTime1 = perceivedTravelTime;
+			   double travelTimeOrig = travelTime;
+			   
 			   return percTavelTimeAndTravelLength; //does perceive length and duration differently
             
 	   }

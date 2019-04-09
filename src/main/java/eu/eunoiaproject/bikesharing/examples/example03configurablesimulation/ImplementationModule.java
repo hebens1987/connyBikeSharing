@@ -64,7 +64,7 @@ class ImplementationModule extends AbstractModule {
 			this.addTravelDisutilityFactoryBinding(EBConstants.MODE ).to(TUG_WalkTravelDisutilityFactory.class);  
 			this.addRoutingModuleBinding(EBConstants.MODE ).to(EBikeSharingRoutingModule.class);
 			
-			this.addTravelTimeBinding(EBConstants.MODE_FF).to(TUG_BikeTravelTime.class); 
+			this.addTravelTimeBinding(EBConstants.MODE_FF).to(TUG_BSTravelTime.class); 
 			//TODO: Hebenstreit - own Travel Time for Bike Sharing (eventually own Disutility for E-BikeSharing!!!)
 			this.addTravelDisutilityFactoryBinding(EBConstants.MODE_FF ).to(TUG_WalkTravelDisutilityFactory.class);  
 			this.addRoutingModuleBinding(EBConstants.MODE_FF ).to(FFBikeSharingRoutingModule.class);
@@ -81,7 +81,7 @@ class ImplementationModule extends AbstractModule {
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK).to(TUG_WalkTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_WALK).toProvider(new NetworkRouting(EBConstants.BS_WALK));
+			this.addRoutingModuleBinding(EBConstants.BS_WALK).to(TUG_WalkRoutingModule.class);
 			
 			this.bindScoringFunctionFactory().to(TUG_LegScoringFunctionBikeAndWalkFactory.class);
 			
