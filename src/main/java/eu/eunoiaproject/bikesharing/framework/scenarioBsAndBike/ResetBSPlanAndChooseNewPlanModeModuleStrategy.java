@@ -25,7 +25,7 @@ public class ResetBSPlanAndChooseNewPlanModeModuleStrategy implements PlanStrate
 		this.strategy = new PlanStrategyImpl( new RandomPlanSelector<Plan, Person>() );
 		 	
 		//addStrategyModule( new TripsToLegsModule(controler.getConfig() ) );   //lets try without this, not sure if it is needed
-		String [] modes = {"car","bike","walk","eBikeSharing","pt"};
+		String [] modes = {"car","bike","walk","eBikeSharing"};
 		ResetBSPlanAndChooseNewPlanModeModule smc = new ResetBSPlanAndChooseNewPlanModeModule(1, modes, true);
 		addStrategyModule(smc );
 	}
@@ -33,16 +33,15 @@ public class ResetBSPlanAndChooseNewPlanModeModuleStrategy implements PlanStrate
 	public void addStrategyModule(final PlanStrategyModule module) {
 		strategy.addStrategyModule(module);
 	}
+	
 	@Override
 	public void run(HasPlansAndId<Plan, Person> person) {
 		strategy.run(person);
-		
 	}
 
 	@Override
 	public void init(ReplanningContext replanningContext) {
 		strategy.init(replanningContext);
-		
 	}
 
 	@Override

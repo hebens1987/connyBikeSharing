@@ -91,9 +91,10 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 			boolean longerThan25km = checkPlan(tour, newMode); 
 			if (longerThan25km)
 			{
-				if (newMode.contains(TransportMode.walk) || newMode.equals(TransportMode.bike))
+				if (newMode.equals(TransportMode.walk) || newMode.equals(TransportMode.bike))
 				{
-					if (currentMode.equals(TransportMode.car)) {newMode = TransportMode.pt;}
+					newMode = TransportMode.car;
+					/*if (currentMode.equals(TransportMode.car)) {newMode = TransportMode.pt;}
 					else if (currentMode.equals(TransportMode.pt)) {newMode = TransportMode.car;}
 					else
 					{
@@ -106,7 +107,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 						{
 							newMode = TransportMode.walk;
 						}
-					}
+					}*/
 				}
 			}
 			changeLegModeTo(tour, newMode);
@@ -140,6 +141,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					}
 				}
 			}
+			//removes all legs - creates a generic eBikeSharing Leg
 			if (newMode.equals("eBikeSharing"))
 			{
 				for(int i = 1; i < list.size()-1; i++)
@@ -167,6 +169,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 
 		Activity old = null;
 		Activity act = null;
+		// checks the beeline distance - returns false or true
 		for (int i = 0; i < list.size(); i++)
 		{
 			if (list.get(i) instanceof Activity)
@@ -195,10 +198,8 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 						return true;
 					}
 				}
-				old.setLinkId(null);
 			}
 		}
-		if (act != null) act.setLinkId(null);
 		return false;
 	}
 
@@ -207,7 +208,17 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 		for (PlanElement pe : tour) {
 			if (pe instanceof Leg) 
 			{
-				((Leg) pe).setMode(newMode);
+				if (!(((Leg) pe).getMode().equals(TransportMode.access_walk) ||
+				((Leg) pe).getMode().equals(TransportMode.egress_walk)))
+				{
+					((Leg) pe).setMode(newMode);
+					if (newMode.equals(TransportMode.pt))
+					{
+						Route route = new GenericRouteImpl(((Leg) pe).getRoute().getStartLinkId(),((Leg) pe).getRoute().getEndLinkId());
+						((Leg)pe).setRoute(route);
+					}
+
+				}
 			}
 		}
 	}
