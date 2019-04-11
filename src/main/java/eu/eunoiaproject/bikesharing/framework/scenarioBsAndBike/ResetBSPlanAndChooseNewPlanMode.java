@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.inject.Named;
 
 import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
@@ -87,7 +88,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 				}
 			}
 
-			boolean longerThan25km = checkPlan(tour, currentMode); 
+			boolean longerThan25km = checkPlan(tour, newMode); 
 			if (longerThan25km)
 			{
 				if (newMode.contains(TransportMode.walk) || newMode.equals(TransportMode.bike))
@@ -115,7 +116,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 	}
 
 
-	private boolean checkPlan (final List<PlanElement> list, String mode)
+	private boolean checkPlan (final List<PlanElement> list, String newMode)
 	{
 
 			for (int i = 0; i < list.size()-1; i++)
@@ -139,30 +140,33 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					}
 				}
 			}
-			for(int i = 1; i < list.size()-1; i++)
+			if (newMode.equals("eBikeSharing"))
 			{
-				Id<Link> firstLink = null;
-				Id<Link> lastLink = null;
-				while (list.get(i) instanceof Leg)
+				for(int i = 1; i < list.size()-1; i++)
 				{
-					if (firstLink == null)
+					Id<Link> firstLink = null;
+					Id<Link> lastLink = null;
+					while (list.get(i) instanceof Leg)
 					{
-						firstLink = ((Leg)list.get(i)).getRoute().getStartLinkId();
+						if (firstLink == null)
+						{
+							firstLink = ((Leg)list.get(i)).getRoute().getStartLinkId();
+						}
+						lastLink = ((Leg)list.get(i)).getRoute().getEndLinkId();
+						list.remove(i);
 					}
-					lastLink = ((Leg)list.get(i)).getRoute().getEndLinkId();
-					list.remove(i);
-				}
-				{
-					Leg leg = new LegImpl (mode);
-					NetworkRoute route = new LinkNetworkRouteImpl(firstLink, lastLink);
+
+					Leg leg = new LegImpl (newMode);
+					Route route =  new GenericRouteImpl(firstLink, lastLink);
+						
 					leg.setRoute(route);
 					list.add(i,leg);
 					i++;	
 				}
 			}
 
-		
 		Activity old = null;
+		Activity act = null;
 		for (int i = 0; i < list.size(); i++)
 		{
 			if (list.get(i) instanceof Activity)
@@ -178,7 +182,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 				
 				else
 				{
-					Activity act = (Activity)list.get(i);
+					act = (Activity)list.get(i);
 					
 					if (act.getCoord() == null)
 					{
@@ -191,16 +195,18 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 						return true;
 					}
 				}
+				old.setLinkId(null);
 			}
 		}
-		
+		if (act != null) act.setLinkId(null);
 		return false;
 	}
 
 
 	private void changeLegModeTo(final List<PlanElement> tour, final String newMode) {
 		for (PlanElement pe : tour) {
-			if (pe instanceof Leg) {
+			if (pe instanceof Leg) 
+			{
 				((Leg) pe).setMode(newMode);
 			}
 		}

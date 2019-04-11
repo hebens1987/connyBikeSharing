@@ -169,7 +169,7 @@
 		<param name="ModuleDisableAfterIteration_3" value="44" /> <!-- 40, auf 26 ändern-->
 
 		<param name="ModuleProbability_4" value="0.2" /> 
-		<param name="Module_4" value="ChangeTripMode" />
+		<param name="Module_4" value="ResetBSPlan" />
 		<param name="ModuleDisableAfterIteration_4" value="54" /><!-- 72, auf 34 ändern-->
 	</module>
 	

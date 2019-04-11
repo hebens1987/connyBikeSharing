@@ -136,6 +136,7 @@ public class RunConfigurableBikeSharingSimulation {
 		//Can I use a combination? TODO:
 		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
 					EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK, EBConstants.BS_WALK_FF) ) ) ;
+		
 		//config.qsim().setMainModes( new HashSet<>( Arrays.asList( 
 		//		TransportMode.car, TransportMode.walk,EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
 		
@@ -147,13 +148,13 @@ public class RunConfigurableBikeSharingSimulation {
 		config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
+		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
 		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
-				config.transitRouter().setMaxBeelineWalkConnectionDistance( 120.0 );
+				config.transitRouter().setMaxBeelineWalkConnectionDistance( 200 );
 				break;
 			case debug:
 				config.controler().setLastIteration( 1 );
-
 				config.transit().setUseTransit( false );
 //				config.transit().setTransitScheduleFile( null );
 //				config.transit().setVehiclesFile( null );
@@ -161,7 +162,7 @@ public class RunConfigurableBikeSharingSimulation {
 			default:
 				throw new RuntimeException( "not implemented" ) ;
 		}
-		config.plansCalcRoute().setInsertingAccessEgressWalk(true);
+
 		
 		return config;
 	}
