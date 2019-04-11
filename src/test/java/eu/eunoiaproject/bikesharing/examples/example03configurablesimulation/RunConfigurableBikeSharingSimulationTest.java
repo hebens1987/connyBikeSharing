@@ -30,12 +30,12 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
-	@Test
+	/*@Test
 	public void testOne() {
 
 		final Config config = prepareConfig( null, InputCase.raster );
 
-		config.controler().setLastIteration(10);
+		config.controler().setLastIteration(60);
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
@@ -64,14 +64,14 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 		controler.run() ;
 
-	}
+	}*/
 	@Test
 	public void testTwo() {
 
 		//		final Config config = prepareConfig( null, InputCase.connyInputDiss );
-		final Config config = prepareConfig( null, InputCase.inputDiss );
+		final Config config = prepareConfig( null, InputCase.connyInputDiss );
 
-		config.controler().setLastIteration(10);
+		config.controler().setLastIteration(60);
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class );;
@@ -98,7 +98,7 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 	}
 
-	@Test
+	/*@Test
 	public void testThree() {
 
 		final Config config = prepareConfig( null, InputCase.raster );
@@ -160,7 +160,7 @@ public class RunConfigurableBikeSharingSimulationTest{
 
 		controler.run() ;
 
-	}
+	}*/
 
 	private static class EventsPrinter implements BasicEventHandler {
 		private int iteration ;

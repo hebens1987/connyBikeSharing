@@ -57,7 +57,7 @@ public class RunConfigurableBikeSharingSimulation {
 	public static void main(final String... args) 
 	/***************************************************************************/
 	{
-		final Config config = prepareConfig( args, InputCase.raster );
+		final Config config = prepareConfig( args, InputCase.connyInputDiss );
 
 		final Scenario sc = prepareScenario( config );
 
@@ -69,6 +69,7 @@ public class RunConfigurableBikeSharingSimulation {
 	static Controler prepareControler(Scenario sc ){
 		final Controler controler = new Controler( sc );
 		controler.addOverridingModule(new ImplementationModule(sc.getConfig()) );
+		//new ImplementationModule(sc.getConfig()).install();
 		return controler;
 	}
 
@@ -102,7 +103,7 @@ public class RunConfigurableBikeSharingSimulation {
 				configFile = "./scenarios/Input_Diss/config_bs.xml" ;
 				break;
 			case connyInputDiss:
-				configFile = "C:/Users/hebens/Documents/Input_Diss/config_bs.xml" ;
+				configFile = "D:/BikeRouting/Wien_Gesamt/config_bs.xml" ;
 				break;
 			case raster:
 				configFile = "./scenarios/RasterBsp/configRaster.xml" ;
@@ -148,7 +149,7 @@ public class RunConfigurableBikeSharingSimulation {
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
 		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
-				config.transitRouter().setMaxBeelineWalkConnectionDistance( 10. );
+				config.transitRouter().setMaxBeelineWalkConnectionDistance( 120.0 );
 				break;
 			case debug:
 				config.controler().setLastIteration( 1 );

@@ -13,6 +13,7 @@ import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
+import org.matsim.core.population.routes.GenericRouteImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.scoring.functions.CharyparNagelLegScoring;
 import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
@@ -55,6 +56,10 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	/***************************************************************************/
 	{
 		double travelTime = newLegX.getTravelTime();
+		if (newLegX.getRoute() instanceof GenericRouteImpl)
+		{
+			System.out.println("warum?");
+		}
 		LinkNetworkRouteImpl nr = (LinkNetworkRouteImpl)newLegX.getRoute();
 		String mode = newLegX.getMode();
 		String routeD = newLegX.getRoute().getRouteDescription();
@@ -113,7 +118,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	    
 	    double mProS = distance/feltTravelTime;
 
-	    if (mProS < 2)
+	    if (mProS < 1)
 	    {
 	    	feltTravelTime = distance/2;
 	    }

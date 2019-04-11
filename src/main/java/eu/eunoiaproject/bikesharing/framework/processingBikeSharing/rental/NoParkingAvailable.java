@@ -65,7 +65,7 @@ public class NoParkingAvailable {
 		  BikeSharingContext bikeSharingContext )
 	/***************************************************************************/
 	{
-		Scenario scenario = bikeSharingContext.getqSim().getScenario();;
+		Scenario scenario = bikeSharingContext.getqSim().getScenario() ;
 
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);

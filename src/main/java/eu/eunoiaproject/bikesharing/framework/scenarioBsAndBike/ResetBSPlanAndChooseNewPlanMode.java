@@ -24,7 +24,6 @@ import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.population.algorithms.PlanAlgorithm;
 
 import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.EBikeSharingRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BikeRoutingModule;
 
 /**
  * Changes the transportation mode of all legs in a plan to a randomly chosen
@@ -140,27 +139,27 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					}
 				}
 			}
-//			for(int i = 1; i < list.size()-1; i++)
-//			{
-//				Id<Link> firstLink = null;
-//				Id<Link> lastLink = null;
-//				while (list.get(i) instanceof Leg)
-//				{
-//					if (firstLink == null)
-//					{
-//						firstLink = ((Leg)list.get(i)).getRoute().getStartLinkId();
-//					}
-//					lastLink = ((Leg)list.get(i)).getRoute().getEndLinkId();
-//					list.remove(i);
-//				}
-//				{
-//					Leg leg = new LegImpl (mode);
-//					NetworkRoute route = new LinkNetworkRouteImpl(firstLink, lastLink);
-//					leg.setRoute(route);
-//					list.add(i,leg);
-//					i++;	
-//				}
-//			}
+			for(int i = 1; i < list.size()-1; i++)
+			{
+				Id<Link> firstLink = null;
+				Id<Link> lastLink = null;
+				while (list.get(i) instanceof Leg)
+				{
+					if (firstLink == null)
+					{
+						firstLink = ((Leg)list.get(i)).getRoute().getStartLinkId();
+					}
+					lastLink = ((Leg)list.get(i)).getRoute().getEndLinkId();
+					list.remove(i);
+				}
+				{
+					Leg leg = new LegImpl (mode);
+					NetworkRoute route = new LinkNetworkRouteImpl(firstLink, lastLink);
+					leg.setRoute(route);
+					list.add(i,leg);
+					i++;	
+				}
+			}
 
 		
 		Activity old = null;

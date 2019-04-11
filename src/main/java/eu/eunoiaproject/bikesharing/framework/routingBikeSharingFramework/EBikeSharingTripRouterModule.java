@@ -20,16 +20,13 @@
 package eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSEBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_WalkRoutingModule;
 
 //import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.router.MainModeIdentifier;
 import org.matsim.core.router.MainModeIdentifierImpl;
+import org.matsim.core.router.NetworkRouting;
 
 
 /**
@@ -51,11 +48,11 @@ public class EBikeSharingTripRouterModule extends AbstractModule {
 	@Override
 	public void install() {
 		addRoutingModuleBinding( EBConstants.MODE ).to(EBikeSharingRoutingModule.class);
-		addRoutingModuleBinding( TransportMode.bike ).to(TUG_BikeRoutingModule.class);
-		addRoutingModuleBinding( TransportMode.walk ).to(TUG_WalkRoutingModule.class);
-		addRoutingModuleBinding( EBConstants.BS_BIKE ).to(TUG_BSBikeRoutingModule.class);
-		addRoutingModuleBinding( EBConstants.BS_E_BIKE ).to(TUG_BSEBikeRoutingModule.class);
-		addRoutingModuleBinding( EBConstants.BS_WALK).to(TUG_WalkRoutingModule.class);
+		addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
+		addRoutingModuleBinding( TransportMode.walk ).toProvider(new NetworkRouting(TransportMode.walk));
+		addRoutingModuleBinding( EBConstants.BS_BIKE ).toProvider(new NetworkRouting(TransportMode.bike));
+		addRoutingModuleBinding( EBConstants.BS_E_BIKE ).toProvider(new NetworkRouting(TransportMode.bike));
+		addRoutingModuleBinding( EBConstants.BS_WALK).toProvider(new NetworkRouting(TransportMode.walk));
 		bind( MainModeIdentifier.class ).toInstance(
 					new EBikeSharingModeIdentifier(
 						 new MainModeIdentifierImpl() ) );

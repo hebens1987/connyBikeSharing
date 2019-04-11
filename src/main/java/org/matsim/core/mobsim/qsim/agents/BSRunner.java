@@ -3,6 +3,7 @@ package org.matsim.core.mobsim.qsim.agents;
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BSTypeAndPlanElements;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.EBikeSharingQsimFactory;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.TakingReturningMethodology;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability;
@@ -87,12 +88,13 @@ public class BSRunner {
 		  Map<Id<Person>, BikeAgent> agentsC,
 		  Map<Id<Person>, BikeAgent> agentsE,
 		  BikeSharingFacilities bsFac,
-		  BikeSharingBikes bSharingVehicles, BikeSharingContext bikeSharingContext )
+		  BikeSharingBikes bSharingVehicles, 
+		  BikeSharingContext bikeSharingContext )
 	/***************************************************************************/
 	{
 		this.bikeSharingContext = bikeSharingContext;
-		this.scenario = bikeSharingContext.getqSim().getScenario();;
-		TransitRouterImpl trImpl = bSharingVehicles.generatePTRouterForBS(scenario);
+		this.scenario = bikeSharingContext.getqSim().getScenario();
+		//TransitRouterImpl trImpl = bSharingVehicles.generatePTRouterForBS(scenario);
 
 		//------------------------------------------
 		TakingReturningMethodology trMet = new TakingReturningMethodology();
@@ -145,7 +147,7 @@ public class BSRunner {
 			//System.out.println(toFac.getType());
 			StationAndType[] sat = new StationAndType[2];
 			BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
-			ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
+			ActivityFacilitiesFactory ff =  scenario.getActivityFacilities().getFactory();
 			if (toFac.getCoord() != null)
 			{
 				BSAtt att = BSAttribsAgent.getPersonAttributes(basicAgentDelegate.getPerson(), scenario);
@@ -462,9 +464,10 @@ public class BSRunner {
 			Id<Link> startLinkId,
 			Id<Link> endLinkId)
 	/***************************************************************************/
-	{
+	{	
 		BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
 				scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
+		bSharingVehicles.generatePTRouterForBS(scenario);
 		TransitRouterImpl pt = bSharingVehicles.trImpl;
 		List<Leg> trip = pt.calcRoute(start, destination, now, person);
 		
@@ -541,7 +544,7 @@ public class BSRunner {
 		  String mode, double departureTime,
 		  BasicPlanAgentImpl basicAgentDelegate, BikeSharingContext bikeSharingContext )
 	{
-		Scenario scenario = bikeSharingContext.getqSim().getScenario() ;
+		Scenario scenario = bikeSharingContext.getqSim().getScenario();
 
 		TravelTime btt;
 		double travelTime = 0;

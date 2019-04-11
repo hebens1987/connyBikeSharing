@@ -17,10 +17,13 @@ import org.matsim.core.mobsim.qsim.InternalInterface;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.TeleportationEngine;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.PlanBasedDriverAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.TransitAgent;
 import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
 import org.matsim.core.mobsim.qsim.interfaces.DepartureHandler;
 import org.matsim.core.mobsim.qsim.interfaces.MobsimEngine;
 import org.matsim.core.mobsim.qsim.pt.AbstractTransitDriverAgent;
+import org.matsim.core.mobsim.qsim.pt.DefaultTransitDriverAgentFactory;
 import org.matsim.core.mobsim.qsim.pt.PTPassengerAgent;
 import org.matsim.core.mobsim.qsim.pt.TransitDriverAgentImpl;
 import org.matsim.core.mobsim.qsim.pt.TransitQSimEngine;
@@ -74,34 +77,35 @@ import java.util.Map.Entry;
  * and is DepartureHandler and MobsimEngine for them, further onPrepareSim() the
  * bs-station and bs-bikes get reset
  */
-public final class BsMobsimEngine implements MobsimEngine{
+public final class BsMobsimEngine implements MobsimEngine {
 	
 	Map<String,TravelDisutilityFactory> travelDisutilityFactories; 
 	Map<String,TravelTime> travelTimes;
 	LeastCostPathCalculatorFactory pathCalculatorFactory;
 	private Collection<MobsimAgent> ptDrivers;
-	QSim qsim; 
-	QNetsimEngine qsimEngine;
-	TransitQSimEngine trans;
-	TeleportationEngine teleport;
 	private static final Logger log = Logger.getLogger( BsMobsimEngine.class ) ;
 	private Scenario scenario;
 	private EventsManager eventsManager;
 	private final boolean withTravelTimeCheck;
+	TeleportationEngine teleport;
+	TransitQSimEngine trans;
 	
 	@Inject
 	public BsMobsimEngine(Scenario scenario, EventsManager eventsManager, 
 			LeastCostPathCalculatorFactory pathCalculatorFactory,
-			Map<String,TravelDisutilityFactory> travelDisutilityFactories, Map<String,TravelTime> travelTimes, QSim qsim) {
+			Map<String,TravelDisutilityFactory> travelDisutilityFactories, 
+			Map<String,TravelTime> travelTimes, QSim qsim) {
 		this.scenario = scenario;
 		this.travelDisutilityFactories = travelDisutilityFactories;
 		this.travelTimes = travelTimes;
 		this.eventsManager = eventsManager;
-		this.qsim = qsim;
 		this.pathCalculatorFactory = pathCalculatorFactory;
-		withTravelTimeCheck = scenario.getConfig().qsim().isUsingTravelTimeCheckInTeleportation() ;
+		scenario.getConfig().qsim().setUsingTravelTimeCheckInTeleportation(false);
+		this.withTravelTimeCheck = scenario.getConfig().qsim().isUsingTravelTimeCheckInTeleportation() ;
 		this.trans = new TransitQSimEngine(qsim);
 		this.teleport = new TeleportationEngine(scenario, eventsManager);
+
+
 	}
 	
 	@Override
@@ -188,23 +192,16 @@ public final class BsMobsimEngine implements MobsimEngine{
 
 	@Override
 	public void doSimStep(double time) {
-		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
 	public void afterSim() {
-		// TODO Auto-generated method stub
-		
 	}
-
 
 	@Override
 	public void setInternalInterface(InternalInterface internalInterface) {
-		// TODO Auto-generated method stub
-		
-	}
-
+		}
 
 }

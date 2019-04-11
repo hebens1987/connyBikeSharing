@@ -100,11 +100,11 @@ class ImplementationModule extends AbstractModule {
 			
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK_FF).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_WALK_FF).toProvider(new NetworkRouting(TransportMode.walk));
+			this.addRoutingModuleBinding(EBConstants.BS_WALK_FF).to(TUG_WalkRoutingModule.class);
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_BIKE_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_BIKE_FF).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_BIKE_FF).toProvider(new NetworkRouting(TransportMode.bike));
+			this.addRoutingModuleBinding(EBConstants.BS_BIKE_FF).to(TUG_BikeRoutingModule.class);
 
 			this.bindMobsim().toProvider(EBikeSharingQsimFactory.class);
 			

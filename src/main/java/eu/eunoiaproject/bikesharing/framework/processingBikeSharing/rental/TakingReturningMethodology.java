@@ -25,7 +25,6 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForFreeBik
 import eu.eunoiaproject.bikesharing.framework.events.AgentFoundBikeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.AgentFoundParkingEvent;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
-
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
 
 
@@ -136,6 +135,7 @@ public class TakingReturningMethodology {
 				newAgE.setBikeE(bikeE);
 				newAgE.setPersonId(personId);
 				agentsE.put(personId,newAgE);
+				
 				PopulationFactory pf = bikeSharingContext.getqSim().getScenario().getPopulation().getFactory();;
 				pf.createRoute(
 						NetworkRoute.class,
@@ -280,6 +280,7 @@ public class TakingReturningMethodology {
 					list.remove(list.get(index+1));
 					list.add(index+1, leg2);
 
+					
 					WaitingListHandling.abortWaitingAtStation (bikeSharingContext.getqSim().getScenario(),station,agentInterim1,true);
 					
 				}

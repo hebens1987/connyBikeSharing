@@ -37,6 +37,7 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForFreeBik
 import eu.eunoiaproject.bikesharing.framework.events.AgentWalksWithVerySlowSpeed;
 import eu.eunoiaproject.bikesharing.framework.events.AgentChangesLegAfterAbortWaiting;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.EBikeSharingQsimFactory;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.relocation.RelocationHandler;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.TakingReturningMethodology;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.WaitingData;
@@ -83,13 +84,13 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 
 	public BikesharingPersonDriverAgentImpl(
 		  final Plan plan,
-		  MobsimVehicle veh, BikeSharingContext bikeSharingContext )
+		  MobsimVehicle veh, BikeSharingContext bikeSharingContext)
 	/***************************************************************************/
 	{
 		this.bikeSharingContext = bikeSharingContext;
 
-		final QSim simulation = bikeSharingContext.getqSim();
-		scenario = simulation.getScenario() ;
+	    final QSim simulation = bikeSharingContext.getqSim();
+		this.scenario = simulation.getScenario() ;
 
 		this.basicAgentDelegate = new BasicPlanAgentImpl( plan, scenario, simulation.getEventsManager(), simulation.getSimTimer() ) ;
 		this.driverAgentDelegate = new PlanBasedDriverAgentImpl( this.basicAgentDelegate ) ;

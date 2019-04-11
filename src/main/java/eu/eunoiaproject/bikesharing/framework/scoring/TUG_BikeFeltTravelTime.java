@@ -2,7 +2,6 @@ package eu.eunoiaproject.bikesharing.framework.scoring;
 
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.RoutingModuleHelper;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_EBSTravelTime;

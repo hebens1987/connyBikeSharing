@@ -29,7 +29,6 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentChangesLegModeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.AgentChoseNewStationEvent;
 import eu.eunoiaproject.bikesharing.framework.events.NoVehicleBikeSharingEvent;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
-
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
 
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
@@ -64,6 +63,7 @@ public class NoBikeAvailable
 	//wird aufgerufen wenn das Aktuelle Element Bs-Interaction ist
 	/***************************************************************************/
 	{
+		
 		Scenario scenario = bikeSharingContext.getqSim().getScenario() ;
 
 		//if a station change was already conducted once

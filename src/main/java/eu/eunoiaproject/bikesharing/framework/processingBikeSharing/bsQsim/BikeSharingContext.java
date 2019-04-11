@@ -1,5 +1,6 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim;
 
+import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 
@@ -19,6 +20,7 @@ public class BikeSharingContext{
 	}
 
 	static class Builder {
+		private Scenario scenario;
 		private LeastCostPathCalculator standardBikePathCalculator;
 		private LeastCostPathCalculator sharedBikePathCalculator;
 		private QSim qSim;
@@ -34,7 +36,7 @@ public class BikeSharingContext{
 			return this ;
 		}
 		BikeSharingContext build() {
-			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, qSim, walkPathCalculator, instance ) ;
+			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, qSim, walkPathCalculator, instance) ;
 		}
 
 		Builder setQSim( QSim qSim ){
@@ -60,7 +62,7 @@ public class BikeSharingContext{
 	private final IKK_ObjectAttributesSingleton instance;
 
 	private BikeSharingContext( LeastCostPathCalculator standardBikePathCalculator, LeastCostPathCalculator sharedBikePathCalculator, QSim qSim,
-					    LeastCostPathCalculator walkPathCalculator, IKK_ObjectAttributesSingleton instance ){
+					    LeastCostPathCalculator walkPathCalculator, IKK_ObjectAttributesSingleton instance){
 		this.standardBikePathCalculator = standardBikePathCalculator;
 		this.sharedBikePathCalculator = sharedBikePathCalculator;
 		this.qSim = qSim;
