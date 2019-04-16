@@ -86,8 +86,8 @@ class ImplementationModule extends AbstractModule {
 			
 			this.addTravelDisutilityFactoryBinding(TransportMode.bike).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.bike).to(TUG_BikeTravelTime.class); 
-			this.addRoutingModuleBinding(TransportMode.bike).to(TUG_BikeRoutingModule.class);
-			//this.addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
+			//this.addRoutingModuleBinding(TransportMode.bike).to(TUG_BikeRoutingModule.class);
+			this.addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
 	
 			//addTravelDisutilityFactoryBinding(TransportMode.walk).to(TUG_WalkTravelDisutilityFactory.class); 
 			//addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 

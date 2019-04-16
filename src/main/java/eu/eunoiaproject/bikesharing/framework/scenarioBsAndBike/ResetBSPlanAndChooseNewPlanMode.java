@@ -159,7 +159,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 					}
 
 					Leg leg = new LegImpl (newMode);
-					Route route =  new GenericRouteImpl(firstLink, lastLink);
+					Route route =  new LinkNetworkRouteImpl(firstLink, lastLink);
 						
 					leg.setRoute(route);
 					list.add(i,leg);

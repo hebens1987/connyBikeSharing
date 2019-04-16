@@ -55,22 +55,33 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	private double [] getLegDistAndTime( Leg newLegX )
 	/***************************************************************************/
 	{
+		double[] timeDist = {0,0};
+    	TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
+		double feltTravelTime = 0;
+		double distance = 0;
 		double travelTime = newLegX.getTravelTime();
 		if (newLegX.getRoute() instanceof GenericRouteImpl)
 		{
-			System.out.println("warum?");
+			if (newLegX.getRoute().getEndLinkId().equals(newLegX.getRoute().getStartLinkId()))
+			{
+        		Link link= network.getLinks().get(newLegX.getRoute().getEndLinkId());
+				timeDist = feltTime.getLinkTravelDisutility(link, 0, person, null, newLegX.getMode(), link.getLength());
+				return timeDist;
+			}
+			else
+			{
+				System.out.println("Das sollte nicht passieren!");
+			}
+			
 		}
 		LinkNetworkRouteImpl nr = (LinkNetworkRouteImpl)newLegX.getRoute();
 		String mode = newLegX.getMode();
 		String routeD = newLegX.getRoute().getRouteDescription();
 		if (routeD == null) routeD = nr.getRouteDescription();
-		double[] timeDist = {0,0};
-		double feltTravelTime = 0;
-		double distance = 0;
+		
 
 	    if (routeD!=null)
 	    {
-	    	TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
 	    	String[] linksOfRoute = new String[50000];
 	    	if (routeD.contains(" "))
 	    	{

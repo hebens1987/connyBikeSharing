@@ -6,6 +6,8 @@ import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.qsim.agents.AgentFactory;
 import org.matsim.core.mobsim.qsim.agents.BikesharingPersonDriverAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.PersonDriverAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.TransitAgent;
+import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 
 public class BikesharingAgentFactory implements AgentFactory{
@@ -18,13 +20,17 @@ public class BikesharingAgentFactory implements AgentFactory{
 	@Override
 	public MobsimDriverAgent createMobsimAgentFromPerson(final Person p) {
 		
-		if (p.getSelectedPlan().getType().equals(TransportMode.car))
+		if (p.getSelectedPlan().getType().equals("eBikeSharing"))
 		{
-			return new PersonDriverAgentImpl (p.getSelectedPlan(),bikeSharingContext.getqSim());
+			return new BikesharingPersonDriverAgentImpl( p.getSelectedPlan(), null, bikeSharingContext );
+		}
+		else if (p.getSelectedPlan().getType().equals(TransportMode.pt))
+		{
+			return TransitAgent.createTransitAgent(p, bikeSharingContext.getqSim()); 
 		}
 		else
 		{
-			return new BikesharingPersonDriverAgentImpl( p.getSelectedPlan(), null, bikeSharingContext );
+			return new PersonDriverAgentImpl(p.getSelectedPlan(), bikeSharingContext.getqSim()); 
 		}
 	}
 }
