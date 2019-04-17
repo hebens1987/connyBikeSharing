@@ -475,20 +475,19 @@ public class BSRunner {
 
 		List<Leg> trip = null;
 		
-		Id<TransitStopFacility> accessStopId = ((PTPassengerAgent) agent).getDesiredAccessStopId();
+		/*Id<TransitStopFacility> accessStopId = ((PTPassengerAgent) agent).getDesiredAccessStopId();
 		Id<TransitStopFacility> egressStopId = ((PTPassengerAgent) agent).getDesiredDestinationStopId();
 		if (accessStopId != null && egressStopId != null)
-		{
+		{*/
 			trip = pt.calcRoute(start, destination, now, person);
-		}
-		else
+		if (trip == null)
 		{
 			return null;
 		}
 		
 		
 		trip.get(0).getRoute().setStartLinkId(startLinkId );
-		Route route = new GenericRouteImpl ( trip.get(trip.size()-2 ).getRoute().getEndLinkId(), endLinkId);
+		Route route = new GenericRouteImpl ( trip.get(trip.size()-1 ).getRoute().getEndLinkId(), endLinkId);
 		trip.get(trip.size()-1).setRoute(route );
 		
 				

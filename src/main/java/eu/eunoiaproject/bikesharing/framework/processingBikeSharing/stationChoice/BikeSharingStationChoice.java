@@ -313,7 +313,7 @@ public class BikeSharingStationChoice
 	{
 		BSRunner bsR = new BSRunner();
 		List<PlanElement> ptLegs = bsR.createPTLegs(fromFacF.getCoord(), toFacF.getCoord(), departureTime, person, 
-				scenario, fromFacF.getLinkId(), toFacF.getLinkId(), new TransitAgentImpl( basicAgentDelegate));
+				scenario, fromFacF.getLinkId(), toFacF.getLinkId(), new TransitAgentImpl(basicAgentDelegate));
 		
 		double travelTime = 0;
 		

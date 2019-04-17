@@ -36,7 +36,7 @@ public class BikesharingAgentFactory implements AgentFactory{
 			if (planelems.get(i) instanceof Leg)
 			{
 				Leg leg = (Leg)planelems.get(i);
-				if (leg.getMode().equals("eBikeSharing")) 
+				if ((leg.getMode().equals("eBikeSharing")) || leg.getMode().contains("bs"))
 				{
 					p.getSelectedPlan().setType("eBikeSharing");
 					break;

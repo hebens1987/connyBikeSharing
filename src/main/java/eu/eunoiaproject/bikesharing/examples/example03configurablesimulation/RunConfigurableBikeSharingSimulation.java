@@ -134,7 +134,7 @@ public class RunConfigurableBikeSharingSimulation {
 
 		//Does not use the implemented routing modules anymore - just uses Network Route
 		//Can I use a combination? TODO:
-		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk,
+		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike,
 					EBConstants.BS_WALK, EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF) ) ) ;
 		
 		//config.qsim().setMainModes( new HashSet<>( Arrays.asList( 
