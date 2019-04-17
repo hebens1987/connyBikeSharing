@@ -16,6 +16,8 @@ import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.facilities.Facility;
 import org.matsim.pt.router.TransitRouterImpl;
 import org.matsim.core.mobsim.qsim.agents.BSRunner;
+import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
 
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSBikeRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSEBikeRoutingModule;
@@ -250,7 +252,8 @@ public class BikeSharingStationChoice
 			double searchRadius,
 			double maxSearchRadius, 
 			Person person,
-			double departureTime)
+			double departureTime,
+			BasicPlanAgentImpl basicAgentDelegate)
 	/***************************************************************************/
 	{
 		BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
@@ -285,7 +288,8 @@ public class BikeSharingStationChoice
 		startEStation = chooseCloseEStartStation( fromFac.getCoord(), searchRadius,  maxSearchRadius, fromFac.getId() );
 		endEStation = chooseCloseEEndStation( toFac.getCoord() ,searchRadius,   maxSearchRadius, toFac.getId()   );
 		
-		startAndEndStation = calcBSStations(fromFac, toFac, startStation, endStation, startEStation, endEStation, departureTime, person);
+		startAndEndStation = calcBSStations(fromFac, toFac, startStation, endStation, 
+				startEStation, endEStation, departureTime, person, basicAgentDelegate);
 		if (startAndEndStation == null || startAndEndStation[0]== null || startAndEndStation[0].station == null 
 				|| startAndEndStation[1] == null || startAndEndStation[1].station == null)
 		{
@@ -303,11 +307,13 @@ public class BikeSharingStationChoice
 			Facility fromFacF,
 			Facility toFacF,
 			double departureTime,
-			Person person)
+			Person person,
+			BasicPlanAgentImpl basicAgentDelegate)
 	/***************************************************************************/
 	{
 		BSRunner bsR = new BSRunner();
-		List<PlanElement> ptLegs = bsR.createPTLegs(fromFacF.getCoord(), toFacF.getCoord(), departureTime, person, scenario, fromFacF.getLinkId(), toFacF.getLinkId());
+		List<PlanElement> ptLegs = bsR.createPTLegs(fromFacF.getCoord(), toFacF.getCoord(), departureTime, person, 
+				scenario, fromFacF.getLinkId(), toFacF.getLinkId(), new TransitAgentImpl( basicAgentDelegate));
 		
 		double travelTime = 0;
 		
@@ -667,7 +673,7 @@ public class BikeSharingStationChoice
 	public StationAndType[] calcBSStations (Facility fromFac, Facility toFac,
 			StationAndType startStation, StationAndType endStation, 
 			StationAndType startEStation, StationAndType endEStation,
-			double departureTime, Person person)
+			double departureTime, Person person, BasicPlanAgentImpl basicAgentDelegate)
 	/***************************************************************************/
 	{
 		StationAndType [] access = new StationAndType[3];
@@ -698,7 +704,7 @@ public class BikeSharingStationChoice
 		
 		//List<StationAndType[]> list = new ArrayList<StationAndType[]>();
 
-		double fullPtTravelTime = getFullPtTrip(fromFac, toFac, departureTime, person);
+		double fullPtTravelTime = getFullPtTrip(fromFac, toFac, departureTime, person, basicAgentDelegate);
 		
 		//############################ full bs trip ###################################
 		if (startStation != null && endStation != null)

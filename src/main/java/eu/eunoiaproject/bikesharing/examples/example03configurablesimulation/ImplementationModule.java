@@ -26,6 +26,7 @@ import org.matsim.core.router.MainModeIdentifier;
 import org.matsim.core.router.MainModeIdentifierImpl;
 import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.router.SingleModeNetworksCache;
+import org.matsim.core.router.TeleportationRoutingModule;
 import org.matsim.pt.router.TransitRouterModule;
 
 class ImplementationModule extends AbstractModule {
@@ -53,34 +54,30 @@ class ImplementationModule extends AbstractModule {
 			    	throw new RuntimeException( "not implemented" ) ;
 		    }
 		    this.bind(SingleModeNetworksCache.class).asEagerSingleton();
-		    //this.addTravelDisutilityFactoryBinding(TransportMode.pt).to(IKK_BikeTravelDisutilityFactory.class);
-//		    PlanCalcScoreConfigGroup plansCalc = (PlanCalcScoreConfigGroup) config.getModule(PlanCalcScoreConfigGroup.GROUP_NAME);
+
 			this.addPlanStrategyBinding("ResetBSPlan").to((Class<? extends PlanStrategy>) ResetBSPlanAndChooseNewPlanModeModuleStrategy.class ) ;
-			//XXXXX Hebenstreit: does this have any effect?
-		
-			//TODO: Hebenstreit - own Travel Time for Bike Sharing (eventually own Disutility for E-BikeSharing!!!)
 			
-			//this.addTravelDisutilityFactoryBinding(EBConstants.MODE ).to(IKK_BikeTravelDisutilityFactory.class);  
 			this.addRoutingModuleBinding(EBConstants.MODE ).to(EBikeSharingRoutingModule.class);
 			
 			this.addTravelTimeBinding(EBConstants.MODE_FF).to(TUG_BSTravelTime.class); 
-			//TODO: Hebenstreit - own Travel Time for Bike Sharing (eventually own Disutility for E-BikeSharing!!!)
+
 			this.addTravelDisutilityFactoryBinding(EBConstants.MODE_FF ).to(IKK_BikeTravelDisutilityFactory.class);  
 			this.addRoutingModuleBinding(EBConstants.MODE_FF ).to(FFBikeSharingRoutingModule.class);
 
-			//this.addRoutingModuleBinding(EBConstants.BS_BIKE).toProvider(new NetworkRouting(EBConstants.BS_BIKE));
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_BIKE).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_BIKE).to(TUG_BSTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_BIKE).to(TUG_BSBikeRoutingModule.class);
+			this.addRoutingModuleBinding(EBConstants.BS_BIKE).toProvider(new NetworkRouting(EBConstants.BS_BIKE));
+			//this.addRoutingModuleBinding(EBConstants.BS_BIKE).to(TUG_BSBikeRoutingModule.class);
 			
-			//this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).toProvider(new NetworkRouting(EBConstants.BS_E_BIKE));
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_E_BIKE).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_E_BIKE).to(TUG_EBSTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).to(TUG_BSEBikeRoutingModule.class);
+			//this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).to(TUG_BSEBikeRoutingModule.class);
+			this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).toProvider(new NetworkRouting(EBConstants.BS_BIKE));
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_WALK).to(TUG_WalkRoutingModule.class);
+			//this.addRoutingModuleBinding(EBConstants.BS_WALK).to(TUG_WalkRoutingModule.class);
+			this.addRoutingModuleBinding(EBConstants.BS_WALK).toProvider(new NetworkRouting(EBConstants.BS_WALK));
 			
 			this.bindScoringFunctionFactory().to(TUG_LegScoringFunctionBikeAndWalkFactory.class);
 			
@@ -88,16 +85,11 @@ class ImplementationModule extends AbstractModule {
 			this.addTravelTimeBinding(TransportMode.bike).to(TUG_BikeTravelTime.class); 
 			//this.addRoutingModuleBinding(TransportMode.bike).to(TUG_BikeRoutingModule.class);
 			this.addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
-	
-			//addTravelDisutilityFactoryBinding(TransportMode.walk).to(TUG_WalkTravelDisutilityFactory.class); 
-			//addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 
-			//addRoutingModuleBinding(TransportMode.walk).toProvider(new NetworkRouting(TransportMode.bike));//Hebenstreit - war auskommentiert
-			//addRoutingModuleBinding("walk").to(TUG_WalkRoutingModule.class);NetworkRouting
-			
+
 			this.addTravelDisutilityFactoryBinding(TransportMode.walk).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(TransportMode.walk).to(TUG_WalkRoutingModule.class);
 			//this.addRoutingModuleBinding(TransportMode.walk).toProvider(new NetworkRouting(TransportMode.walk));
+			this.addRoutingModuleBinding(TransportMode.walk).to(TUG_WalkRoutingModule.class);
 			
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK_FF).to(TUG_WalkTravelTime.class); 
@@ -110,15 +102,5 @@ class ImplementationModule extends AbstractModule {
 			this.bindMobsim().toProvider(EBikeSharingQsimFactory.class);
 			
 		 } 
-		 
-
-//		TripRouter create(Map<String, Provider<RoutingModule>> routingModules, MainModeIdentifier mainModeIdentifier) {
-//		        TripRouter tripRouter = new TripRouter();
-//		        for (Map.Entry<String, Provider<RoutingModule>> entry : routingModules.entrySet()) {
-//		            tripRouter.setRoutingModule(entry.getKey(), entry.getValue().get());
-//		        }
-//		        tripRouter.setMainModeIdentifier(mainModeIdentifier);
-//		        return tripRouter;
-//		    }
 }
 

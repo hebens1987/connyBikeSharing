@@ -93,8 +93,8 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 			{
 				if (newMode.equals(TransportMode.walk) || newMode.equals(TransportMode.bike))
 				{
-					newMode = TransportMode.car;
-					/*if (currentMode.equals(TransportMode.car)) {newMode = TransportMode.pt;}
+					//newMode = TransportMode.car;
+					if (currentMode.equals(TransportMode.car)) {newMode = TransportMode.pt;}
 					else if (currentMode.equals(TransportMode.pt)) {newMode = TransportMode.car;}
 					else
 					{
@@ -107,7 +107,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 						{
 							newMode = TransportMode.walk;
 						}
-					}*/
+					}
 				}
 			}
 			changeLegModeTo(tour, newMode);
@@ -208,17 +208,24 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 		for (PlanElement pe : tour) {
 			if (pe instanceof Leg) 
 			{
-				if (!(((Leg) pe).getMode().equals(TransportMode.access_walk) ||
-				((Leg) pe).getMode().equals(TransportMode.egress_walk)))
-				{
-					((Leg) pe).setMode(newMode);
-					if (newMode.equals(TransportMode.pt))
+				//if (!(((Leg) pe).getMode().equals(TransportMode.access_walk) ||
+				//((Leg) pe).getMode().equals(TransportMode.egress_walk)))
+				//{
+					Leg leg = (Leg) pe;
+					leg.setMode(newMode);
+					Route route = leg.getRoute();
+					if (route instanceof NetworkRoute)
+					{
+						((NetworkRoute)route).setVehicleId(null);
+					}
+					
+					
+					/*if (newMode.equals(TransportMode.pt))
 					{
 						Route route = new GenericRouteImpl(((Leg) pe).getRoute().getStartLinkId(),((Leg) pe).getRoute().getEndLinkId());
 						((Leg)pe).setRoute(route);
-					}
-
-				}
+					}*/
+				//}
 			}
 		}
 	}

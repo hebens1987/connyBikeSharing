@@ -16,6 +16,7 @@ import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
+import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.utils.geometry.CoordUtils;
@@ -85,7 +86,7 @@ public class NoBikeAvailable
 			{
 				Leg twoLegsBefore = (Leg)planElements.get(planIndex-3);
 				
-				if (twoLegsBefore.getMode().contains(TransportMode.walk))
+				if ((twoLegsBefore.getMode().equals(TransportMode.walk))||(twoLegsBefore.getMode().equals(EBConstants.BS_WALK)))
 				{
 					double desider = Math.random();
 					modeChangeOrWait = EBConstants.WAIT;
@@ -132,7 +133,7 @@ public class NoBikeAvailable
 		ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
 		ActivityFacility actFac = ff.createActivityFacility( nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId() ) ;
 		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius, 
-				maxSearchRadius, basicAgentDelegate.getPerson(), now);
+				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate);
 		StationAndType newChoiceStart;
 		StationAndType newChoiceEnd;
 		
@@ -364,7 +365,8 @@ public class NoBikeAvailable
 			else if (dist > 3500)
 			{
 				//log.warn("PT_0:  " + basicAgentDelegate.getPerson().getId());
-				List<PlanElement> p0 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId());
+				List<PlanElement> p0 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, 
+						basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId(), new TransitAgentImpl(basicAgentDelegate));
 				if (p0 == null)
 				{
 					Leg p0a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
@@ -395,7 +397,8 @@ public class NoBikeAvailable
 			{
 				//PT_LEG
 				//log.warn("PT_2:  " + basicAgentDelegate.getPerson().getId());
-				List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId());
+				List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord() , now, basicAgentDelegate.getPerson(), 
+						scenario, startLink.getId(), endLink.getId(), new TransitAgentImpl(basicAgentDelegate));
 				if (pe2 == null)
 				{
 					Leg pe2a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,

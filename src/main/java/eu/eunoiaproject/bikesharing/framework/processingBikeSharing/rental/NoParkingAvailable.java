@@ -90,7 +90,7 @@ public class NoParkingAvailable {
 //		ActivityFacility actFac = new ActivityFacilityImpl (nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
 		ActivityFacility actFac = ff.createActivityFacility( nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
 		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius,
-				maxSearchRadius, basicAgentDelegate.getPerson(), now);
+				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate);
 
 		StationAndType newChoiceEnd = null;
 		if (sat != null)

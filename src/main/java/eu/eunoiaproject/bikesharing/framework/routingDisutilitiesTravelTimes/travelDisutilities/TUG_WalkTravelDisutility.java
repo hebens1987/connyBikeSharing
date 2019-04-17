@@ -1,6 +1,7 @@
 package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities;
 
 import org.apache.log4j.Logger;
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
@@ -43,8 +44,13 @@ public class TUG_WalkTravelDisutility implements TravelDisutility {
 			Link link, double time, Person person, Vehicle vehicle) 
 	/***************************************************************************/
 	{                     
-		double disutility = link.getLength();
-		return disutility;
+		if (link.getAllowedModes().contains(TransportMode.walk))
+		{
+			double disutility = link.getLength();
+			return disutility;
+		}
+		else
+			return Double.POSITIVE_INFINITY;
 	}
 
 	/***************************************************************************/

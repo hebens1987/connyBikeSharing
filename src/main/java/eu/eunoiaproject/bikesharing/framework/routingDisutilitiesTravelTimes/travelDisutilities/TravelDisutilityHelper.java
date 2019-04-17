@@ -1,5 +1,6 @@
 package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities;
 
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.utils.objectattributes.ObjectAttributes;
@@ -14,6 +15,11 @@ public class TravelDisutilityHelper {
 		BicycleConfigGroup bikeConfigGroup,
 		Link link, Person person)
 {
+		if (!(link.getAllowedModes().contains(TransportMode.bike)))
+		   {
+			   return Double.POSITIVE_INFINITY;
+		   }
+		  
 	 String [] amountShare = null;
 	 String [] slopeShare = null;
 	 String [] surroundingShare = null;
@@ -34,11 +40,21 @@ public class TravelDisutilityHelper {
 		   // Einlesen aus Bike_Attributes  
 		   if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null)
 		   {
-			   	return link.getLength(); //TODO: Hebenstreit
+			   if (link.getAllowedModes().contains(TransportMode.bike))
+			   {
+				   return link.getLength();
+			   }
+			   else
+				   return Double.POSITIVE_INFINITY;
 		   }
 		   if (personAttributes.getAttribute(person.getId().toString(), "routingType")==null)
 			{
-				return link.getLength(); //TODO: Hebenstreit
+			   if (link.getAllowedModes().contains(TransportMode.bike))
+			   {
+				   return link.getLength();
+			   }
+			   else
+				   return Double.POSITIVE_INFINITY;
 			}
 		   int routingType = ((int) personAttributes.getAttribute(person.getId().toString(), "routingType")); 
 			  
