@@ -24,11 +24,6 @@ public class BikesharingAgentFactory implements AgentFactory{
 	@Override
 	public MobsimDriverAgent createMobsimAgentFromPerson(final Person p) {
 		
-		/*if (p.getSelectedPlan().getType().equals(TransportMode.car))
-		{
-			return new PersonDriverAgentImpl(p.getSelectedPlan(), bikeSharingContext.getqSim()); 
-		}*/
-		
 		List<PlanElement> planelems = p.getSelectedPlan().getPlanElements();
 		
 		for (int i = 0; i < planelems.size(); i++)
@@ -47,22 +42,6 @@ public class BikesharingAgentFactory implements AgentFactory{
 				}
 			}
 		}
-		
-		
 		return new BikesharingPersonDriverAgentImpl( p.getSelectedPlan(), null, bikeSharingContext );
-		/*
-		if (p.getSelectedPlan().getType().equals("eBikeSharing"))
-		{
-			return new BikesharingPersonDriverAgentImpl( p.getSelectedPlan(), null, bikeSharingContext );
-		}
-		else if (p.getSelectedPlan().getType().equals(TransportMode.pt))
-		{
-			return TransitAgent.createTransitAgent(p, bikeSharingContext.getqSim()); 
-		}
-		else
-		{
-			return new PersonDriverAgentImpl(p.getSelectedPlan(), bikeSharingContext.getqSim()); 
-		}
-		*/
 	}
 }

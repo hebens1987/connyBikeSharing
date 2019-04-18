@@ -48,6 +48,7 @@ import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.Facility;
+import org.matsim.pt.router.TransitRouter;
 import org.matsim.pt.router.TransitRouterImpl;
 import org.matsim.pt.transitSchedule.api.TransitStopFacility;
 
@@ -472,25 +473,18 @@ public class BSRunner {
 				scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
 		bSharingVehicles.generatePTRouterForBS(scenario);
 		TransitRouterImpl pt = bSharingVehicles.trImpl;
-
-		List<Leg> trip = null;
 		
+		List<Leg> trip = null;
 		/*Id<TransitStopFacility> accessStopId = ((PTPassengerAgent) agent).getDesiredAccessStopId();
 		Id<TransitStopFacility> egressStopId = ((PTPassengerAgent) agent).getDesiredDestinationStopId();
 		if (accessStopId != null && egressStopId != null)
 		{*/
-			trip = pt.calcRoute(start, destination, now, person);
+		trip = pt.calcRoute(start, destination, now, person);
 		if (trip == null)
 		{
 			return null;
 		}
-		
-		
-		trip.get(0).getRoute().setStartLinkId(startLinkId );
-		Route route = new GenericRouteImpl ( trip.get(trip.size()-1 ).getRoute().getEndLinkId(), endLinkId);
-		trip.get(trip.size()-1).setRoute(route );
-		
-				
+	
 		trip.get(0).setDepartureTime(now);
 		double departure = now;
 		
@@ -512,40 +506,70 @@ public class BSRunner {
 		peTrip.add(trip.get(j));
 		
 		int k = 0;
+		Id<Link> startLinkIdLastPart = null;
+		double newStartTime = 0;
 		for (k = 0; k < peTrip.size()-1; k++)
 		{
 			if (k != 0)
 			{
 				Leg leg = (Leg) peTrip.get(k);
 				Activity act = (Activity) peTrip.get(k+1);
-				leg.setDepartureTime(((Activity)peTrip.get(k+1-2)).getEndTime());
+				leg.setDepartureTime(((Activity)peTrip.get(k-1)).getEndTime());
 				act.setStartTime(leg.getDepartureTime()+leg.getTravelTime());
 				act.setEndTime(act.getStartTime()+EBConstants.TIME_RETURN);
 				act.setLinkId(leg.getRoute().getEndLinkId());
 				leg.getRoute().setDistance(leg.getTravelTime()/1.5);
 				leg.getRoute().setTravelTime(leg.getTravelTime());
+				startLinkIdLastPart = leg.getRoute().getEndLinkId();
+				newStartTime = leg.getDepartureTime() + leg.getTravelTime();
+				
 			}
 			else
 			{
-			Leg leg = (Leg) peTrip.get(k);
-			Activity act = (Activity) peTrip.get(k+1);
-			leg.setDepartureTime(now);
-			act.setStartTime(leg.getDepartureTime()+leg.getTravelTime());
-			act.setEndTime(act.getStartTime()+EBConstants.TIME_RETURN);
-			act.setLinkId(leg.getRoute().getEndLinkId());
-			leg.getRoute().setDistance(leg.getTravelTime()/1.5);
-			leg.getRoute().setTravelTime(leg.getTravelTime());
+				Leg leg = (Leg) peTrip.get(k);
+				Activity act = (Activity) peTrip.get(k+1);
+				leg.setDepartureTime(now);
+				act.setStartTime(leg.getDepartureTime()+leg.getTravelTime());
+				act.setEndTime(act.getStartTime()+EBConstants.TIME_RETURN);
+				act.setLinkId(leg.getRoute().getEndLinkId());
+				leg.getRoute().setDistance(leg.getTravelTime()/1.5);
+				leg.getRoute().setTravelTime(leg.getTravelTime());
+				newStartTime = leg.getDepartureTime() + leg.getTravelTime();
 			}
 			k++;
 		}
 		Leg leg = (Leg) peTrip.get(k);
-		leg.setDepartureTime(((Activity)peTrip.get(k+1-2)).getEndTime());
+		Route route = null;
+		if (startLinkIdLastPart == null)
+		{
+			route = new GenericRouteImpl (startLinkId, endLinkId);
+			route.setStartLinkId(startLinkId);
+		}
+		else
+		{
+			route = new GenericRouteImpl (startLinkIdLastPart, endLinkId);
+			route.setStartLinkId(startLinkIdLastPart);
+		}
+		
+		if (route.getStartLinkId() == null)
+		{
+			System.out.println("warum?");
+		}
+		
+		route.setEndLinkId(endLinkId);
+		((Leg)peTrip.get(k)).setRoute(route);
+		if (newStartTime < 0.01)
+		{
+			leg.setDepartureTime(departure);
+		}
+		else
+		{
+			leg.setDepartureTime(newStartTime);
+		}
 		leg.getRoute().setDistance(leg.getTravelTime()/1.5);
 		leg.getRoute().setTravelTime(leg.getTravelTime());
 		
-		((Leg)peTrip.get(peTrip.size()-1)).setDepartureTime(((Leg)peTrip.get(peTrip.size()-3)).getDepartureTime() + ((Leg)peTrip.get(peTrip.size()-3)).getTravelTime()+EBConstants.TIME_RETURN);
-		
-		return peTrip;	
+		return peTrip;
 	
 	}
 	
