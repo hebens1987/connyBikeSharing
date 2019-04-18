@@ -24,9 +24,6 @@ import org.matsim.api.core.v01.events.Event;
 
 import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForBikeEvent;
 
-/**
- * @author thibautd
- */
 public class AgentStopsWaitingForEBikeEvent extends AgentStopsWaitingForBikeEvent {
 	public static final String EVENT_TYPE = "agentStopsWaitingForBike";
 

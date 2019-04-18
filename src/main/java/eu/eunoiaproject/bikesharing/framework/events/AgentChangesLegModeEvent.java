@@ -25,9 +25,6 @@ import org.matsim.api.core.v01.events.Event;
 import eu.eunoiaproject.bikesharing.framework.events.AgentStartsWaitingForBikeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.ChangeLegEvent;
 
-/**
- * @author thibautd
- */
 public class AgentChangesLegModeEvent extends ChangeLegEvent {
 	public static final String EVENT_TYPE = "agentChangesLegMode";
 

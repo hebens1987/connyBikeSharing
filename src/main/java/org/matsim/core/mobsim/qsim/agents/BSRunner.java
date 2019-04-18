@@ -433,6 +433,10 @@ public class BSRunner {
 		route.setDistance(route.getTravelTime()/(0.9/1.41)); //4 km/h
 		leg.setRoute(route);
 		
+		if (leg.getRoute().getStartLinkId() == null)
+				{
+			System.out.println("stopp hier");
+				}
 		return leg;
 	}
 	
@@ -471,7 +475,6 @@ public class BSRunner {
 	{	
 		BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
 				scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
-		bSharingVehicles.generatePTRouterForBS(scenario);
 		TransitRouterImpl pt = bSharingVehicles.trImpl;
 		
 		List<Leg> trip = null;
@@ -480,12 +483,15 @@ public class BSRunner {
 		if (accessStopId != null && egressStopId != null)
 		{*/
 		trip = pt.calcRoute(start, destination, now, person);
-		if (trip == null)
+		if (trip == null ||trip.size() == 1)
 		{
+			if (trip == null) { return null;}
+			if (((Leg)trip.get(0)).getMode().equals(TransportMode.transit_walk))
 			return null;
 		}
 	
 		trip.get(0).setDepartureTime(now);
+		trip.get(0).getRoute().setStartLinkId(startLinkId);
 		double departure = now;
 		
 		int i = 1;

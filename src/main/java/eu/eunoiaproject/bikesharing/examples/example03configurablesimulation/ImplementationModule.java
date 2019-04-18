@@ -1,12 +1,33 @@
+/* *********************************************************************** *
+ * project: org.matsim.													   *
+ *                                                                         *
+ * *********************************************************************** *
+ *                                                                         *
+ * copyright       : (C) 2013 by the members listed in the COPYING,     *
+ *                   LICENSE and WARRANTY file.                            *
+ * email           : info at matsim dot org                                *
+ *                                                                         *
+ * *********************************************************************** *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *   See also COPYING, LICENSE and WARRANTY file                           *
+ *                                                                         *
+ * *********************************************************************** */
+
+/**
+ * @author hebens
+ */
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.EBikeSharingQsimFactory;
 import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.EBikeSharingRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.scoring.TUG_LegScoringFunctionBikeAndWalkFactory;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSEBikeRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BikeRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BsWalkRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_WalkRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.IKK_BikeTravelDisutilityFactory;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
@@ -76,8 +97,7 @@ class ImplementationModule extends AbstractModule {
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK).to(TUG_WalkTravelTime.class); 
-			//this.addRoutingModuleBinding(EBConstants.BS_WALK).to(TUG_WalkRoutingModule.class);
-			this.addRoutingModuleBinding(EBConstants.BS_WALK).toProvider(new NetworkRouting(EBConstants.BS_WALK));
+			this.addRoutingModuleBinding(EBConstants.BS_WALK).to(TUG_BsWalkRoutingModule.class);
 			
 			this.bindScoringFunctionFactory().to(TUG_LegScoringFunctionBikeAndWalkFactory.class);
 			
@@ -88,12 +108,12 @@ class ImplementationModule extends AbstractModule {
 
 			this.addTravelDisutilityFactoryBinding(TransportMode.walk).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 
-			//this.addRoutingModuleBinding(TransportMode.walk).toProvider(new NetworkRouting(TransportMode.walk));
 			this.addRoutingModuleBinding(TransportMode.walk).to(TUG_WalkRoutingModule.class);
+			//this.addRoutingModuleBinding(TransportMode.walk).toProvider(new NetworkRouting(TransportMode.walk));
 			
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK_FF).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_WALK_FF).to(TUG_WalkRoutingModule.class);
+			this.addRoutingModuleBinding(EBConstants.BS_WALK_FF).to(TUG_BsWalkRoutingModule.class);
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_BIKE_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_BIKE_FF).to(TUG_WalkTravelTime.class); 

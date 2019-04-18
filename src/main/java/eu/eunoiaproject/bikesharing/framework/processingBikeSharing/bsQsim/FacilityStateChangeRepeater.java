@@ -61,8 +61,6 @@ public class FacilityStateChangeRepeater implements EBikeSharingManagerListener 
 					facilityInNewState.getNumberOfAvailableBikes(),
 					facilityInNewState.getFreeParkingSlots()));
 		}
-		
-
 	}
 }
 

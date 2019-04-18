@@ -26,9 +26,6 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStartsWaitingForBikeEv
 import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForBikeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.ChangeLegEvent;
 
-/**
- * @author thibautd
- */
 public class AgentFoundBikeEvent extends AgentStopsWaitingForBikeEvent{
 	public static final String EVENT_TYPE = "agent stops Waiting as he found a bike";
 

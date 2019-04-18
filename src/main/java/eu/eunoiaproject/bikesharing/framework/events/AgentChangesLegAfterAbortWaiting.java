@@ -1,10 +1,9 @@
 /* *********************************************************************** *
- * project: org.matsim.*
- * AgentStartsWaitingForBikeEvent.java
+ * project: org.matsim.													   *
  *                                                                         *
  * *********************************************************************** *
  *                                                                         *
- * copyright       : (C) 2013 by the members listed in the COPYING,        *
+ * copyright       : (C) 2013 by the members listed in the COPYING,     *
  *                   LICENSE and WARRANTY file.                            *
  * email           : info at matsim dot org                                *
  *                                                                         *
@@ -17,6 +16,10 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
+
+/**
+ * @author hebens (and parts transferred from thibautd)
+ */
 package eu.eunoiaproject.bikesharing.framework.events;
 
 import org.matsim.api.core.v01.Id;
@@ -25,9 +28,6 @@ import org.matsim.api.core.v01.events.Event;
 import eu.eunoiaproject.bikesharing.framework.events.AgentStartsWaitingForBikeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.ChangeLegEvent;
 
-/**
- * @author thibautd
- */
 public class AgentChangesLegAfterAbortWaiting extends ChangeLegEvent {
 	public static final String EVENT_TYPE = "agent stops Waiting and Changes LegMode";
 

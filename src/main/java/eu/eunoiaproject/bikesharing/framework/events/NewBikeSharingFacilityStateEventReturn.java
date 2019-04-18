@@ -27,9 +27,6 @@ import org.matsim.api.core.v01.events.Event;
 
 import java.util.Map;
 
-/**
- * @author thibautd
- */
 public class NewBikeSharingFacilityStateEventReturn extends Event {
 	public static final String EVENT_TYPE = EBConstants.INTERACTION_TYPE_BS+"_r";
 

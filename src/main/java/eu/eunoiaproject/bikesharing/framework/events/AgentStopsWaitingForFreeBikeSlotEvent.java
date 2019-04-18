@@ -23,9 +23,6 @@ import org.matsim.api.core.v01.events.Event;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.facilities.ActivityFacility;
 
-/**
- * @author thibautd
- */
 public class AgentStopsWaitingForFreeBikeSlotEvent extends AbstractPersonEvent {
 	public static final String EVENT_TYPE = "agentStopsWaitingForFreeBikeSlot";
 

@@ -1,10 +1,9 @@
 /* *********************************************************************** *
- * project: org.matsim.*
- * RunZurichBikeSharingSimulation.java
+ * project: org.matsim.													   *
  *                                                                         *
  * *********************************************************************** *
  *                                                                         *
- * copyright       : (C) 2014 by the members listed in the COPYING,        *
+ * copyright       : (C) 2013 by the members listed in the COPYING,     *
  *                   LICENSE and WARRANTY file.                            *
  * email           : info at matsim dot org                                *
  *                                                                         *
@@ -17,11 +16,16 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
+
+/**
+ * @author hebens
+ */
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeAndEBikeSharingScenarioUtils;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingBikes;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Scenario;
@@ -79,6 +83,9 @@ public class RunConfigurableBikeSharingSimulation {
 		switch( bikeSharingConfig.getRunType() ) {
 			case standard:
 				loadTransitInScenario( sc );
+				BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
+						sc.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
+				bSharingVehicles.generatePTRouterForBS(sc);
 				break;
 			case debug:
 				sc.getPopulation().getPersons().entrySet().removeIf( entry -> MatsimRandom.getRandom().nextDouble() < 0.9 ) ;
@@ -127,8 +134,6 @@ public class RunConfigurableBikeSharingSimulation {
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
 
 		config.global().setNumberOfThreads( 8 );
-		
-		
 		
 		//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
 

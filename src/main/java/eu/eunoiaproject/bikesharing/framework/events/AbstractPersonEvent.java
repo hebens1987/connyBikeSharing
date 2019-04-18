@@ -1,10 +1,9 @@
 /* *********************************************************************** *
- * project: org.matsim.*
- * AbstractPersonEvent.java
+ * project: org.matsim.													   *
  *                                                                         *
  * *********************************************************************** *
  *                                                                         *
- * copyright       : (C) 2013 by the members listed in the COPYING,        *
+ * copyright       : (C) 2013 by the members listed in the COPYING,     *
  *                   LICENSE and WARRANTY file.                            *
  * email           : info at matsim dot org                                *
  *                                                                         *
@@ -17,6 +16,10 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
+
+/**
+ * @author hebens (and parts transferred from thibautd)
+ */
 package eu.eunoiaproject.bikesharing.framework.events;
 
 import org.matsim.api.core.v01.Id;
@@ -27,9 +30,7 @@ import org.matsim.facilities.ActivityFacility;
 
 import java.util.Map;
 
-/**
- * @author thibautd
- */
+
 abstract class AbstractPersonEvent extends Event implements HasPersonId {
 	private final Id<Person> personId;
 	private final Id<ActivityFacility> facilityId;

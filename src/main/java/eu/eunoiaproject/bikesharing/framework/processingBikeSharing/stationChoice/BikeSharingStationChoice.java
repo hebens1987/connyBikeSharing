@@ -1,3 +1,21 @@
+/* *********************************************************************** *
+ * project: org.matsim.*
+ *                                                                         *
+ * *********************************************************************** *
+ *                                                                         *
+ * copyright       : (C) 2013 by the members listed in the COPYING,        *
+ *                   LICENSE and WARRANTY file.                            *
+ * email           : info at matsim dot org                                *
+ *                                                                         *
+ * *********************************************************************** *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *   See also COPYING, LICENSE and WARRANTY file                           *
+ *                                                                         *
+ * *********************************************************************** */
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice;
 
 import java.util.*;
@@ -21,7 +39,7 @@ import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
 
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSBikeRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BSEBikeRoutingModule;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_WalkRoutingModule;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules.TUG_BsWalkRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingBikes;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
@@ -424,7 +442,7 @@ public class BikeSharingStationChoice
 			return stat;
 		}
 		TransitRouterImpl pt = bSharingVehicles.trImpl;
-		RoutingModule walk = new TUG_WalkRoutingModule(scenario);
+		RoutingModule walk = new TUG_BsWalkRoutingModule(scenario);
 		List<? extends PlanElement> egressWalk = walk.calcRoute(endStation, toFacF, departureTime, person);
 		Leg egressWalkLeg = (Leg)egressWalk.get(0);
 		double travelTimeEgressWalk = egressWalkLeg.getTravelTime();
@@ -502,7 +520,7 @@ public class BikeSharingStationChoice
 		{
 			isEBikeStation = true;
 		}
-		RoutingModule walk = new TUG_WalkRoutingModule(scenario);
+		RoutingModule walk = new TUG_BsWalkRoutingModule(scenario);
 		List<?extends PlanElement> accWalk = walk.calcRoute(fromFacF, startStation, departureTime, person);
 		Leg accWalkLeg = (Leg)accWalk.get(0);
 		double travelTimeAccWalk = accWalkLeg.getTravelTime();
@@ -613,7 +631,7 @@ public class BikeSharingStationChoice
 		}
 		
 		TransitRouterImpl pt = bSharingVehicles.trImpl;
-		RoutingModule walk = new TUG_WalkRoutingModule(scenario);
+		RoutingModule walk = new TUG_BsWalkRoutingModule(scenario);
 		List<? extends PlanElement> accessWalk = walk.calcRoute(fromFacF, startStation, departureTime, person);
 		Leg accessWalkLeg = (Leg)accessWalk.get(0);
 		double travelTimeAccessWalk = accessWalkLeg.getTravelTime();

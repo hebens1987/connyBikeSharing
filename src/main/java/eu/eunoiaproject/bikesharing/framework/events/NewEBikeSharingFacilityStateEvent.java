@@ -29,9 +29,6 @@ import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacil
 
 import java.util.Map;
 
-/**
- * @author thibautd
- */
 public class NewEBikeSharingFacilityStateEvent extends Event {
 	public static final String EVENT_TYPE = "newEBikeSharingFacilityState";
 

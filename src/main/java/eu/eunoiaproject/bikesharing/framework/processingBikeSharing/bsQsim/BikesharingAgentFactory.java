@@ -1,8 +1,27 @@
+/* *********************************************************************** *
+ * project: org.matsim.*
+ *                                                                         *
+ * *********************************************************************** *
+ *                                                                         *
+ * copyright       : (C) 2013 by the members listed in the COPYING,        *
+ *                   LICENSE and WARRANTY file.                            *
+ * email           : info at matsim dot org                                *
+ *                                                                         *
+ * *********************************************************************** *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *   See also COPYING, LICENSE and WARRANTY file                           *
+ *                                                                         *
+ * *********************************************************************** */
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim;
 
 import java.util.List;
 
 import org.matsim.api.core.v01.TransportMode;
+import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
@@ -17,29 +36,22 @@ import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 public class BikesharingAgentFactory implements AgentFactory{
 	private final BikeSharingContext bikeSharingContext;
 
-	BikesharingAgentFactory( BikeSharingContext bikeSharingContext) {
-		this.bikeSharingContext = bikeSharingContext;
-	}
+	BikesharingAgentFactory( BikeSharingContext bikeSharingContext) 
+	{this.bikeSharingContext = bikeSharingContext;}
 
 	@Override
-	public MobsimDriverAgent createMobsimAgentFromPerson(final Person p) {
-		
+	public MobsimDriverAgent createMobsimAgentFromPerson(final Person p) 
+	{
 		List<PlanElement> planelems = p.getSelectedPlan().getPlanElements();
-		
 		for (int i = 0; i < planelems.size(); i++)
 		{
 			if (planelems.get(i) instanceof Leg)
 			{
 				Leg leg = (Leg)planelems.get(i);
 				if ((leg.getMode().equals("eBikeSharing")) || leg.getMode().contains("bs"))
-				{
-					p.getSelectedPlan().setType("eBikeSharing");
-					break;
-				}
-				else
-				{
-					p.getSelectedPlan().setType("other");
-				}
+				{	p.getSelectedPlan().setType("eBikeSharing");
+					break;}
+				else {p.getSelectedPlan().setType("other");}
 			}
 		}
 		return new BikesharingPersonDriverAgentImpl( p.getSelectedPlan(), null, bikeSharingContext );

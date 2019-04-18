@@ -26,9 +26,6 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStartsWaitingForBikeEv
 import eu.eunoiaproject.bikesharing.framework.events.ChangeLegEvent;
 import eu.eunoiaproject.bikesharing.framework.events.ChooseNewStationEvent;
 
-/**
- * @author thibautd
- */
 public class AgentChoseNewStationEvent extends ChooseNewStationEvent {
 	public static final String EVENT_TYPE = "new Station chosen";
 

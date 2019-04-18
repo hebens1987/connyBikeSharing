@@ -114,8 +114,10 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
 		
+		PlanElement pe =this.basicAgentDelegate.getCurrentPlanElement();
+		String mode = ((Leg)pe).getMode();
+		
 		PlanElement nextElem = this.basicAgentDelegate.getNextPlanElement();
-		Leg leg = null;
 		if (nextElem instanceof Activity)
 		{
 			Activity act = (Activity) nextElem;
