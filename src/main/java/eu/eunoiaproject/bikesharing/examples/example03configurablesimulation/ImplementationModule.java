@@ -34,20 +34,17 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_EBSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_WalkTravelTime;
-import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.ResetBSPlanAndChooseNewPlanModeModuleStrategy;
 import eu.eunoiaproject.freeFloatingBS.FFBikeSharingRoutingModule;
 
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.AbstractModule;
-import org.matsim.core.replanning.PlanStrategy;
 import org.matsim.core.router.LeastCostPathCalculatorModule;
 import org.matsim.core.router.MainModeIdentifier;
 import org.matsim.core.router.MainModeIdentifierImpl;
 import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.router.SingleModeNetworksCache;
-import org.matsim.core.router.TeleportationRoutingModule;
 import org.matsim.pt.router.TransitRouterModule;
 
 class ImplementationModule extends AbstractModule {
@@ -75,9 +72,7 @@ class ImplementationModule extends AbstractModule {
 			    	throw new RuntimeException( "not implemented" ) ;
 		    }
 		    this.bind(SingleModeNetworksCache.class).asEagerSingleton();
-
-			this.addPlanStrategyBinding("ResetBSPlan").to((Class<? extends PlanStrategy>) ResetBSPlanAndChooseNewPlanModeModuleStrategy.class ) ;
-			
+		
 			this.addRoutingModuleBinding(EBConstants.MODE ).to(EBikeSharingRoutingModule.class);
 			
 			this.addTravelTimeBinding(EBConstants.MODE_FF).to(TUG_BSTravelTime.class); 
@@ -88,11 +83,9 @@ class ImplementationModule extends AbstractModule {
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_BIKE).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_BIKE).to(TUG_BSTravelTime.class); 
 			this.addRoutingModuleBinding(EBConstants.BS_BIKE).toProvider(new NetworkRouting(EBConstants.BS_BIKE));
-			//this.addRoutingModuleBinding(EBConstants.BS_BIKE).to(TUG_BSBikeRoutingModule.class);
-			
+						
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_E_BIKE).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_E_BIKE).to(TUG_EBSTravelTime.class); 
-			//this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).to(TUG_BSEBikeRoutingModule.class);
 			this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).toProvider(new NetworkRouting(EBConstants.BS_BIKE));
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK).to(IKK_BikeTravelDisutilityFactory.class); 
@@ -103,14 +96,12 @@ class ImplementationModule extends AbstractModule {
 			
 			this.addTravelDisutilityFactoryBinding(TransportMode.bike).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.bike).to(TUG_BikeTravelTime.class); 
-			//this.addRoutingModuleBinding(TransportMode.bike).to(TUG_BikeRoutingModule.class);
 			this.addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
 
 			this.addTravelDisutilityFactoryBinding(TransportMode.walk).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 
 			this.addRoutingModuleBinding(TransportMode.walk).to(TUG_WalkRoutingModule.class);
-			//this.addRoutingModuleBinding(TransportMode.walk).toProvider(new NetworkRouting(TransportMode.walk));
-			
+						
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK_FF).to(TUG_WalkTravelTime.class); 
 			this.addRoutingModuleBinding(EBConstants.BS_WALK_FF).to(TUG_BsWalkRoutingModule.class);
@@ -120,7 +111,6 @@ class ImplementationModule extends AbstractModule {
 			this.addRoutingModuleBinding(EBConstants.BS_BIKE_FF).to(TUG_BikeRoutingModule.class);
 
 			this.bindMobsim().toProvider(EBikeSharingQsimFactory.class);
-			
 		 } 
 }
 

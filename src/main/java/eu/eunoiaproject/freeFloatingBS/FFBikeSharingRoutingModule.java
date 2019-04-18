@@ -38,7 +38,6 @@ import java.util.List;
  */
 public class FFBikeSharingRoutingModule implements RoutingModule {
 	private final StageActivityTypes stageTypes = EmptyStageActivityTypes.INSTANCE;
-	private final BikeSharingBikes allBikes;
 	Scenario scenario;
 	CreateSubtrips c;
 	int varifyer = 0;
@@ -46,7 +45,6 @@ public class FFBikeSharingRoutingModule implements RoutingModule {
 	public final RoutingModule bsWalkRouting;
 	public final RoutingModule ptRouting;
 	public final RoutingModule ebs2Routing;
-	private static final Logger log = Logger.getLogger(FFBikeSharingRoutingModule.class);
 	
 	/***************************************************************************/
 	@Inject
@@ -83,7 +81,6 @@ public class FFBikeSharingRoutingModule implements RoutingModule {
 			final RoutingModule ebs2Routing) 
 	/***************************************************************************/
 	{
-		this.allBikes = bikeSharingBikes;
 		this.ptRouting = ptRouting;
 		this.bsRouting = bsRouting;
 		this.bsWalkRouting = bsWalkRouting;

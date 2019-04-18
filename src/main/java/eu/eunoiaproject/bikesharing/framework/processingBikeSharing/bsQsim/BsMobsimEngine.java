@@ -91,11 +91,8 @@ public final class BsMobsimEngine implements MobsimEngine {
 	Map<String,TravelDisutilityFactory> travelDisutilityFactories; 
 	Map<String,TravelTime> travelTimes;
 	LeastCostPathCalculatorFactory pathCalculatorFactory;
-	private Collection<MobsimAgent> ptDrivers;
 	private static final Logger log = Logger.getLogger( BsMobsimEngine.class ) ;
 	private Scenario scenario;
-	private EventsManager eventsManager;
-	private final boolean withTravelTimeCheck;
 	TeleportationEngine teleport;
 	TransitQSimEngine trans;
 	
@@ -107,10 +104,8 @@ public final class BsMobsimEngine implements MobsimEngine {
 		this.scenario = scenario;
 		this.travelDisutilityFactories = travelDisutilityFactories;
 		this.travelTimes = travelTimes;
-		this.eventsManager = eventsManager;
 		this.pathCalculatorFactory = pathCalculatorFactory;
 		scenario.getConfig().qsim().setUsingTravelTimeCheckInTeleportation(false);
-		this.withTravelTimeCheck = scenario.getConfig().qsim().isUsingTravelTimeCheckInTeleportation() ;
 		this.trans = new TransitQSimEngine(qsim);
 		this.teleport = new TeleportationEngine(scenario, eventsManager);
 
@@ -201,7 +196,6 @@ public final class BsMobsimEngine implements MobsimEngine {
 
 	@Override
 	public void doSimStep(double time) {
-		
 	}
 
 

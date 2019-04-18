@@ -36,12 +36,6 @@ public class IKK_ObjectAttributesSingleton {
 	private ObjectAttributes intermodalSpeedBoundary;
 	private ObjectAttributes intermodalSpeedGroupNumber;
 	
-	/***************************************************************************/
-	private IKK_ObjectAttributesSingleton()
-	/***************************************************************************/
-	{
-		
-	}
 
 	/***************************************************************************/
 	public IKK_ObjectAttributesSingleton(BicycleConfigGroup bikeConfigGroup)

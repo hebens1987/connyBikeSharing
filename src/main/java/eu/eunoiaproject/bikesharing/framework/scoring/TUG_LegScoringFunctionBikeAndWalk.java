@@ -77,7 +77,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	TUG_BikeFeltTravelTime feltTime = new TUG_BikeFeltTravelTime(bikeConfigGroup);
 		double feltTravelTime = 0;
 		double distance = 0;
-		double travelTime = newLegX.getTravelTime();
 		if (newLegX.getRoute() instanceof GenericRouteImpl)
 		{
 			if (newLegX.getRoute().getEndLinkId().equals(newLegX.getRoute().getStartLinkId()))
@@ -93,7 +92,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 			
 		}
 		LinkNetworkRouteImpl nr = (LinkNetworkRouteImpl)newLegX.getRoute();
-		String mode = newLegX.getMode();
 		String routeD = newLegX.getRoute().getRouteDescription();
 		if (routeD == null) routeD = nr.getRouteDescription();
 		
@@ -139,11 +137,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	        		distance += timeDist[1];
 	    	}
 	    }
-	    
-	    double distOrig = newLegX.getRoute().getDistance();
-	    double travelTimeOrig = newLegX.getTravelTime();
-	    
-
 	    
 	    double mProS = distance/feltTravelTime;
 
@@ -344,7 +337,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		double score = 0.0D;
 		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.transit_walk);
 		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
-		double utilDist = modeParams.getMarginalUtilityOfDistance();
 		double constant = modeParams.getConstant();
 		double factor = 0;
 		double weighting = ((travelTime/3600) *(travelTime/3600))*12.5; //Hebenstreit Parameter
@@ -448,27 +440,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		score = score * (1+factor);
 		return score;
 	}
-	
-	/***************************************************************************/            	
-	private double getBikeSharingScore(double distance, double travelTime)
-	/***************************************************************************/
-	{
-		ModeParams modeParams = cn.getOrCreateModeParams(EBConstants.BS_BIKE);
-		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
-		double utilDist = modeParams.getMarginalUtilityOfDistance();
-		double constant = modeParams.getConstant();
-		double score = 0.0D;
-    	score += travelTime * utilTrav + distance + utilDist + constant;
-    	return score;
-	}
- 
-	/***************************************************************************/
-	private class Stats
-	/***************************************************************************/
-	{
-		private double startTime;
-		private double endTime;
-		private double distance;		
-	}        	
+	 	
 }
 

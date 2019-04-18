@@ -22,7 +22,6 @@ package eu.eunoiaproject.bikesharing.framework.events;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.Event;
 
-import eu.eunoiaproject.bikesharing.framework.events.AgentStartsWaitingForBikeEvent;
 import eu.eunoiaproject.bikesharing.framework.events.ChangeLegEvent;
 
 public class AgentChangesLegModeEvent extends ChangeLegEvent {

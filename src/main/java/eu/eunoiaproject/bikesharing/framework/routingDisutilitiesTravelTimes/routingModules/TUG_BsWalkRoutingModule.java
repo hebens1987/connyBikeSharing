@@ -20,24 +20,13 @@
 package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.routingModules;
 
 import org.apache.log4j.Logger;
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.TransportMode;
-import org.matsim.api.core.v01.network.Link;
-import org.matsim.api.core.v01.network.Node;
-import org.matsim.api.core.v01.population.Activity;
-import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
-import org.matsim.api.core.v01.population.Route;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
-import org.matsim.core.population.LegImpl;
 import org.matsim.core.router.Dijkstra;
 import org.matsim.core.router.EmptyStageActivityTypes;
 import org.matsim.core.router.RoutingModule;
 import org.matsim.core.router.StageActivityTypes;
-import org.matsim.core.router.util.LeastCostPathCalculator.Path;
-import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.facilities.Facility;
 import com.google.inject.Inject;
@@ -47,7 +36,6 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_WalkTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

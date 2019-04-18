@@ -25,7 +25,6 @@ import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttrib
 
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.vehicles.Vehicle;

@@ -53,7 +53,7 @@ public class ReturnBike {
 		{
 			runner.planComparison(agent);
 		}
-		//System.out.println("...free bike parkings at Station= " + station.getId()+ " = " + station.getNumberOfAvailableBikes());
+		
 		if (station.getFreeParkingSlots() == 0)
 		{
 			TakeABike.checkIfRelocationNecessary(station, actualTime, facilities);
@@ -104,7 +104,7 @@ public class ReturnBike {
 						
 					}
 				}
-				//System.out.println("SOC of Bike ID: " + ebike.getBikeId() + " ...= " + ebike.getStateOfCharge());
+				
 				ebike.setInfoIfBikeInStation(true);
 				ebike.setInStation(Id.create(station.getStationId().toString(), BikeSharingFacility.class));
 				station.setNumberOfAvailableBikes(station.getNumberOfAvailableBikes()+1);

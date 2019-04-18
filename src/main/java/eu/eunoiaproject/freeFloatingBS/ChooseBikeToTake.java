@@ -2,8 +2,6 @@ package eu.eunoiaproject.freeFloatingBS;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
@@ -12,9 +10,6 @@ import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.vehicles.Vehicle;
 
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
-import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
-
 
 public class ChooseBikeToTake {
 	

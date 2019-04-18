@@ -169,12 +169,9 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 	{
 		List<PlanElement> trip = new ArrayList<PlanElement>();
 
-		Activity act = null; //Hebenstreit
-		
+	
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();
-		
-		
 		
 		boolean ptUsage = false; //TODO: define ptUsage - due to the different possible types:
 		// because of a very long trip length (intermodal)
@@ -404,7 +401,6 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 					PlanElement pe = runner.genericRouteWithStartAndEndLink(leg, trip, scenario, i, fromFacility.getLinkId(), toFacility.getLinkId());
 					trip.remove(i);
 					trip.add(i, pe);
-					String mode = leg.getMode();
 					Route route = leg.getRoute();
 					route.setDistance(leg.getTravelTime()/1.5);
 					route.setTravelTime(leg.getTravelTime());

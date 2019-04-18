@@ -37,7 +37,6 @@ import eu.eunoiaproject.bikesharing.framework.events.AgentStopsWaitingForFreeBik
 import eu.eunoiaproject.bikesharing.framework.events.AgentWalksWithVerySlowSpeed;
 import eu.eunoiaproject.bikesharing.framework.events.AgentChangesLegAfterAbortWaiting;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.EBikeSharingQsimFactory;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.relocation.RelocationHandler;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.TakingReturningMethodology;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.WaitingData;
@@ -113,9 +112,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 	{
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
-		
-		PlanElement pe =this.basicAgentDelegate.getCurrentPlanElement();
-		String mode = ((Leg)pe).getMode();
 		
 		PlanElement nextElem = this.basicAgentDelegate.getNextPlanElement();
 		if (nextElem instanceof Activity)
@@ -458,7 +454,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						  bikeSharingContext );
 					
 					
-					BikeSharingBikes bsb = (BikeSharingBikes) scenario.getScenarioElement("bikeSharingBikes");
 					List<PlanElement> pe2 = BSRunner.createPTLegs(startLink.getCoord(), endLink.getCoord(), now, agentInterim.getPerson(), 
 							scenario, startLink.getId(), endLink.getId(), new TransitAgentImpl( basicAgentDelegate)); 
 					Leg walkLeg = (Leg)pe;

@@ -671,8 +671,6 @@ public class BSRunner {
 		
 		NetworkRoute route = new LinkNetworkRouteImpl(startLinkId, endLinkId);
 		String routeDescr = "";
-		String startLinkIdPath = path.links.get(0).getId().toString();
-		String endLinkIdPath = path.links.get(path.links.size()-1).getId().toString();
 		
 		if (distance >= 5)
 		{
@@ -725,20 +723,6 @@ public class BSRunner {
 		
 	}
 	
-	/***************************************************************************/
-	public static Route createRouteOnly(
-			Id<Link> startLink, Id<Link> endLink, 
-			String mode, 
-			Scenario scenario,
-			Person p)  
-	/***************************************************************************/
-	{	
-		PopulationFactory pf = scenario.getPopulation().getFactory() ;
-		RouteFactoryImpl routeFactory = ((PopulationFactoryImpl)pf).getRouteFactory() ;
-		Route route = routeFactory.createRoute(routeFactory.getRouteClassForType(mode), startLink, endLink);
-		return route;		
-	}
-	
 	
 	/***************************************************************************/
 	/**Hebenstreit: This method removes all BSPlanElements after the first bs_walk was found,
@@ -749,11 +733,6 @@ public class BSRunner {
 		  BasicPlanAgentImpl basicAgentDelegate2 )
 	/***************************************************************************/
 	{
-//		int actIndex = basicAgentDelegate2.getCurrentPlanElementIndex();
-		
-		//int actIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate2 ) ;
-//		BikesharingPersonDriverAgentImpl agent2 = new BikesharingPersonDriverAgentImpl(basicAgentDelegate2);
-//		final int actIndex= agent2.getCurrentPlanElementIndex(basicAgentDelegate2) ;
 		final int actIndex = basicAgentDelegate2.getCurrentPlan().getPlanElements().indexOf( basicAgentDelegate2.getCurrentPlanElement() ) ;
 
 		for (int i = actIndex + 1; i < basicAgentDelegate2.getCurrentPlan().getPlanElements().size(); i++)
@@ -852,17 +831,6 @@ public class BSRunner {
 		Person person = basicAgentDelegate.getPerson();
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();
-		//TODO: define ptUsage - due to the different possible types:
-		// because of a very long trip length (intermodal)
-		// because no station near at departure or arrival facility
-		// there are the following options:
-		// * no public transport used = bike-sharing only
-		// * public transport used, because BS-Station too far from Facility
-		//	  - PT <-> BS         = no BS-Station near the Departure Facility
-		//	  - BS <-> PT         = no BS-Station near the Arrival Facility
-		//	  - PT <-> BS <-> PT  = no BS-Station near the Departure and Arrival Facility
-		// * public transport used, because Total-Trip Length too long for cycling
-		//    - Intermodal        = this should be used, if total trip length is too long
 
 		int bikeSharingOptionSelection;
 		// Chain of trip: walk - bike - walk (==0)
@@ -914,9 +882,6 @@ public class BSRunner {
 		List<PlanElement> fifthLeg;
 		if (bikeSharingOptionSelection == 3)
 		{
-			BikeSharingBikes bSharingVehicles = (BikeSharingBikes) 
-					scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);
-			TransitRouterImpl pt = bSharingVehicles.trImpl;
 			trip = createPTLegs(fromFacility.getCoord(),toFacility.getCoord(),departureTime,person,
 					scenario, fromFacility.getLinkId(), toFacility.getLinkId(), new TransitAgentImpl( basicAgentDelegate));
 

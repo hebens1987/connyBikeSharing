@@ -101,15 +101,10 @@ public class TakeABike
 		}
 		String [][] cycleSOC;
 		double stateOfCharge;
-		Id<BikesE> idOfBikeToTake = null;
-		//Map<Id<BikesE>,BikesE> allEbikes = allbikes.getEFacilities();
+		Id<BikesE> idOfBikeToTake = null;;
 		BikesE eBike = null;	
-		
-		//Id<BikeSharingFacility> id = station.getStationId();//Aufruf von getStationId
 			
 		//##############################################################
-
-
 		if (station.getCycles_in_station() == null)
 		{
 			return null;
@@ -137,7 +132,6 @@ public class TakeABike
 			station.setFreeParkingSlots(station.getFreeParkingSlots()+1);
 			TakeABike.checkIfRelocationNecessary(station, time, facilities);
 			return eBike;
-
 		}
 		
 		else
@@ -146,10 +140,7 @@ public class TakeABike
 			//initialize array of bikes at station
 				
 			for (int j = 0; j < len; j++) 	//getting all Bikes
-			{
-				//cycleSOC [j][0] storage of SOC
-				//cycleSOC [j][1] storage of bikeID
-					
+			{		
 				//get one bike which is currently at the Station (station-bikes)
 				String [] bikesInStation = station.getCycles_in_station();
 
@@ -202,7 +193,6 @@ public class TakeABike
 				for (int e = 1; e < len; e++)
 				{
 					actBikeList[e-1] = cycleSOC[e][1];
-					//System.out.println("Bike with ID " + actBikeList[e-1]+ " - stays in Station ");
 				}
 				
 				eBike = allEbikes.get(idOfBikeToTake);
@@ -243,8 +233,6 @@ public class TakeABike
 			BikeSharingFacilities facilities) //time, where the bike is)
 	/***************************************************************************/
 	{
-		//System.out.println("...available bikes at Station: " + station.getId() + " = "+ station.getNumberOfAvailableBikes());
-		
 		if (station.getNumberOfAvailableBikes() == 0)
 		{
 			TakeABike.checkIfRelocationNecessary(station, time, facilities);
@@ -275,8 +263,6 @@ public class TakeABike
 
 			}
 
-
-			
 			String [] actBikeList = null;
 			
 			if (statNum > 0)

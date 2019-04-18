@@ -19,28 +19,19 @@
 package eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
-import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.BikeSharingRouteFactory;
 
-import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
-import org.matsim.api.core.v01.TransportMode;
-import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigGroup;
 import org.matsim.core.config.ConfigUtils;
-import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ActivityParams;
 import org.matsim.core.controler.OutputDirectoryLogging;
-import org.matsim.core.population.PopulationFactoryImpl;
-import org.matsim.core.population.routes.LinkNetworkRouteImpl;
-import org.matsim.core.router.NetworkRoutingInclAccessEgressModule;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.facilities.ActivityFacilities;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Provides helper methods to load a bike sharing scenario.

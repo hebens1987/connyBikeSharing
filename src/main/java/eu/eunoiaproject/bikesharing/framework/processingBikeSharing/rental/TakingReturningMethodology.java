@@ -146,7 +146,6 @@ public class TakingReturningMethodology {
 			}
 			else
 			{
-				Activity actThis = (Activity)thisElem;
 				log.info("Agent with ID:;" + personId + 
 						";took an E-Bike at Station:;" + station.getId() + ";(BikeId= ;" + bikeE.getBikeId() + ")");
 				BikeAgent newAgE = new BikeAgent();

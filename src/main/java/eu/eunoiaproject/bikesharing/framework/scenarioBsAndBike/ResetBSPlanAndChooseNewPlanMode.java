@@ -21,10 +21,7 @@ package eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike;
 import java.util.List;
 import java.util.Random;
 
-import javax.inject.Named;
-
 import org.matsim.api.core.v01.Id;
-import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
@@ -35,14 +32,10 @@ import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.gbl.MatsimRandom;
 import org.matsim.core.population.LegImpl;
 import org.matsim.core.population.PersonUtils;
-import org.matsim.core.population.routes.GenericRouteImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.population.routes.NetworkRoute;
-import org.matsim.core.router.RoutingModule;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.population.algorithms.PlanAlgorithm;
-
-import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.EBikeSharingRoutingModule;
 
 /**
  * Changes the transportation mode of all legs in a plan to a randomly chosen

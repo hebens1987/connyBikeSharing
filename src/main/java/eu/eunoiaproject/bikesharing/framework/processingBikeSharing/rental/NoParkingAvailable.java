@@ -20,9 +20,7 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
@@ -32,9 +30,7 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
-import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
-import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
@@ -54,9 +50,6 @@ import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoic
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BSAtt;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BSAttribsAgent;
-import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeAgent;
-import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingBikes;
-import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.EBikeSharingConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.StationAndType;
@@ -95,8 +88,6 @@ public class NoParkingAvailable {
 		BSAtt att = BSAttribsAgent.getPersonAttributes( basicAgentDelegate.getPerson(), scenario);
 		double searchRadius =  att.searchRadius;
 		double maxSearchRadius =   att.maxSearchRadius;
-		double maxSearchRadiusPt =   att.ptSearchRadius;
-		double maxDistanceForBikeTrip = att.maxBSTripLength;
 
 		StationAndType[] sat = new StationAndType[2];
 
@@ -266,24 +257,7 @@ public class NoParkingAvailable {
 			trip.add(actAfterBs);
 			//shall insert a new bike-sharing-trip
 			planElements.addAll(indexOfInsertion, trip);
-			
-			//create new Plan
-			BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( scenario.getConfig(), BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
-			//switch( bikeSharingConfig.getRunType() ) {
-			//	case standard:
-					//			for (int i = 0; i < planElements.size(); i++ )
-					//			{
-					//				basicAgentDelegate.setPlanElement(i, planElements.get(i));
-					//			}
-			//		throw new RuntimeException("this is not possible.  But I also do not see why it should be needed, since the code already operates on the agent's " +
-			//							     "planElements. kai, apr'19") ;
-			//	case debug:
-			//		break;
-			//	default:
-			//		throw new RuntimeException("not implemented") ;
-			//}
 
-			Id<Person> pers = basicAgentDelegate.getPerson().getId();
 			log.info("Agent with ID:;" + basicAgentDelegate.getPerson().getId()+ ";did not get a Parking Spot and choose -->;" + whatToChoose);
 			runner.planComparison(basicAgentDelegate);
 		}

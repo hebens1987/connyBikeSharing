@@ -102,12 +102,6 @@ public class CreateSubtrips {
 			final Facility facility, List<? extends PlanElement> firstLeg, double now) 
 	/***************************************************************************/{
 		String interaction = EBConstants.INTERACTION_TYPE_BS + "_r";
-		PlanElement firstLeg2 = firstLeg.get(firstLeg.size()-1);
-		if (firstLeg2 instanceof Leg)
-		{
-			Leg leg2 = (Leg)firstLeg2;
-			
-		}
 
 		final Activity actE = new ActivityImpl( interaction , facility.getCoord() );
 		actE.setType(interaction);
@@ -126,13 +120,7 @@ public class CreateSubtrips {
 	/***************************************************************************/{
 		
 		String interaction = EBConstants.INTERACTION_TYPE_BS + "_t";
-		PlanElement firstLeg2 = firstLeg.get(firstLeg.size()-1);
-		if (firstLeg2 instanceof Leg)
-		{
-			Leg leg2 = (Leg)firstLeg2;
-			
-		}
-		
+
 		final Activity actE = new ActivityImpl( interaction , facility.getCoord() );
 		actE.setType(interaction);
 		actE.setMaximumDuration( EBConstants.TIME_TAKE ); // 120 sec = 2 min
@@ -150,8 +138,7 @@ public class CreateSubtrips {
 	/***************************************************************************/{
 		
 		String interaction = EBConstants.INTERACTION_TYPE_FF;
-		PlanElement firstLeg2 = firstLeg.get(firstLeg.size()-1);
-		
+
 		final Activity actE = new ActivityImpl( interaction , facility.getCoord() );
 		actE.setType(interaction);
 		actE.setMaximumDuration( 90 );

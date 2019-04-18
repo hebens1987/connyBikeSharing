@@ -62,18 +62,14 @@ public class RunConfigurableBikeSharingSimulation {
 	/***************************************************************************/
 	{
 		final Config config = prepareConfig( args, InputCase.connyInputDiss );
-
 		final Scenario sc = prepareScenario( config );
-
 		final Controler controler = prepareControler( sc );
-
 		controler.run();
 	}
 
 	static Controler prepareControler(Scenario sc ){
 		final Controler controler = new Controler( sc );
 		controler.addOverridingModule(new ImplementationModule(sc.getConfig()) );
-		//new ImplementationModule(sc.getConfig()).install();
 		return controler;
 	}
 
@@ -94,7 +90,6 @@ public class RunConfigurableBikeSharingSimulation {
 				throw new RuntimeException( "not implemented" ) ;
 		}
 
-		// ---
 		return sc;
 	}
 
@@ -103,8 +98,6 @@ public class RunConfigurableBikeSharingSimulation {
 		switch( user ) {
 			case fromArgs:
 				configFile = args[0] ;
-				//final String configFile = "E:/MATCHSIM_ECLIPSE/matsim-master/playgrounds/thibautd/examples\BikeRouting\haus\config.xml";
-				//E:\MATCHSIM_ECLIPSE\matsim-master\playgrounds\thibautd\test\output\eu\eunoiaproject\bikesharing\framework\examples\TestRegressionConfigurableExample\testRunDoesNotFailMultimodal
 				break;
 			case inputDiss:
 				configFile = "./scenarios/Input_Diss/config_bs.xml" ;
@@ -121,35 +114,20 @@ public class RunConfigurableBikeSharingSimulation {
 		
 		
 		OutputDirectoryLogging.catchLogEntries();
-		//Logger.getLogger( SoftCache.class ).setLevel( Level.TRACE );
-
-
-//		BikeScenarioUtils.loadConfig(configFile );
-		// yyyyyy what is this?  Why is it loading the configFile twice?
 
 		final Config config = BikeAndEBikeSharingScenarioUtils.loadConfig( configFile );
-		//config.addCoreModules();
 		config.addModule( new BicycleConfigGroup() );
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
 
 		config.global().setNumberOfThreads( 8 );
-		
-		//##### included from V11 - not possible to use config.plansCalcRoute().removeModeRoutingParams( TransportMode.bike );
 
-		//Does not use the implemented routing modules anymore - just uses Network Route
-		//Can I use a combination? TODO:
 		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike,
 					EBConstants.BS_WALK, EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF) ) ) ;
 		
-		//config.qsim().setMainModes( new HashSet<>( Arrays.asList( 
-		//		TransportMode.car, TransportMode.walk,EBConstants.BS_WALK_FF, EBConstants.BS_WALK) ) ) ;
-		
 		config.travelTimeCalculator().setSeparateModes( true ); 
 		failIfExists( config.controler().getOutputDirectory() );
-
-		// ---
-
+		
 		config.controler().setRoutingAlgorithmType( ControlerConfigGroup.RoutingAlgorithmType.FastAStarLandmarks );
 
 		BikeSharingConfigGroup bikeSharingConfig = ConfigUtils.addOrGetModule( config, BikeSharingConfigGroup.NAME, BikeSharingConfigGroup.class ) ;
@@ -161,8 +139,6 @@ public class RunConfigurableBikeSharingSimulation {
 			case debug:
 				config.controler().setLastIteration( 1 );
 				config.transit().setUseTransit( false );
-//				config.transit().setTransitScheduleFile( null );
-//				config.transit().setVehiclesFile( null );
 				break;
 			default:
 				throw new RuntimeException( "not implemented" ) ;

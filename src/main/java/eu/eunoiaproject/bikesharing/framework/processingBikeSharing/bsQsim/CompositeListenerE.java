@@ -39,8 +39,4 @@ public class CompositeListenerE implements EBikeSharingManagerListener {
 			l.handleChange( f, isTaking );
 		}
 	}
-	
-	
-
-
 }
