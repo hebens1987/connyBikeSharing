@@ -41,6 +41,7 @@ import org.matsim.core.population.routes.GenericRouteImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.population.routes.RouteFactoryImpl;
+import org.matsim.core.router.RoutingModule;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculator.Path;
 import org.matsim.core.router.util.TravelDisutility;
@@ -158,7 +159,7 @@ public class BSRunner {
 				Facility fromFacF = ff.createActivityFacility( fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
 				Facility toFacF = ff.createActivityFacility( toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
 				sat = bsChoice.getStationsDuringSim(fromFacF,toFacF,
-						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate);
+						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext);
 				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate , sat, bikeSharingContext );
 				List<PlanElement> actualPlanElem = planElementAndType.peList;
 				int bikeSharingType = planElementAndType.type;
@@ -827,7 +828,6 @@ public class BSRunner {
 		
 		boolean useEBSStart = false;
 		boolean useEBSEnd = false;
-		boolean useEBS = false;
 		Person person = basicAgentDelegate.getPerson();
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();
@@ -860,7 +860,6 @@ public class BSRunner {
 			
 			if (useEBSEnd == useEBSStart)
 			{
-				useEBS = useEBSEnd;
 			}
 			else
 			{

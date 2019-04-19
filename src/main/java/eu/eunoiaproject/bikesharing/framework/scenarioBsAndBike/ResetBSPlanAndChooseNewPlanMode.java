@@ -102,7 +102,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 			boolean longerThan25km = checkPlan(tour, newMode); 
 			if (longerThan25km)
 			{
-				if (newMode.equals(TransportMode.walk) || newMode.equals(TransportMode.bike))
+				if (newMode.equals(TransportMode.walk+"ing") || newMode.equals(TransportMode.bike))
 				{
 					//newMode = TransportMode.car;
 					if (currentMode.equals(TransportMode.car)) {newMode = TransportMode.pt;}
@@ -116,7 +116,7 @@ public class ResetBSPlanAndChooseNewPlanMode implements PlanAlgorithm {
 						}
 						else
 						{
-							newMode = TransportMode.walk;
+							newMode = TransportMode.walk+"ing";
 						}
 					}
 				}

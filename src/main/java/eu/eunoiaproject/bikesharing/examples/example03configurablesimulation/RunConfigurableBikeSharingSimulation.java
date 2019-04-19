@@ -122,7 +122,7 @@ public class RunConfigurableBikeSharingSimulation {
 
 		config.global().setNumberOfThreads( 8 );
 
-		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike,
+		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk+"ing",
 					EBConstants.BS_WALK, EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF) ) ) ;
 		
 		config.travelTimeCalculator().setSeparateModes( true ); 

@@ -450,7 +450,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					endLink = scenario.getNetwork().getLinks().get(nextAct.getLinkId());
 					
 					
-					PlanElement pe = BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, agentInterim,
+					PlanElement pe = BSRunner.createLeg(startLink, endLink, TransportMode.walk+"ing", now, agentInterim,
 						  bikeSharingContext );
 					
 					
@@ -569,7 +569,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						}
 						Link startLink2 = scenario.getNetwork().getLinks().get(walksTo);
 						Link endLink2 = scenario.getNetwork().getLinks().get(walksFrom);
-						PlanElement pe2 = BSRunner.createLeg(startLink2, endLink2, TransportMode.walk, now+1, agentInterim,
+						PlanElement pe2 = BSRunner.createLeg(startLink2, endLink2, TransportMode.walk+"ing", now+1, agentInterim,
 							  bikeSharingContext );
 						Leg leg = (Leg)pe2;
 						leg.setTravelTime(leg.getTravelTime()*1000);

@@ -195,14 +195,7 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 		StationAndType[] startAndEnd = bsChoice.getInitialStations(
 				fromFacility.getCoord(), toFacility.getCoord(), att.searchRadius,
 				att.maxSearchRadius, att.maxBSTripLength, fromFacility.getId(), toFacility.getId());
-		/*if (startAndEnd == null)
-		{
-			log.warn("Agent mit ID: " + person.getId() + " has no useful Bike-Sharing Stations within Reach");
-		}
-		else if (startAndEnd[0] == startAndEnd[1])
-		{
-			log.warn("Agent mit ID: " + person.getId() + "found same Start- and End-Station (will not use bike-sharing)");
-		}*/
+		
 		int bikeSharingOptionSelection;
 		// Chain of trip: walk - bike - walk (==0)
 		List<PlanElement> firstLeg = null;

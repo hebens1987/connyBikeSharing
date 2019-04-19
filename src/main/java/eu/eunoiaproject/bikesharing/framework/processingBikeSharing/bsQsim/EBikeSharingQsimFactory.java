@@ -4,9 +4,14 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim;
 import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_BSTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_BikeTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_EBSTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_WalkTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_EBSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_WalkTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttributesSingleton;
@@ -23,6 +28,7 @@ import org.matsim.core.mobsim.qsim.TeleportationEngine;
 import org.matsim.core.mobsim.qsim.agents.PopulationAgentSource;
 import org.matsim.core.mobsim.qsim.pt.TransitQSimEngine;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine;
+import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
@@ -95,17 +101,22 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 
 		BikeSharingContext.Builder builder = new BikeSharingContext.Builder() ;
 		{
-			TravelTime travelTime = travelTimes.get( TransportMode.bike );
-			TravelDisutilityFactory travelDisutilityFactory = travelDisutilityFactories.get( TransportMode.bike );
-			TravelDisutility travelDisutility = travelDisutilityFactory.createTravelDisutility( travelTime );
+			TravelTime travelTime = new TUG_BikeTravelTime(confBC);;
+			TravelDisutility travelDisutility = new TUG_BikeTravelDisutility(confBC);
 			LeastCostPathCalculator standardBikePathCalculator = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), travelDisutility, travelTime );
 			builder.setStandardBikePathCalculator( standardBikePathCalculator ) ;
 		}
 		{
 			TravelTime btt = new TUG_BSTravelTime(confBC);
-			TravelDisutility btd = 	new TUG_BikeTravelDisutility(confBC);
+			TravelDisutility btd = 	new TUG_BSTravelDisutility(confBC);
 			LeastCostPathCalculator calc = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt ) ;
 			builder.setSharedBikePathCalculator( calc ) ;
+		}
+		{
+			TravelTime btt = new TUG_EBSTravelTime(confBC);
+			TravelDisutility btd = 	new TUG_EBSTravelDisutility(confBC);
+			LeastCostPathCalculator calc = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt ) ;
+			builder.setSharedEBikePathCalculator( calc ) ;
 		}
 		{
 			TravelTime btt = new TUG_WalkTravelTime(confBC);

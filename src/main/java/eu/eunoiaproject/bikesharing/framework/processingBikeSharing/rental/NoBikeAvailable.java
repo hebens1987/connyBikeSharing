@@ -37,6 +37,8 @@ import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
+import org.matsim.core.router.NetworkRouting;
+import org.matsim.core.router.RoutingModule;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.ActivityFacility;
@@ -104,7 +106,7 @@ public class NoBikeAvailable
 			{
 				Leg twoLegsBefore = (Leg)planElements.get(planIndex-3);
 				
-				if ((twoLegsBefore.getMode().equals(TransportMode.walk))||(twoLegsBefore.getMode().equals(EBConstants.BS_WALK)))
+				if ((twoLegsBefore.getMode().equals(TransportMode.walk+"ing"))||(twoLegsBefore.getMode().equals(EBConstants.BS_WALK)))
 				{
 					double desider = Math.random();
 					modeChangeOrWait = EBConstants.WAIT;
@@ -147,11 +149,12 @@ public class NoBikeAvailable
 		{
 			System.out.println("NoBikeAvailable - hier toFac Coord NULL");
 		}
+
 //		ActivityFacility actFac = new ActivityFacilityImpl(nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
 		ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
 		ActivityFacility actFac = ff.createActivityFacility( nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId() ) ;
 		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius, 
-				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate);
+				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext);
 		StationAndType newChoiceStart;
 		StationAndType newChoiceEnd;
 		
@@ -374,7 +377,7 @@ public class NoBikeAvailable
 				//WALK_LEG
 				//Hebenstreit vor Urlaub: hier muss über basicAgentDelegate auf den aktuellen Plan 
 				//zugegriffen und dieser verändert werden - zu prüfen
-				Leg p = (Leg)BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate, bikeSharingContext );
+				Leg p = (Leg)BSRunner.createLeg(startLink, endLink, TransportMode.walk+"ing", now, basicAgentDelegate, bikeSharingContext );
 				p.setDepartureTime(now);
 				trip.add(p); 
 				travelTimeTotal = p.getTravelTime();
@@ -387,7 +390,7 @@ public class NoBikeAvailable
 						basicAgentDelegate.getPerson(), scenario, startLink.getId(), endLink.getId(), new TransitAgentImpl(basicAgentDelegate));
 				if (p0 == null)
 				{
-					Leg p0a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
+					Leg p0a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk+"ing", now, basicAgentDelegate,
 						  bikeSharingContext );
 					p0a.setDepartureTime(now);
 					trip.add(p0a); 
@@ -406,7 +409,7 @@ public class NoBikeAvailable
 				//Hebenstreit vor Urlaub: hier muss über basicAgentDelegate auf den aktuellen Plan 
 				//zugegriffen und dieser verändert werden - zu prüfen
 				
-				Leg p1 = (Leg)BSRunner.createLeg(startLink, endLink , TransportMode.walk, now, basicAgentDelegate, bikeSharingContext );
+				Leg p1 = (Leg)BSRunner.createLeg(startLink, endLink , TransportMode.walk+"ing", now, basicAgentDelegate, bikeSharingContext );
 				p1.setDepartureTime(now);
 				trip.add(p1); 
 				travelTimeTotal = p1.getTravelTime();
@@ -419,7 +422,7 @@ public class NoBikeAvailable
 						scenario, startLink.getId(), endLink.getId(), new TransitAgentImpl(basicAgentDelegate));
 				if (pe2 == null)
 				{
-					Leg pe2a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk, now, basicAgentDelegate,
+					Leg pe2a = (Leg) BSRunner.createLeg(startLink, endLink, TransportMode.walk+"ing", now, basicAgentDelegate,
 						  bikeSharingContext );
 					pe2a.setDepartureTime(now);
 					trip.add(pe2a); 

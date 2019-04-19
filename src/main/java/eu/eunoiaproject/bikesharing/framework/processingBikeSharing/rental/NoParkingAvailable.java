@@ -34,6 +34,8 @@ import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.qsim.agents.BasicPlanAgentImpl;
 import org.matsim.core.population.ActivityImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
+import org.matsim.core.router.NetworkRouting;
+import org.matsim.core.router.RoutingModule;
 import org.matsim.facilities.ActivityFacilitiesFactory;
 import org.matsim.facilities.ActivityFacility;
 import org.matsim.facilities.Facility;
@@ -77,7 +79,6 @@ public class NoParkingAvailable {
 	/***************************************************************************/
 	{
 		Scenario scenario = bikeSharingContext.getqSim().getScenario() ;
-
 		BSRunner runner = new BSRunner();
 		runner.planComparison(basicAgentDelegate);
 		
@@ -99,7 +100,7 @@ public class NoParkingAvailable {
 //		ActivityFacility actFac = new ActivityFacilityImpl (nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
 		ActivityFacility actFac = ff.createActivityFacility( nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId());
 		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius,
-				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate);
+				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext);
 
 		StationAndType newChoiceEnd = null;
 		if (sat != null)

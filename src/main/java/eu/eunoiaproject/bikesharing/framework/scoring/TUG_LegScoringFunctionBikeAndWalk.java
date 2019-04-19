@@ -219,7 +219,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
         	//new java.util.Scanner(System.in).nextLine();
     	}    
 		
-    	if (legX.getMode().equals(TransportMode.walk))
+    	if (legX.getMode().contains(TransportMode.walk))
     	{   
     		tmpScore += getWalkScore(dist, travelTime);
     		//System.out.println("#####################################  WalkScore = " + tmpScore);
@@ -244,11 +244,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	else if ((EBConstants.BS_E_BIKE).equals(legX.getMode())) //Hebenstreit
     	{				           			
     		tmpScore += getEBSScore(dist, travelTime);
-     
-    	}
-    	else if ((EBConstants.BS_WALK).equals(legX.getMode())) //Hebenstreit
-    	{				           			
-    		tmpScore += getWalkScore(dist, travelTime);
      
     	}
     	
