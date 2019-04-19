@@ -539,7 +539,7 @@ public class BikeSharingStationChoice
 		Path p_we = bsc.getWalkPathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(),
 				scenario.getNetwork().getLinks().get(toFacF.getLinkId()).getFromNode(), departureTime, person, null);
 		
-		if (p_bs == null) 
+		if (p_bs == null || p_bs.links.size() < 1)
 		{
 			return Double.POSITIVE_INFINITY;
 		}
