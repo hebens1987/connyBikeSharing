@@ -33,6 +33,7 @@ public class TravelTimeHelper
 			ObjectAttributes personAttributes, ObjectAttributes bikeLinkAttributes,
 			double lowestSpeed, double highestSpeed, double speedReduction)
 	{
+		boolean isFastCycleLane = false;
 		double v = 0;
 		// bikeSpeed in km/h
 		double lenOfLink = link.getLength();
@@ -77,6 +78,7 @@ public class TravelTimeHelper
 		
 		else
 		{
+			isFastCycleLane = (boolean) bikeLinkAttributes.getAttribute(link.getId().toString(), "interaction");
 			bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")); // m/s
 		}
 
@@ -89,7 +91,14 @@ public class TravelTimeHelper
     	{
     		v=bikeSpeedOfPerson;
     	}
-    		
+    	
+    	if (isFastCycleLane)
+    	{
+    		v = v + 1.5;
+    		if ( v < 4 ) v = 4;
+    		else if (v > 8) v = 8;
+    	}
+    	
     	double traveltime = lenOfLink / v;
 		return traveltime;
 	}
