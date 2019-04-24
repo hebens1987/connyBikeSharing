@@ -67,7 +67,8 @@ class TUG_BikeFeltTravelTime implements TravelTime
 		  Link link, double time, Person person, Vehicle vehicle, String mode, double travelDistance)
 	/***************************************************************************/
 	{   
-			int routingType = -1;
+		boolean isFastCycleLane = false;	
+		int routingType = -1;
 		   		TravelTime tt = null;
 		   		
 		   		if (mode.equals(EBConstants.BS_E_BIKE))
@@ -107,6 +108,7 @@ class TUG_BikeFeltTravelTime implements TravelTime
 				   }
 				   else
 				   {
+					   isFastCycleLane = (boolean) bikeLinkAttributes.getAttribute(link.getId().toString(), "interaction");
 					   bikeSafetyOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "safety"));
 					   bikeSlopeOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "slope")); 
 					   bikeComfortOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "comfort"));                      
@@ -290,8 +292,11 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   percTavelTimeAndTravelLength[0] =perceivedTravelTime;//perceivedTravelTime;
 			   percTavelTimeAndTravelLength[1] = travelDistance;
 			   
-			   //double travelTime1 = perceivedTravelTime;
-			 //  double travelTimeOrig = travelTime;
+			   if (isFastCycleLane)
+			   {
+				   percTavelTimeAndTravelLength[0] = perceivedTravelTime * 0.8;
+				   percTavelTimeAndTravelLength[1] = travelDistance * 0.9;
+			   }
 			   
 			   return percTavelTimeAndTravelLength; //does perceive length and duration differently
             
