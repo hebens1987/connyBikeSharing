@@ -26,6 +26,159 @@ import com.vividsolutions.jts.io.WKTReader;
 
 public class Analysis_Events_File
 {
+	static double counterBike_V = 0;
+	static double counterWalk_V = 0;
+	static double counterPt_V = 0;
+	static double counterCar_V = 0;
+	static double counterPtBs_V = 0;
+	static double counterBs_V = 0;
+	
+	static double counterBike_nV = 0;
+	static double counterWalk_nV = 0;
+	static double counterPt_nV = 0;
+	static double counterCar_nV = 0;
+	static double counterBs_nV = 0;
+	static double counterPtBs_nV=0;
+	
+	static double counterBs_V0 = 0;
+	static double counterPtBs_V0 = 0;
+	static double counterBs_V1 = 0;
+	static double counterPtBs_V1 = 0;
+	static double counterBs_V2 = 0;
+	static double counterPtBs_V2 = 0;
+	static double counterBs_V3 = 0;
+	static double counterPtBs_V3 = 0;
+	static double counterBs_V4 = 0;
+	static double counterPtBs_V4 = 0;
+	static double counterBs_V5 = 0;
+	static double counterPtBs_V5 = 0;
+	static double counterBs_V6 = 0;
+	static double counterPtBs_V6 = 0;
+	static double counterBs_V7 = 0;
+	static double counterPtBs_V7 = 0;
+	static double counterBs_V8 = 0;
+	static double counterPtBs_V8 = 0;
+	static double counterBs_V9 = 0;
+	static double counterPtBs_V9 = 0;
+	static double counterBs_V10 = 0;
+	static double counterPtBs_V10 = 0;
+	static double counterBs_V11 = 0;
+	static double counterPtBs_V11 = 0;
+	static double counterBs_V12 = 0;
+	static double counterPtBs_V12 = 0;
+	static double counterBs_V13 = 0;
+	static double counterPtBs_V13 = 0;
+	static double counterBs_V14 = 0;
+	static double counterPtBs_V14 = 0;
+	static double counterBs_V15 = 0;
+	static double counterPtBs_V15 = 0;
+	static double counterBs_V16 = 0;
+	static double counterPtBs_V16 = 0;
+	static double counterBs_V17 = 0;
+	static double counterPtBs_V17 = 0;
+	static double counterBs_V18 = 0;
+	static double counterPtBs_V18 = 0;
+	static double counterBs_V19 = 0;
+	static double counterPtBs_V19 = 0;
+	static double counterBs_V20 = 0;
+	static double counterPtBs_V20 = 0;
+	static double counterBs_V21 = 0;
+	static double counterPtBs_V21 = 0;
+	static double counterBs_V22 = 0;
+	static double counterPtBs_V22 = 0;
+	
+	static double counterBike_V0 = 0;
+	static double counterWalk_V0 = 0;
+	static double counterPt_V0 = 0;
+	static double counterCar_V0 = 0;
+	static double counterBike_V1 = 0;
+	static double counterWalk_V1 = 0;
+	static double counterPt_V1 = 0;
+	static double counterCar_V1 = 0;
+	static double counterBike_V2 = 0;
+	static double counterWalk_V2 = 0;
+	static double counterPt_V2 = 0;
+	static double counterCar_V2 = 0;
+	static double counterBike_V3 = 0;
+	static double counterWalk_V3 = 0;
+	static double counterPt_V3 = 0;
+	static double counterCar_V3 = 0;
+	static double counterBike_V4 = 0;
+	static double counterWalk_V4 = 0;
+	static double counterPt_V4 = 0;
+	static double counterCar_V4 = 0;
+	static double counterBike_V5 = 0;
+	static double counterWalk_V5 = 0;
+	static double counterPt_V5 = 0;
+	static double counterCar_V5 = 0;
+	static double counterBike_V6 = 0;
+	static double counterWalk_V6 = 0;
+	static double counterPt_V6 = 0;
+	static double counterCar_V6 = 0;
+	static double counterBike_V7 = 0;
+	static double counterWalk_V7 = 0;
+	static double counterPt_V7 = 0;
+	static double counterCar_V7 = 0;
+	static double counterBike_V8 = 0;
+	static double counterWalk_V8 = 0;
+	static double counterPt_V8 = 0;
+	static double counterCar_V8 = 0;
+	static double counterBike_V9 = 0;
+	static double counterWalk_V9 = 0;
+	static double counterPt_V9 = 0;
+	static double counterCar_V9 = 0;
+	static double counterBike_V10 = 0;
+	static double counterWalk_V10 = 0;
+	static double counterPt_V10 = 0;
+	static double counterCar_V10 = 0;
+	static double counterBike_V11 = 0;
+	static double counterWalk_V11 = 0;
+	static double counterPt_V11 = 0;
+	static double counterCar_V11 = 0;
+	static double counterBike_V12 = 0;
+	static double counterWalk_V12 = 0;
+	static double counterPt_V12 = 0;
+	static double counterCar_V12 = 0;
+	static double counterBike_V13 = 0;
+	static double counterWalk_V13 = 0;
+	static double counterPt_V13 = 0;
+	static double counterCar_V13 = 0;
+	static double counterBike_V14 = 0;
+	static double counterWalk_V14 = 0;
+	static double counterPt_V14 = 0;
+	static double counterCar_V14 = 0;
+	static double counterBike_V15 = 0;
+	static double counterWalk_V15 = 0;
+	static double counterPt_V15 = 0;
+	static double counterCar_V15 = 0;
+	static double counterBike_V16 = 0;
+	static double counterWalk_V16 = 0;
+	static double counterPt_V16 = 0;
+	static double counterCar_V16 = 0;
+	static double counterBike_V17 = 0;
+	static double counterWalk_V17 = 0;
+	static double counterPt_V17 = 0;
+	static double counterCar_V17 = 0;
+	static double counterBike_V18 = 0;
+	static double counterWalk_V18 = 0;
+	static double counterPt_V18 = 0;
+	static double counterCar_V18 = 0;
+	static double counterBike_V19 = 0;
+	static double counterWalk_V19 = 0;
+	static double counterPt_V19 = 0;
+	static double counterCar_V19 = 0;
+	static double counterBike_V20 = 0;
+	static double counterWalk_V20 = 0;
+	static double counterPt_V20 = 0;
+	static double counterCar_V20 = 0;
+	static double counterBike_V21 = 0;
+	static double counterWalk_V21 = 0;
+	static double counterPt_V21 = 0;
+	static double counterCar_V21 = 0;
+	static double counterBike_V22 = 0;
+	static double counterWalk_V22 = 0;
+	static double counterPt_V22 = 0;
+	static double counterCar_V22 = 0;
 	
 	public static void main(final String... args) throws IOException 
 	/***************************************************************************/
@@ -33,7 +186,7 @@ public class Analysis_Events_File
 		boolean isInitialAnalysis = true;
 	
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/April2019_noBs_vAttrib_all39000/";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/April2019_noBs_vAttrib_sued9000/";
 		String fileName = "output_plans.xml";
 		
 		//String fileLocation2 = "H:/otherValues/";
@@ -146,126 +299,392 @@ public class Analysis_Events_File
 		System.out.println("<-----finished------>");
 	}
 	
+
+
+	public static void districtTest (int district, String mode, boolean inVienna)
+	{
+		if (mode.equals("bike"))
+		{ 
+			if (inVienna) {counterBike_V += 1;}
+			else {counterBike_nV +=1;}
+				
+			if (district == 0) {counterBike_V0 += 1;}
+			else if (district == 1) {counterBike_V1 += 1;}
+			else if (district == 2) {counterBike_V2 += 1;}
+			else if (district == 3) {counterBike_V3 += 1;}
+			else if (district == 4) {counterBike_V4 += 1;}
+			else if (district == 5) {counterBike_V5 += 1;}
+			else if (district == 6) {counterBike_V6 += 1;}
+			else if (district == 7) {counterBike_V7 += 1;}
+			else if (district == 8) {counterBike_V8 += 1;}
+			else if (district == 9) {counterBike_V9 += 1;}
+			else if (district == 10) {counterBike_V10 += 1;}
+			else if (district == 11) {counterBike_V11 += 1;}
+			else if (district == 12) {counterBike_V12 += 1;}
+			else if (district == 13) {counterBike_V13 += 1;}
+			else if (district == 14) {counterBike_V14 += 1;}
+			else if (district == 15) {counterBike_V15 += 1;}
+			else if (district == 16) {counterBike_V16 += 1;}
+			else if (district == 17) {counterBike_V17 += 1;}
+			else if (district == 18) {counterBike_V18 += 1;}
+			else if (district == 19) {counterBike_V19 += 1;}
+			else if (district == 20) {counterBike_V20 += 1;}
+			else if (district == 21) {counterBike_V21 += 1;}
+			else if (district == 22) {counterBike_V22 += 1;}
+		}
+		else if (mode.equals("walk"))
+		{
+			if (inVienna) {counterWalk_V += 1;}
+			else {counterWalk_nV +=1;}
+			
+			if (district == 0) {counterWalk_V0 += 1;}
+			else if (district == 1) {counterWalk_V1 += 1;}
+			else if (district == 2) {counterWalk_V2 += 1;}
+			else if (district == 3) {counterWalk_V3 += 1;}
+			else if (district == 4) {counterWalk_V4 += 1;}
+			else if (district == 5) {counterWalk_V5 += 1;}
+			else if (district == 6) {counterWalk_V6 += 1;}
+			else if (district == 7) {counterWalk_V7 += 1;}
+			else if (district == 8) {counterWalk_V8 += 1;}
+			else if (district == 9) {counterWalk_V9 += 1;}
+			else if (district == 10) {counterWalk_V10 += 1;}
+			else if (district == 11) {counterWalk_V11 += 1;}
+			else if (district == 12) {counterWalk_V12 += 1;}
+			else if (district == 13) {counterWalk_V13 += 1;}
+			else if (district == 14) {counterWalk_V14 += 1;}
+			else if (district == 15) {counterWalk_V15 += 1;}
+			else if (district == 16) {counterWalk_V16 += 1;}
+			else if (district == 17) {counterWalk_V17 += 1;}
+			else if (district == 18) {counterWalk_V18 += 1;}
+			else if (district == 19) {counterWalk_V19 += 1;}
+			else if (district == 20) {counterWalk_V20 += 1;}
+			else if (district == 21) {counterWalk_V21 += 1;}
+			else if (district == 22) {counterWalk_V22 += 1;}
+		}
+		else if (mode.equals("pt"))
+		{
+			if (inVienna) {counterPt_V += 1;}
+			else {counterPt_nV +=1;}
+			
+			if (district == 0) {counterPt_V0 += 1;}
+			else if (district == 1) {counterPt_V1 += 1;}
+			else if (district == 2) {counterPt_V2 += 1;}
+			else if (district == 3) {counterPt_V3 += 1;}
+			else if (district == 4) {counterPt_V4 += 1;}
+			else if (district == 5) {counterPt_V5 += 1;}
+			else if (district == 6) {counterPt_V6 += 1;}
+			else if (district == 7) {counterPt_V7 += 1;}
+			else if (district == 8) {counterPt_V8 += 1;}
+			else if (district == 9) {counterPt_V9 += 1;}
+			else if (district == 10) {counterPt_V10 += 1;}
+			else if (district == 11) {counterPt_V11 += 1;}
+			else if (district == 12) {counterPt_V12 += 1;}
+			else if (district == 13) {counterPt_V13 += 1;}
+			else if (district == 14) {counterPt_V14 += 1;}
+			else if (district == 15) {counterPt_V15 += 1;}
+			else if (district == 16) {counterPt_V16 += 1;}
+			else if (district == 17) {counterPt_V17 += 1;}
+			else if (district == 18) {counterPt_V18 += 1;}
+			else if (district == 19) {counterPt_V19 += 1;}
+			else if (district == 20) {counterPt_V20 += 1;}
+			else if (district == 21) {counterPt_V21 += 1;}
+			else if (district == 22) {counterPt_V22 += 1;}
+		}
+		else if (mode.equals("car"))
+		{
+			if (inVienna) {counterCar_V += 1;}
+			else {counterCar_nV +=1;}
+			
+			if (district == 0) {counterCar_V0 += 1;}
+			else if (district == 1) {counterCar_V1 += 1;}
+			else if (district == 2) {counterCar_V2 += 1;}
+			else if (district == 3) {counterCar_V3 += 1;}
+			else if (district == 4) {counterCar_V4 += 1;}
+			else if (district == 5) {counterCar_V5 += 1;}
+			else if (district == 6) {counterCar_V6 += 1;}
+			else if (district == 7) {counterCar_V7 += 1;}
+			else if (district == 8) {counterCar_V8 += 1;}
+			else if (district == 9) {counterCar_V9 += 1;}
+			else if (district == 10) {counterCar_V10 += 1;}
+			else if (district == 11) {counterCar_V11 += 1;}
+			else if (district == 12) {counterCar_V12 += 1;}
+			else if (district == 13) {counterCar_V13 += 1;}
+			else if (district == 14) {counterCar_V14 += 1;}
+			else if (district == 15) {counterCar_V15 += 1;}
+			else if (district == 16) {counterCar_V16 += 1;}
+			else if (district == 17) {counterCar_V17 += 1;}
+			else if (district == 18) {counterCar_V18 += 1;}
+			else if (district == 19) {counterCar_V19 += 1;}
+			else if (district == 20) {counterCar_V20 += 1;}
+			else if (district == 21) {counterCar_V21 += 1;}
+			else if (district == 22) {counterCar_V22 += 1;}
+		}
+		
+		else if (mode.equals("bs"))
+		{
+			if (inVienna) {counterBs_V += 1;}
+			else {counterBs_nV +=1;}
+			
+			if (district == 0) {counterBs_V0 += 1;}
+			else if (district == 1) {counterBs_V1 += 1;}
+			else if (district == 2) {counterBs_V2 += 1;}
+			else if (district == 3) {counterBs_V3 += 1;}
+			else if (district == 4) {counterBs_V4 += 1;}
+			else if (district == 5) {counterBs_V5 += 1;}
+			else if (district == 6) {counterBs_V6 += 1;}
+			else if (district == 7) {counterBs_V7 += 1;}
+			else if (district == 8) {counterBs_V8 += 1;}
+			else if (district == 9) {counterBs_V9 += 1;}
+			else if (district == 10) {counterBs_V10 += 1;}
+			else if (district == 11) {counterBs_V11 += 1;}
+			else if (district == 12) {counterBs_V12 += 1;}
+			else if (district == 13) {counterBs_V13 += 1;}
+			else if (district == 14) {counterBs_V14 += 1;}
+			else if (district == 15) {counterBs_V15 += 1;}
+			else if (district == 16) {counterBs_V16 += 1;}
+			else if (district == 17) {counterBs_V17 += 1;}
+			else if (district == 18) {counterBs_V18 += 1;}
+			else if (district == 19) {counterBs_V19 += 1;}
+			else if (district == 20) {counterBs_V20 += 1;}
+			else if (district == 21) {counterBs_V21 += 1;}
+			else if (district == 22) {counterBs_V22 += 1;}
+		}
+		else if (mode.equals("pt_bs"))
+		{
+			if (inVienna) {counterPtBs_V += 1;}
+			else {counterPtBs_nV +=1;}
+			
+			if (district == 0) {counterPtBs_V0 += 1;}
+			else if (district == 1) {counterPtBs_V1 += 1;}
+			else if (district == 2) {counterPtBs_V2 += 1;}
+			else if (district == 3) {counterPtBs_V3 += 1;}
+			else if (district == 4) {counterPtBs_V4 += 1;}
+			else if (district == 5) {counterPtBs_V5 += 1;}
+			else if (district == 6) {counterPtBs_V6 += 1;}
+			else if (district == 7) {counterPtBs_V7 += 1;}
+			else if (district == 8) {counterPtBs_V8 += 1;}
+			else if (district == 9) {counterPtBs_V9 += 1;}
+			else if (district == 10) {counterPtBs_V10 += 1;}
+			else if (district == 11) {counterPtBs_V11 += 1;}
+			else if (district == 12) {counterPtBs_V12 += 1;}
+			else if (district == 13) {counterPtBs_V13 += 1;}
+			else if (district == 14) {counterPtBs_V14 += 1;}
+			else if (district == 15) {counterPtBs_V15 += 1;}
+			else if (district == 16) {counterPtBs_V16 += 1;}
+			else if (district == 17) {counterPtBs_V17 += 1;}
+			else if (district == 18) {counterPtBs_V18 += 1;}
+			else if (district == 19) {counterPtBs_V19 += 1;}
+			else if (district == 20) {counterPtBs_V20 += 1;}
+			else if (district == 21) {counterPtBs_V21 += 1;}
+			else if (district == 22) {counterPtBs_V22 += 1;}
+		}
+		
+	}
+
 	public static void analysePlansAndTripModeChoice (List<String> zeilen, List<Geometry> geoList)
 	{
-		
 		String planMode = "";
-		double counterBike_V = 0;
-		double counterWalk_V = 0;
-		double counterPt_V = 0;
-		double counterCar_V = 0;
-		double counterBike_nV = 0;
-		double counterWalk_nV = 0;
-		double counterPt_nV = 0;
-		double counterCar_nV = 0;
-		
-		double counterPlanBike = 0;
-		double counterPlanWalk = 0;
-		double counterPlanPt = 0;
-		double counterPlanCar = 0;
-
-		
 		for (int i = 0; i < zeilen.size(); i++)
 		{
 			if (zeilen.get(i).contains("<plan"))
 			{
 				boolean inVienna = false;
+				int wien = -1;
 				double x = -1;
 				double y;
-				while (!(zeilen.get(i).contains("</plan")))
+				String modesWithinAct = "";
+				i++;
+				if (zeilen.get(i).contains("home"))
 				{
-					if (zeilen.get(i).contains("home"))
-					{
-						if (x < 0)
-						{
-							int indexX = zeilen.get(i).indexOf("x=\"")+3;
-							int indexY = zeilen.get(i).indexOf("y=\"")+3;
-							
-							x = Double.parseDouble(zeilen.get(i).substring(indexX, indexX+12));
-							y = Double.parseDouble(zeilen.get(i).substring(indexY, indexY+12));
-							Coord xy = new Coord(x,y);
+					int indexX = zeilen.get(i).indexOf("x=\"")+3;
+					int indexY = zeilen.get(i).indexOf("y=\"")+3;
+					
+					x = Double.parseDouble(zeilen.get(i).substring(indexX, indexX+12));
+					y = Double.parseDouble(zeilen.get(i).substring(indexY, indexY+12));
+					Coord xy = new Coord(x,y);
 
-							// Koordinaten Transformation 
-							String epsgTo = "epsg:4326"; //WGS84 
-						    String epsgFrom= "epsg:32632";//<-- utm 33N, epsg: 32632 = utm 32N
-						    CoordinateTransformation ct = TransformationFactory.getCoordinateTransformation(epsgFrom, epsgTo);					        
-						       
-						    Coord coordNewR = ct.transform(xy);
-						    Coordinate coord = new Coordinate(coordNewR.getX(), coordNewR.getY());
+					// Koordinaten Transformation 
+					String epsgTo = "epsg:4326"; //WGS84 
+				    String epsgFrom= "epsg:32632";//<-- utm 33N, epsg: 32632 = utm 32N
+				    CoordinateTransformation ct = TransformationFactory.getCoordinateTransformation(epsgFrom, epsgTo);					        
+				       
+				    Coord coordNewR = ct.transform(xy);
+				    Coordinate coord = new Coordinate(coordNewR.getX(), coordNewR.getY());
+					
+					PrecisionModel pm = new PrecisionModel();
+					Geometry point = new Point(coord,pm,1);
+					for (int j = 0; j < geoList.size(); j++)
+					{
+						if (point.within(geoList.get(j)))
+						{
+							inVienna = true;
+							wien = j;
 							
-							PrecisionModel pm = new PrecisionModel();
-							Geometry point = new Point(coord,pm,1);
-							for (int j = 0; j < geoList.size(); j++)
-							{
-								if (point.within(geoList.get(j)))
-								{
-									inVienna = true;
-									break;
-								}
-							}
+							break;
 						}
 					}
-					if (zeilen.get(i).contains("\"bike\""))
-					{	
-						if (inVienna)
-						{
-							counterBike_V = counterBike_V + 1;
-						}
-						else counterBike_nV = counterBike_nV + 1;
-						planMode = "bike";
-					}
-					else if (zeilen.get(i).contains("\"walk\""))
+				}
+				while (! zeilen.get(i).contains("</plan"))
+				{
+					while((!(zeilen.get(i).contains("work")))&&
+							(!(zeilen.get(i).contains("home"))) &&
+									(!(zeilen.get(i).contains("shopping"))))
 					{
-						if (inVienna)
-						{
-							counterWalk_V = counterWalk_V+1;
-						}
-						else counterWalk_nV = counterWalk_nV + 1;;
-						planMode = "walk";
+						if (zeilen.get(i).contains("\"bike\"")) {modesWithinAct += ",bike";}
+						else if (zeilen.get(i).contains("\"walk\"")) {modesWithinAct += ",walk";}
+						else if (zeilen.get(i).contains("\"bs_walk\"")) {modesWithinAct += ",bs_walk";}
+						else if (zeilen.get(i).contains("\"bs\"")) {modesWithinAct += ",bsX";}
+						else if (zeilen.get(i).contains("\"car\"")) {modesWithinAct += ",car";}
+						else if (zeilen.get(i).contains("\"transit_walk\"")) {modesWithinAct += ",walk";}
+						else if (zeilen.get(i).contains("\"pt\"")) {modesWithinAct += ",pt";}
+						i++;
 					}
-					else if (zeilen.get(i).contains("\"pt\""))
+				String mode = "";
+				if (modesWithinAct.contains("bike")) {mode = "bike";}
+				else if (modesWithinAct.contains("pt")) {
+					if (modesWithinAct.contains("bsX"))
 					{
-						while (!
-								(zeilen.get(i).contains("work"))&&
-								(zeilen.get(i).contains("home"))&&
-								(zeilen.get(i).contains("shopping")))
-						{
-							i++;
-						}
-						planMode = "pt";
-						if (inVienna)
-						{
-							counterPt_V = counterPt_V+1;
-						}
-						else counterPt_nV = counterPt_nV + 1;
+						mode = "pt_bs";
 					}
-					else if (zeilen.get(i).contains("\"car\""))
-					{
-						if (inVienna)
-						{
-							counterCar_V = counterCar_V+1;
-						}
-						else counterCar_nV = counterCar_nV + 1;
-						planMode="car";
-					}
-					i++;
+					else mode = "pt";
+				}
+				else if (modesWithinAct.contains("bsX")) {mode = "bs";}
+				else if (modesWithinAct.contains("car")) {mode = "car";}
+				else if (modesWithinAct.contains("walk")) {mode = "walk";}
+				districtTest (wien, mode, inVienna);
+				mode = "";
+				i++;
 				}
 			}
-			if (planMode.equals("car")) {counterPlanCar = counterPlanCar + 1;}
-			else if (planMode.equals("bike")) {counterPlanBike = counterPlanBike + 1;}
-			else if (planMode.equals("walk")) {counterPlanWalk = counterPlanWalk + 1;}
-			else if (planMode.equals("pt")) {counterPlanPt = counterPlanPt + 1;}
 		}
-		double totalPlans = counterPlanCar + counterPlanBike + counterPlanWalk + counterPlanPt;
-		double totalTrips_V = counterCar_V + counterBike_V + counterWalk_V + counterPt_V;
-		double totalTrips_nV = counterCar_nV + counterBike_nV + counterWalk_nV + counterPt_nV;
+		double totalTrips_V = counterCar_V + counterBike_V + counterPtBs_V + counterBs_V + counterWalk_V + counterPt_V;
+		double totalTrips_nV = counterCar_nV + counterBike_nV + counterPtBs_nV + counterBs_nV + counterWalk_nV + counterPt_nV;
+		double totalTrips_V0 = counterCar_V0 + counterBike_V0 + counterPtBs_V0 + counterBs_V0 + counterWalk_V0 + counterPt_V0;
+		double totalTrips_V1 = counterCar_V1 + counterBike_V1 + counterPtBs_V1 + counterBs_V1 + counterWalk_V1 + counterPt_V1;
+		double totalTrips_V2 = counterCar_V2 + counterBike_V2 + counterPtBs_V2 + counterBs_V2 + counterWalk_V2 + counterPt_V2;
+		double totalTrips_V3 = counterCar_V3 + counterBike_V3 + counterPtBs_V3 + counterBs_V3 + counterWalk_V3 + counterPt_V3;
+		double totalTrips_V4 = counterCar_V4 + counterBike_V4 + counterPtBs_V4 + counterBs_V4 + counterWalk_V4 + counterPt_V4;
+		double totalTrips_V5 = counterCar_V5 + counterBike_V5 + counterPtBs_V5 + counterBs_V5 + counterWalk_V5 + counterPt_V5;
+		double totalTrips_V6 = counterCar_V6 + counterBike_V6 + counterPtBs_V6 + counterBs_V6 + counterWalk_V6 + counterPt_V6;
+		double totalTrips_V7 = counterCar_V7 + counterBike_V7 + counterPtBs_V7 + counterBs_V7 + counterWalk_V7 + counterPt_V7;
+		double totalTrips_V8 = counterCar_V8 + counterBike_V8 + counterPtBs_V8 + counterBs_V8 + counterWalk_V8 + counterPt_V8;
+		double totalTrips_V9 = counterCar_V9 + counterBike_V9 + counterPtBs_V9 + counterBs_V9 + counterWalk_V9 + counterPt_V9;
+		double totalTrips_V10 = counterCar_V10 + counterBike_V10 + counterPtBs_V10 + counterBs_V10 + counterWalk_V10 + counterPt_V10;
+		double totalTrips_V11 = counterCar_V11 + counterBike_V11 + counterPtBs_V11 + counterBs_V11 + counterWalk_V11 + counterPt_V11;
+		double totalTrips_V12 = counterCar_V12 + counterBike_V12 + counterPtBs_V12 + counterBs_V12 + counterWalk_V12 + counterPt_V12;
+		double totalTrips_V13 = counterCar_V13 + counterBike_V13 + counterPtBs_V13 + counterBs_V13 + counterWalk_V13 + counterPt_V13;
+		double totalTrips_V14 = counterCar_V14 + counterBike_V14 + counterPtBs_V14 + counterBs_V14 + counterWalk_V14 + counterPt_V14;
+		double totalTrips_V15 = counterCar_V15 + counterBike_V15 + counterPtBs_V15 + counterBs_V15 + counterWalk_V15 + counterPt_V15;
+		double totalTrips_V16 = counterCar_V16 + counterBike_V16 + counterPtBs_V16 + counterBs_V16 + counterWalk_V16 + counterPt_V16;
+		double totalTrips_V17 = counterCar_V17 + counterBike_V17 + counterPtBs_V17 + counterBs_V17 + counterWalk_V17 + counterPt_V17;
+		double totalTrips_V18 = counterCar_V18 + counterBike_V18 + counterPtBs_V18 + counterBs_V18 + counterWalk_V18 + counterPt_V18;
+		double totalTrips_V19 = counterCar_V19 + counterBike_V19 + counterPtBs_V19 + counterBs_V19 + counterWalk_V19 + counterPt_V19;
+		double totalTrips_V20 = counterCar_V20 + counterBike_V20 + counterPtBs_V20 + counterBs_V20 + counterWalk_V20 + counterPt_V20;
+		double totalTrips_V21 = counterCar_V21 + counterBike_V21 + counterPtBs_V21 + counterBs_V21 + counterWalk_V21 + counterPt_V21;
+		double totalTrips_V22 = counterCar_V22 + counterBike_V22 + counterPtBs_V22 + counterBs_V22 + counterWalk_V22 + counterPt_V22;
 		
-		System.out.println("Plans (n=" + totalPlans + ") : walk: " + counterPlanWalk/totalPlans + " bike: " + counterPlanBike/totalPlans +
-				                 " car: "  + counterPlanCar/totalPlans  + " pt: " + counterPlanPt/totalPlans);
 		System.out.println("Vienna Trips (n=" + totalTrips_V + ") : walk: " + counterWalk_V/totalTrips_V + " bike: " + counterBike_V/totalTrips_V +
-                " car: "  + counterCar_V/totalTrips_V  + " pt: " + counterPt_V/totalTrips_V);
+                " car: "  + counterCar_V/totalTrips_V  + " pt: " + counterPt_V/totalTrips_V
+                + " ptBs: " + counterPtBs_V/totalTrips_V + " Bs: " + counterBs_V/totalTrips_V);
+		
 		System.out.println("Not Vienna Trips (n=" + totalTrips_nV + ") : walk: " + counterWalk_nV/totalTrips_nV + " bike: " + counterBike_nV/totalTrips_nV +
-                " car: "  + counterCar_nV/totalTrips_nV  + " pt: " + counterPt_nV/totalTrips_nV);
+                " car: "  + counterCar_nV/totalTrips_nV  + " pt: " + counterPt_nV/totalTrips_nV
+                + " ptBs: " + counterPtBs_nV/totalTrips_nV + " Bs: " + counterBs_nV/totalTrips_nV);
+		
+		System.out.println("");
+		System.out.println("Vienna Trips _V0 (n=" + totalTrips_V0 + ") : walk: " + counterWalk_V0/totalTrips_V0 + " bike: " + counterBike_V0/totalTrips_V0 +
+                " car: "  + counterCar_V0/totalTrips_V0  + " pt: " + counterPt_V0/totalTrips_V0 
+                + " ptBs: " + counterPtBs_V0/totalTrips_V0 + " Bs: " + counterBs_V0/totalTrips_V0);
+		
+		System.out.println("Vienna Trips _V1 (n=" + totalTrips_V1 + ") : walk: " + counterWalk_V1/totalTrips_V1 + " bike: " + counterBike_V1/totalTrips_V1 +
+                " car: "  + counterCar_V1/totalTrips_V1  + " pt: " + counterPt_V1/totalTrips_V1
+                + " ptBs: " + counterPtBs_V1/totalTrips_V1 + " Bs: " + counterBs_V1/totalTrips_V1);
+		
+		System.out.println("Vienna Trips _V2 (n=" + totalTrips_V2 + ") : walk: " + counterWalk_V2/totalTrips_V2 + " bike: " + counterBike_V2/totalTrips_V2 +
+                " car: "  + counterCar_V2/totalTrips_V2  + " pt: " + counterPt_V2/totalTrips_V2
+                + " ptBs: " + counterPtBs_V2/totalTrips_V2 + " Bs: " + counterBs_V2/totalTrips_V2);
+		
+		System.out.println("Vienna Trips _V3 (n=" + totalTrips_V3 + ") : walk: " + counterWalk_V3/totalTrips_V3 + " bike: " + counterBike_V3/totalTrips_V3 +
+                " car: "  + counterCar_V3/totalTrips_V3  + " pt: " + counterPt_V3/totalTrips_V3
+                + " ptBs: " + counterPtBs_V3/totalTrips_V3 + " Bs: " + counterBs_V3/totalTrips_V3);
+		
+		System.out.println("Vienna Trips _V4 (n=" + totalTrips_V4 + ") : walk: " + counterWalk_V4/totalTrips_V4 + " bike: " + counterBike_V4/totalTrips_V4 +
+                " car: "  + counterCar_V4/totalTrips_V4  + " pt: " + counterPt_V4/totalTrips_V4
+                + " ptBs: " + counterPtBs_V4/totalTrips_V4 + " Bs: " + counterBs_V4/totalTrips_V4);
+		
+		System.out.println("Vienna Trips _V5 (n=" + totalTrips_V5 + ") : walk: " + counterWalk_V5/totalTrips_V5 + " bike: " + counterBike_V5/totalTrips_V5 +
+                " car: "  + counterCar_V5/totalTrips_V5  + " pt: " + counterPt_V5/totalTrips_V5 +
+                " ptBs: " + counterPtBs_V5/totalTrips_V5 + " Bs: " + counterBs_V5/totalTrips_V5);
+		
+		System.out.println("Vienna Trips _V6 (n=" + totalTrips_V6 + ") : walk: " + counterWalk_V6/totalTrips_V6 + " bike: " + counterBike_V6/totalTrips_V6 +
+                " car: "  + counterCar_V6/totalTrips_V6  + " pt: " + counterPt_V6/totalTrips_V6
+                + " ptBs: " + counterPtBs_V6/totalTrips_V6 + " Bs: " + counterBs_V6/totalTrips_V6);
+		
+		System.out.println("Vienna Trips _V7 (n=" + totalTrips_V7 + ") : walk: " + counterWalk_V7/totalTrips_V7 + " bike: " + counterBike_V7/totalTrips_V7 +
+                " car: "  + counterCar_V7/totalTrips_V7  + " pt: " + counterPt_V7/totalTrips_V7
+                + " ptBs: " + counterPtBs_V7/totalTrips_V7 + " Bs: " + counterBs_V7/totalTrips_V7);
+		
+		System.out.println("Vienna Trips _V8 (n=" + totalTrips_V8 + ") : walk: " + counterWalk_V8/totalTrips_V8 + " bike: " + counterBike_V8/totalTrips_V8 +
+                " car: "  + counterCar_V8/totalTrips_V8  + " pt: " + counterPt_V8/totalTrips_V8
+                + " ptBs: " + counterPtBs_V8/totalTrips_V8 + " Bs: " + counterBs_V8/totalTrips_V8);
+		
+		System.out.println("Vienna Trips _V9 (n=" + totalTrips_V9 + ") : walk: " + counterWalk_V9/totalTrips_V9 + " bike: " + counterBike_V9/totalTrips_V9 +
+                " car: "  + counterCar_V9/totalTrips_V9  + " pt: " + counterPt_V9/totalTrips_V9
+                + " ptBs: " + counterPtBs_V9/totalTrips_V9 + " Bs: " + counterBs_V9/totalTrips_V9);
+		
+		System.out.println("Vienna Trips _V10 (n=" + totalTrips_V10 + ") : walk: " + counterWalk_V10/totalTrips_V10 + " bike: " + counterBike_V10/totalTrips_V10 +
+                " car: "  + counterCar_V10/totalTrips_V10  + " pt: " + counterPt_V10/totalTrips_V10
+                + " ptBs: " + counterPtBs_V10/totalTrips_V10 + " Bs: " + counterBs_V10/totalTrips_V10);
+		
+		System.out.println("Vienna Trips _V11 (n=" + totalTrips_V11 + ") : walk: " + counterWalk_V11/totalTrips_V11 + " bike: " + counterBike_V11/totalTrips_V11 +
+                " car: "  + counterCar_V11/totalTrips_V11  + " pt: " + counterPt_V11/totalTrips_V11
+                + " ptBs: " + counterPtBs_V11/totalTrips_V11 + " Bs: " + counterBs_V11/totalTrips_V11);
+		
+		System.out.println("Vienna Trips _V12 (n=" + totalTrips_V12 + ") : walk: " + counterWalk_V12/totalTrips_V12 + " bike: " + counterBike_V12/totalTrips_V12 +
+                " car: "  + counterCar_V12/totalTrips_V12  + " pt: " + counterPt_V12/totalTrips_V12
+                + " ptBs: " + counterPtBs_V12/totalTrips_V12 + " Bs: " + counterBs_V12/totalTrips_V12);
+		
+		System.out.println("Vienna Trips _V13 (n=" + totalTrips_V13 + ") : walk: " + counterWalk_V13/totalTrips_V13 + " bike: " + counterBike_V13/totalTrips_V13 +
+                " car: "  + counterCar_V13/totalTrips_V13  + " pt: " + counterPt_V13/totalTrips_V13
+                + " ptBs: " + counterPtBs_V13/totalTrips_V13 + " Bs: " + counterBs_V13/totalTrips_V13);
+		
+		System.out.println("Vienna Trips _V14 (n=" + totalTrips_V14 + ") : walk: " + counterWalk_V14/totalTrips_V14 + " bike: " + counterBike_V14/totalTrips_V14 +
+                " car: "  + counterCar_V14/totalTrips_V14  + " pt: " + counterPt_V14/totalTrips_V14
+                + " ptBs: " + counterPtBs_V14/totalTrips_V14 + " Bs: " + counterBs_V14/totalTrips_V14);
+		
+		System.out.println("Vienna Trips _V15 (n=" + totalTrips_V15 + ") : walk: " + counterWalk_V15/totalTrips_V15 + " bike: " + counterBike_V15/totalTrips_V15 +
+                " car: "  + counterCar_V15/totalTrips_V15  + " pt: " + counterPt_V15/totalTrips_V15
+                + " ptBs: " + counterPtBs_V15/totalTrips_V15 + " Bs: " + counterBs_V15/totalTrips_V15);
+		
+		System.out.println("Vienna Trips _V16 (n=" + totalTrips_V16 + ") : walk: " + counterWalk_V16/totalTrips_V16 + " bike: " + counterBike_V16/totalTrips_V16 +
+                " car: "  + counterCar_V16/totalTrips_V16  + " pt: " + counterPt_V16/totalTrips_V16
+                + " ptBs: " + counterPtBs_V16/totalTrips_V16 + " Bs: " + counterBs_V16/totalTrips_V16);
+		
+		System.out.println("Vienna Trips _V17 (n=" + totalTrips_V17 + ") : walk: " + counterWalk_V17/totalTrips_V17 + " bike: " + counterBike_V17/totalTrips_V17 +
+                " car: "  + counterCar_V17/totalTrips_V17  + " pt: " + counterPt_V17/totalTrips_V17
+                + " ptBs: " + counterPtBs_V17/totalTrips_V17 + " Bs: " + counterBs_V17/totalTrips_V17);
+		
+		
+		System.out.println("Vienna Trips _V18 (n=" + totalTrips_V18 + ") : walk: " + counterWalk_V18/totalTrips_V18 + " bike: " + counterBike_V18/totalTrips_V18 +
+                " car: "  + counterCar_V18/totalTrips_V18  + " pt: " + counterPt_V18/totalTrips_V18
+                + " ptBs: " + counterPtBs_V18/totalTrips_V18 + " Bs: " + counterBs_V18/totalTrips_V18);
+		
+		System.out.println("Vienna Trips _V19 (n=" + totalTrips_V19 + ") : walk: " + counterWalk_V19/totalTrips_V19 + " bike: " + counterBike_V19/totalTrips_V19 +
+                " car: "  + counterCar_V19/totalTrips_V19  + " pt: " + counterPt_V19/totalTrips_V19
+                + " ptBs: " + counterPtBs_V19/totalTrips_V19 + " Bs: " + counterBs_V19/totalTrips_V19);
+		
+		System.out.println("Vienna Trips _V20 (n=" + totalTrips_V20 + ") : walk: " + counterWalk_V20/totalTrips_V20 + " bike: " + counterBike_V20/totalTrips_V20 +
+                " car: "  + counterCar_V20/totalTrips_V20  + " pt: " + counterPt_V20/totalTrips_V20
+                + " ptBs: " + counterPtBs_V20/totalTrips_V20 + " Bs: " + counterBs_V20/totalTrips_V20);
+		
+		System.out.println("Vienna Trips _V21 (n=" + totalTrips_V21 + ") : walk: " + counterWalk_V21/totalTrips_V21 + " bike: " + counterBike_V21/totalTrips_V21 +
+                " car: "  + counterCar_V21/totalTrips_V21  + " pt: " + counterPt_V21/totalTrips_V21
+                + " ptBs: " + counterPtBs_V21/totalTrips_V21 + " Bs: " + counterBs_V21/totalTrips_V21);
+		
+		System.out.println("Vienna Trips _V22 (n=" + totalTrips_V22 + ") : walk: " + counterWalk_V22/totalTrips_V22 + " bike: " + counterBike_V22/totalTrips_V22 +
+                " car: "  + counterCar_V22/totalTrips_V22  + " pt: " + counterPt_V22/totalTrips_V22
+                + " ptBs: " + counterPtBs_V22/totalTrips_V22 + " Bs: " + counterBs_V22/totalTrips_V22);
+		
 	}
 	
 	public static void ActCoordList(PrintWriter writerRoute, List<String> zeilen, String mode)

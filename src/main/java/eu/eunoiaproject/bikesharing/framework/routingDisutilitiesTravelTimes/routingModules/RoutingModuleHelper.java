@@ -57,10 +57,12 @@ public class RoutingModuleHelper {
 		double travelTime = 0.0;
 		double distance = 0.0;
 		
-		double travelTimePath = path.travelTime;
-		if (travelTimePath == Double.NaN)
-		travelTimePath = 0.0;
-		
+		double travelTimePath = 0;
+		if (path != null)
+		{
+			travelTimePath = path.travelTime;
+		}
+
 		Id <Link> startLinkId = fromFacility.getLinkId();
 		Id <Link> endLinkId = toFacility.getLinkId();
 		/*if (path.links.size()>0)
