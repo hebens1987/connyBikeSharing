@@ -193,10 +193,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	{
     		legScore = calcLegScore(leg.getDepartureTime(), leg.getDepartureTime() + feltTravelTime, leg);
     	}
-    	if (legScore == 0 || legScore == Double.POSITIVE_INFINITY)
-    	{
-    		System.out.println("warum? Hebenstreit");
-    	}
+
 		this.score += legScore;
 	}
 
@@ -317,10 +314,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		{
 			factor = (distance - 3500)/3500*5;
 			if (factor < 0) {factor = 0;}
-		}
-		if (score < constant)
-		{
-			score = constant;
 		}
 		return score * (1+factor);
 	}
