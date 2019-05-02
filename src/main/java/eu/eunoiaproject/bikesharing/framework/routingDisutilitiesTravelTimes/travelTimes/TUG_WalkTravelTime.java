@@ -60,7 +60,8 @@ public class TUG_WalkTravelTime implements TravelTime {
 		if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")!= null)
 		{
 			double speedInfra = (double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed");
-			if (speed > speedInfra)
+			
+			if(( speedInfra > 0)&& (speed > speedInfra))
 			{
 				speed = speedInfra;
 			}

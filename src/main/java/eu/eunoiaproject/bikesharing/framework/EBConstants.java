@@ -41,9 +41,9 @@ public class EBConstants {
 	
 	public static final String BS_BIKE = "bs";
 	public static final String BS_E_BIKE = "e_bs";
-	public static final String BS_WALK = "bs_walk";
+	public static final String BS_WALK = "bsWalk";
 	public static final String BS_BIKE_FF = "bs_ff";
-	public static final String BS_WALK_FF = "bs_walk_ff";
+	public static final String BS_WALK_FF = "bsWalk_ff";
 	
 	public static final int TIME_TAKE = 120;
 	public static final int TIME_RETURN = 30;

@@ -8,6 +8,7 @@ public class ModiArray
 	double pt;
 	double car;
 	double bs;
+	double walking;
 
 	
 }

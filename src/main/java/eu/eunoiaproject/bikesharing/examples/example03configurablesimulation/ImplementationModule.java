@@ -88,7 +88,7 @@ class ImplementationModule extends AbstractModule {
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_WALK).toProvider(new NetworkRouting(TransportMode.walk));
+			this.addRoutingModuleBinding(EBConstants.BS_WALK).toProvider(new NetworkRouting(EBConstants.BS_WALK));
 			
 			this.bindScoringFunctionFactory().to(TUG_LegScoringFunctionBikeAndWalkFactory.class);
 			
@@ -96,17 +96,17 @@ class ImplementationModule extends AbstractModule {
 			this.addTravelTimeBinding(TransportMode.bike).to(TUG_BikeTravelTime.class); 
 			this.addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
 
-			this.addTravelDisutilityFactoryBinding(TransportMode.walk).to(IKK_BikeTravelDisutilityFactory.class); 
-			this.addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(TransportMode.walk).to(TUG_WalkRoutingModule.class);
+			//this.addTravelDisutilityFactoryBinding(TransportMode.walk).to(IKK_BikeTravelDisutilityFactory.class); 
+			//this.addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 
+			//this.addRoutingModuleBinding(TransportMode.walk).to(TUG_WalkRoutingModule.class);
 			
 			this.addTravelDisutilityFactoryBinding(TransportMode.walk+"ing").to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.walk+"ing").to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(TransportMode.walk+"ing").toProvider(new NetworkRouting(TransportMode.walk));
+			this.addRoutingModuleBinding(TransportMode.walk+"ing").toProvider(new NetworkRouting(TransportMode.walk+"ing"));
 						
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK_FF).to(TUG_WalkTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_WALK_FF).toProvider(new NetworkRouting(TransportMode.walk));
+			this.addRoutingModuleBinding(EBConstants.BS_WALK_FF).toProvider(new NetworkRouting(EBConstants.BS_WALK));
 			
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_BIKE_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_BIKE_FF).to(TUG_WalkTravelTime.class); 

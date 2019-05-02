@@ -39,13 +39,14 @@ public class Graphics
 					temp.toAnalyze = Double.parseDouble(interim[0]);
 					String modi = interim[1];
 					int k = 2;
-					if (modi.equals("tran") || modi.equals("bs_w"))
+					if (modi.equals("trans") || modi.equals("bs_wa"))
 					{
 						while (k < interim.length)
 						{
 								modi += interim[k];
 								k++;
 						}
+						
 						if ((modi.contains("bs\""))&& (modi.contains("pt")))
 						{
 							modi = "pt_bs";
@@ -58,15 +59,41 @@ public class Graphics
 						
 						else if (modi.contains("pt"))
 						{
-							modi = "tran";
+							modi = "pt";
 						}
-						else
+						else if (modi.contains("walki"))
+						{
+							modi = "walking";
+						}
+						else if (modi.contains("walk"))
 						{
 							modi = "walk";
 						}
 					}
-					temp.mode=modi;		
-					data.add(temp);
+					else if (modi.contains("car"))
+					{
+						modi = "car";
+					}
+					else if (modi.contains("bike"))
+					{
+						modi = "bike";
+					}
+
+					else if (modi.contains("walki"))
+					{
+						modi = "walking";
+					}
+					else if (modi.contains("walk"))
+					{
+						modi = "walk";
+					}
+					else {modi = "x";}
+					
+					if (!(modi.equals("x")))
+					{
+						temp.mode=modi;		
+						data.add(temp);
+					}
 				}
 			}
 	 while (categoryStep <= categoryMax)
@@ -77,6 +104,7 @@ public class Graphics
 		 modeArr.bs = 0;
 		 modeArr.car = 0;
 		 modeArr.pt = 0;
+		 modeArr.walking = 0;
 		 modeArr.walk = 0;
 		 categoryStep += orig;
 		 cat.add(modeArr);
@@ -88,6 +116,7 @@ public class Graphics
 	 modeArr.car = 0;
 	 modeArr.pt = 0;
 	 modeArr.walk = 0;
+	 modeArr.walking = 0;
 	 cat.add(modeArr);
 	 
 	 for (int i = 0; i < data.size(); i++)
@@ -107,11 +136,14 @@ public class Graphics
 				cat.get(k).bs++;
 			}
 			
-			else if (data.get(i).mode.equals("tran"))
+			else if (data.get(i).mode.equals("pt"))
 			{
 				cat.get(k).pt++;
 			}
-			
+			else if ((data.get(i).mode.equals("walking")))
+			{
+				cat.get(k).walking++;
+			}
 			else if ((data.get(i).mode.equals("walk"))||
 					(data.get(i).mode.equals("t_walk"))||
 					(data.get(i).mode.equals("walG")))
@@ -119,7 +151,7 @@ public class Graphics
 				cat.get(k).walk++;
 			}
 			
-			else if (data.get(i).mode.equals("car\""))
+			else if (data.get(i).mode.equals("car"))
 			{
 				cat.get(k).car++;
 			}
@@ -140,6 +172,10 @@ public class Graphics
 			{
 				cat.get(cat.size()-1).pt++;
 			}
+			else if ((data.get(i).mode.equals("walking")))
+			{
+				cat.get(cat.size()-1).walking++;
+			}
 			
 			else if ((data.get(i).mode.equals("walk"))||
 					(data.get(i).mode.equals("t_walk"))||
@@ -148,7 +184,7 @@ public class Graphics
 				cat.get(cat.size()-1).walk++;
 			}
 			
-			else if (data.get(cat.size()-1).mode.equals("car\""))
+			else if (data.get(cat.size()-1).mode.equals("car"))
 			{
 				cat.get(cat.size()-1).car++;
 			}
@@ -160,6 +196,7 @@ public class Graphics
 	 {
 		 cat.get(j).bike += cat.get(j-1).bike;
 		 cat.get(j).walk += cat.get(j-1).walk;
+		 cat.get(j).walking += cat.get(j-1).walking;
 		 cat.get(j).pt += cat.get(j-1).pt;
 		 cat.get(j).car += cat.get(j-1).car;
 		 cat.get(j).bs += cat.get(j-1).bs;
@@ -167,6 +204,7 @@ public class Graphics
 	 
 	 double totalBike = cat.get(cat.size()-1).bike;
 	 double totalWalk = cat.get(cat.size()-1).walk;
+	 double totalWalking = cat.get(cat.size()-1).walking;
 	 double totalPt = cat.get(cat.size()-1).pt;
 	 double totalCar = cat.get(cat.size()-1).car;
 	 double totalBs = cat.get(cat.size()-1).bs;
@@ -177,6 +215,7 @@ public class Graphics
 		 cat.get(j).walk = cat.get(j).walk/totalWalk;
 		 cat.get(j).pt = cat.get(j).pt/totalPt;
 		 cat.get(j).car = cat.get(j).car/totalCar;
+		 cat.get(j).walking = cat.get(j).walking/totalWalking;
 		 cat.get(j).bs = cat.get(j).bs/totalBs;
 	 }
 
@@ -190,6 +229,7 @@ public class Graphics
 			final XYSeries ptSerie = new XYSeries("pt", false, true);
 			final XYSeries bikeSerie = new XYSeries("bike", false, true);
 			final XYSeries walkSerie = new XYSeries("walk", false, true);
+			final XYSeries walkingSerie = new XYSeries("walking", false, true);
 			final XYSeries bsSerie = new XYSeries("bs", false, true);
 			
 			for (int i = 0; i < data.size(); i++ )
@@ -199,15 +239,17 @@ public class Graphics
 				ptSerie.add(x, data.get(i).pt);
 				walkSerie.add(x,data.get(i).walk);
 				bikeSerie.add(x,data.get(i).bike);
+				walkingSerie.add(x,data.get(i).walking);
 				bsSerie.add(x,data.get(i).bs);
 				
 			}
 			
 			xyData.addSeries(carSerie);
 			xyData.addSeries(ptSerie);
-			xyData.addSeries(walkSerie);
+			xyData.addSeries(walkingSerie);
 			xyData.addSeries(bikeSerie);
 			xyData.addSeries(bsSerie);
+			xyData.addSeries(walkSerie);
 
 
 
@@ -230,6 +272,7 @@ public class Graphics
 			plot.getRenderer().setSeriesStroke(2, new BasicStroke(2.0f));
 			plot.getRenderer().setSeriesStroke(3, new BasicStroke(2.0f));
 			plot.getRenderer().setSeriesStroke(4, new BasicStroke(2.0f));
+			plot.getRenderer().setSeriesStroke(5, new BasicStroke(2.0f));
 			plot.setBackgroundPaint(Color.white);
 			plot.setRangeGridlinePaint(Color.gray);
 			plot.setDomainGridlinePaint(Color.gray);

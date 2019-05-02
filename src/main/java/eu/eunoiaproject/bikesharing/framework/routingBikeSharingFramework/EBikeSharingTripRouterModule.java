@@ -49,10 +49,10 @@ public class EBikeSharingTripRouterModule extends AbstractModule {
 	public void install() {
 		addRoutingModuleBinding( EBConstants.MODE ).to(EBikeSharingRoutingModule.class);
 		addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
-		addRoutingModuleBinding( TransportMode.walk+"ing" ).toProvider(new NetworkRouting(TransportMode.walk));
+		addRoutingModuleBinding( TransportMode.walk+"ing" ).toProvider(new NetworkRouting(TransportMode.walk+"ing"));
 		addRoutingModuleBinding( EBConstants.BS_BIKE ).toProvider(new NetworkRouting(TransportMode.bike));
 		addRoutingModuleBinding( EBConstants.BS_E_BIKE ).toProvider(new NetworkRouting(TransportMode.bike));
-		addRoutingModuleBinding( EBConstants.BS_WALK).toProvider(new NetworkRouting(TransportMode.walk));
+		addRoutingModuleBinding( EBConstants.BS_WALK).toProvider(new NetworkRouting(EBConstants.BS_WALK));
 		bind( MainModeIdentifier.class ).toInstance(
 					new EBikeSharingModeIdentifier(
 						 new MainModeIdentifierImpl() ) );

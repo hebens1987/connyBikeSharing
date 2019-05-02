@@ -214,9 +214,13 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     		//System.out.println("#####################################  WalkScore = " + tmpScore);
     		//System.out.println("Pause - press Key to continue!");
         	//new java.util.Scanner(System.in).nextLine();
-    	}    
+    	}   
+    	else if ((TransportMode.transit_walk).equals(legX.getMode())) //Hebenstreit
+    	{	
+    		tmpScore += getWalkScorePt(travelTime);
+    	}
 		
-    	if (legX.getMode().contains(TransportMode.walk))
+    	else if (legX.getMode().contains(TransportMode.walk))
     	{   
     		tmpScore += getWalkScore(dist, travelTime);
     		//System.out.println("#####################################  WalkScore = " + tmpScore);
@@ -242,11 +246,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	{				           			
     		tmpScore += getEBSScore(dist, travelTime);
      
-    	}
-    	
-    	else if ((TransportMode.transit_walk).equals(legX.getMode())) //Hebenstreit
-    	{	
-    		tmpScore += getWalkScorePt(travelTime);
     	}
     	
     	else if ((TransportMode.pt).equals(legX.getMode())) //Hebenstreit
@@ -297,7 +296,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	/***************************************************************************/
 	{
 		double score = 0.0D;
-		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.walk);
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.walk+"ing");
 		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
 		double utilDist = modeParams.getMonetaryDistanceRate();
 		double constant = modeParams.getConstant();

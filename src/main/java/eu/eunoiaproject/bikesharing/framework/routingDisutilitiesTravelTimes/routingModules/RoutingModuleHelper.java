@@ -27,7 +27,9 @@ import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
+import org.matsim.api.core.v01.population.Route;
 import org.matsim.core.population.LegImpl;
+import org.matsim.core.population.routes.GenericRouteImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculator.Path;
@@ -56,15 +58,27 @@ public class RoutingModuleHelper {
 				scenario.getNetwork().getLinks().get(toFacility.getLinkId()).getFromNode(), departureTime, person, null);
 		double travelTime = 0.0;
 		double distance = 0.0;
-		
-		double travelTimePath = 0;
-		if (path != null)
-		{
-			travelTimePath = path.travelTime;
-		}
-
 		Id <Link> startLinkId = fromFacility.getLinkId();
 		Id <Link> endLinkId = toFacility.getLinkId();
+		
+		double travelTimePath = 0;
+		if (path == null)
+		{
+			System.out.println("warum nur?");
+			Route route = new GenericRouteImpl(startLinkId, endLinkId);
+			final Leg leg = new LegImpl(mode);
+			//System.out.println("path.travelTime = " + path.travelTime + ";  leg.getTravelTime() = " + leg.getTravelTime());
+			route.setTravelTime(10);
+			route.setRouteDescription(startLinkId + " " + endLinkId);
+			route.setDistance(25);
+			leg.setRoute(route);
+			leg.setTravelTime(20);
+			leg.setDepartureTime(departureTime);
+			trip.add(leg);
+			return trip;
+		}
+		travelTimePath = path.travelTime;
+		
 		/*if (path.links.size()>0)
 		{
 			if (path.links.get(0).getId() != startLinkId)

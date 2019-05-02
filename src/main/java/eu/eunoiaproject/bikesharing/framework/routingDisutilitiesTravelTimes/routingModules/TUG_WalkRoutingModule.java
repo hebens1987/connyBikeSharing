@@ -84,7 +84,7 @@ public class TUG_WalkRoutingModule implements RoutingModule {
 			
 			RoutingModuleHelper rmh = new RoutingModuleHelper(fromFacility, toFacility, 
 					departureTime, person, routeAlgo,
-					scenario, btt, TransportMode.walk);
+					scenario, btt, TransportMode.walk+"ing");
 			return rmh.peList;
 	}
 
