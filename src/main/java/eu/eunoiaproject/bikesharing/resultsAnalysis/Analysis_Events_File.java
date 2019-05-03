@@ -186,8 +186,8 @@ public class Analysis_Events_File
 		boolean isInitialAnalysis = true;
 	
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/v4_April2019_noBS(all3)_A_walking/ITERS/it.10/";
-		String fileName = "10.plans.xml";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/v4_April2019_noBS(all3)_A_walking/";
+		String fileName = "output_plans.xml";
 		
 		//String fileLocation2 = "H:/otherValues/";
 		//String fileName = "output_plans.xml";
@@ -1153,27 +1153,26 @@ public class Analysis_Events_File
 							int indexY = zeilen.get(i-1).lastIndexOf("<leg mode=")+1;
 							String modesTemp = zeilen.get(i-1).substring(indexY+10, indexY+15)+";";
 							
-							modes += modesTemp;
+							if (modesTemp.contains("acces")||modesTemp.contains("egres"))
+							{
+								//Do nothing
+							}
+							else modes += modesTemp;
 						}
 
 						ranIntoNextWhile = true;
 						i++;
 						if (zeilen.get(i).contains("<act type"))
 						{
-							if (zeilen.get(i).contains("pt interaction"))
+							if (zeilen.get(i).contains("interaction"))
 							{
 								i++;
 							}
-							
-							if (zeilen.get(i).contains("pt interaction"))
+							else if (zeilen.get(i).contains("wait"))
 							{
 								i++;
 							}
-							
 						}
-						
-						
-						
 					}
 					if (!(ranIntoNextWhile))
 					{
@@ -1272,20 +1271,22 @@ public class Analysis_Events_File
 								int indexY = zeilen.get(i-1).lastIndexOf("<leg mode=")+1;
 
 								String modesTemp = zeilen.get(i-1).substring(indexY+10, indexY+15)+";";
-								
-								modes += modesTemp;
+								if (modesTemp.contains("acces")||modesTemp.contains("egres"))
+								{
+									//Do nothing
+								}
+								else modes += modesTemp;
 						}
 
 						ranIntoNextWhile = true;
 						i++;
 						if (zeilen.get(i).contains("<act type"))
 						{
-							if (zeilen.get(i).contains("pt interaction"))
+							if (zeilen.get(i).contains("interaction"))
 							{
 								i++;
 							}
-							
-							if (zeilen.get(i).contains("eb_interaction"))
+							else if (zeilen.get(i).contains("wait"))
 							{
 								i++;
 							}

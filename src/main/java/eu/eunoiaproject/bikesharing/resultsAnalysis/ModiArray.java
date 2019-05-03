@@ -9,6 +9,7 @@ public class ModiArray
 	double car;
 	double bs;
 	double walking;
+	double bs_pt;
 
 	
 }

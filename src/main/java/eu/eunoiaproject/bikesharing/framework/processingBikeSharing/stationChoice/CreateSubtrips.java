@@ -190,6 +190,10 @@ public class CreateSubtrips {
 			RoutingModule routing) 
 	/***************************************************************************/
 	{
+		if (fromFacility == null || toFacility == null)
+		{
+			System.out.println("Warum nur?");
+		}
 		final List<? extends PlanElement> trip =
 			routing.calcRoute(
 					fromFacility,
