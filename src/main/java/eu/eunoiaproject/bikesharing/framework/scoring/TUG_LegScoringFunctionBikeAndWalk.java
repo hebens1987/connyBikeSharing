@@ -210,7 +210,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
     	if ((legX.getMode().equals(TransportMode.egress_walk))||(legX.getMode().equals(TransportMode.access_walk)))
     	{   
-    		tmpScore += getWalkScore(dist, travelTime);
+    		tmpScore += getWalkScorePt(travelTime);
     		//System.out.println("#####################################  WalkScore = " + tmpScore);
     		//System.out.println("Pause - press Key to continue!");
         	//new java.util.Scanner(System.in).nextLine();
@@ -286,6 +286,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		double constant = modeParams.getConstant();
 		
 		score += (travelTime * utilTrav)*2/(1+Math.exp(-distance/12+2)) + distance * utilDist + constant;
+		if (distance < 500) { score = score * 2;}
 		return score;
 	}
 	
@@ -312,7 +313,10 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		if (distance > 3500)
 		{
 			factor = (distance - 3500)/3500*5;
-			if (factor < 0) {factor = 0;}
+		}
+		if (distance > 7000)
+		{
+			score = score * (distance-7000);
 		}
 		return score * (1+factor);
 	}
@@ -333,6 +337,10 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		if (travelTime > 900)
 		{
 			factor = (travelTime - 900)/900;
+		}
+		if (travelTime > 1800)
+		{
+			score = score * 5;
 		}
 		return score * (1+factor);
 	}
@@ -419,9 +427,14 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
 		score += (travelTime * utilTrav)  + ((distance * utilDist)*weighting) + constant;
 		
-		if (distance > 10000)
+		if (distance > 7000)
 		{
-			factor = (distance - 10000)/1000/2;
+			factor = (distance - 7000)/1000/2;
+		}
+		
+		if (distance > 12000)
+		{
+			score = score * (distance-12000);
 		}
 		
 		score = score * (1+factor);

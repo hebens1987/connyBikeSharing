@@ -100,20 +100,20 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   
 				   if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null) 
 				   {
-					   bikeSafetyOfInfrastructure = 5;
-					   bikeSlopeOfInfrastructure = 5;
-					   bikeComfortOfInfrastructure = 5;               
-					   bikeSurroundingOfInfrastructure = 5;
-					   bikeAmountOfInfrastructure = 5;  
+					   bikeSafetyOfInfrastructure = 5/10;
+					   bikeSlopeOfInfrastructure = 5/10;
+					   bikeComfortOfInfrastructure = 5/10;               
+					   bikeSurroundingOfInfrastructure = 5/10;
+					   bikeAmountOfInfrastructure = 5/10;  
 				   }
 				   else
 				   {
 					   isFastCycleLane = (boolean) bikeLinkAttributes.getAttribute(link.getId().toString(), "interaction");
-					   bikeSafetyOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "safety"));
-					   bikeSlopeOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "slope")); 
-					   bikeComfortOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "comfort"));                      
-					   bikeSurroundingOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "surrounding"));  
-					   bikeAmountOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "amount"));  
+					   bikeSafetyOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "safety"))/10;
+					   bikeSlopeOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "slope"))/10; 
+					   bikeComfortOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "comfort"))/10;                      
+					   bikeSurroundingOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "surrounding"))/10;  
+					   bikeAmountOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "amount"))/10;  
 				   }
                                                 	                     
 			   // Einlesen aus Config (siehe TravelDisutil): FEHLT NOCH: TODO: Hebenstreit
@@ -294,8 +294,8 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   
 			   if (isFastCycleLane)
 			   {
-				   percTavelTimeAndTravelLength[0] = perceivedTravelTime * 0.8;
-				   percTavelTimeAndTravelLength[1] = travelDistance * 0.9;
+				   percTavelTimeAndTravelLength[0] = perceivedTravelTime * 0.25;
+				   percTavelTimeAndTravelLength[1] = travelDistance * 0.25;
 			   }
 			   
 			   return percTavelTimeAndTravelLength; //does perceive length and duration differently

@@ -1252,16 +1252,8 @@ public class BSRunner {
 			trip.addAll(int1_int2);
 			trip.add(interact2);
 			trip.addAll(int2_act2);
-			
 
 			pEList.addAll(actIndex+1, trip);
-
-			
-			/*System.out.println("TravelTime: " + act1_int1.getTravelTime() + "   DepTime: " + act1_int1.getDepartureTime());
-			System.out.println("EndTime:    " + interact1.getEndTime() + "   Dur:" + interact1.getMaximumDuration());
-			System.out.println("TravelTime: " + int1_int2.getTravelTime() + "   DepTime: " + int1_int2.getDepartureTime());
-			System.out.println("EndTime:   " + interact2.getEndTime() + "   Dur: " + interact2.getMaximumDuration());
-			System.out.println("TravelTime: " + int2_act2.getTravelTime() + "   DepTime: " + int2_act2.getDepartureTime());*/
 			planComparison(basicAgentDelegate);
 			//System.out.println("Test");
 			}

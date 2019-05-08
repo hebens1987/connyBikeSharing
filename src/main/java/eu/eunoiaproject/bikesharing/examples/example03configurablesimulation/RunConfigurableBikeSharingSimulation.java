@@ -69,7 +69,7 @@ public class RunConfigurableBikeSharingSimulation {
 
 	static Controler prepareControler(Scenario sc ){
 		final Controler controler = new Controler( sc );
-		controler.addOverridingModule(new ImplementationModule(sc.getConfig()) );
+		controler.addOverridingModule(new ImplementationModule(sc.getConfig(), sc) );
 		return controler;
 	}
 

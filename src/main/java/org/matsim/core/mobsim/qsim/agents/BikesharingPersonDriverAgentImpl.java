@@ -182,7 +182,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 			{
 				ChooseBikeToTake cbtt = new ChooseBikeToTake(scenario);
 				Activity thisAct = (Activity) thisElem;
-				if (thisAct.getType().contains("interaction")) //actual activity is bs-activity
+				if (thisAct.getType().contains("_interaction")) //actual activity is bs-activity
 				{
 					if ((nextElem instanceof Activity) && (!(((Activity)nextElem).getType().contains("interaction"))))
 						//2te interaction Activity - bike is returned, and needs to be added to the list again
@@ -192,6 +192,10 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 						cbtt.addBikeFFToListAndActCoord(thisAct.getFacilityId(), coord, link.getId());
 						//log.warn("FF-Bike added: " + thisAct.getFacilityId() + "  at Coord:" + coord);
 					}
+				}
+				else if (thisAct.getType().contains(" interaction")) // actual activity is access/egress activity
+				{
+					//do nothing
 				}
 				else //actual activity is plan activity
 				{

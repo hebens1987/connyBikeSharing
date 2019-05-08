@@ -82,12 +82,11 @@ public class TravelTimeHelper
 			if (isFastCycleLane)
 			{
 				bikeSpeedOfInfrastructure = 500;
-				if (bikeSpeedOfPerson > 4) bikeSpeedOfPerson = bikeSpeedOfPerson + 1;
+				if (bikeSpeedOfPerson > 4) bikeSpeedOfPerson = bikeSpeedOfPerson + 0.3;
 				else {bikeSpeedOfPerson = 5;}
 			}
 			else bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")); // m/s
 		}
-
 
     	if(bikeSpeedOfInfrastructure <= bikeSpeedOfPerson)
     	{

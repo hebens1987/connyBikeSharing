@@ -24,6 +24,7 @@ import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.api.core.v01.population.Plan;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.mobsim.framework.MobsimDriverAgent;
 import org.matsim.core.mobsim.qsim.agents.AgentFactory;
@@ -41,19 +42,7 @@ public class BikesharingAgentFactory implements AgentFactory{
 
 	@Override
 	public MobsimDriverAgent createMobsimAgentFromPerson(final Person p) 
-	{
-		List<PlanElement> planelems = p.getSelectedPlan().getPlanElements();
-		for (int i = 0; i < planelems.size(); i++)
-		{
-			if (planelems.get(i) instanceof Leg)
-			{
-				Leg leg = (Leg)planelems.get(i);
-				if ((leg.getMode().equals("eBikeSharing")) || leg.getMode().contains("bs"))
-				{	p.getSelectedPlan().setType("eBikeSharing");
-					break;}
-				else {p.getSelectedPlan().setType("other");}
-			}
-		}
-		return new BikesharingPersonDriverAgentImpl( p.getSelectedPlan(), null, bikeSharingContext );
+	{		
+		return new BikesharingPersonDriverAgentImpl(p.getSelectedPlan(), null, bikeSharingContext );
 	}
 }

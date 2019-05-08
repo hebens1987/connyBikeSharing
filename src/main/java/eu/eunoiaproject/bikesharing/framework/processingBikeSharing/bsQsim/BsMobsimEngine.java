@@ -28,6 +28,7 @@ import org.matsim.api.core.v01.events.PersonStuckEvent;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.Plan;
+import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.mobsim.framework.AgentSource;
 import org.matsim.core.mobsim.framework.MobsimAgent;
@@ -108,13 +109,10 @@ public final class BsMobsimEngine implements MobsimEngine {
 		scenario.getConfig().qsim().setUsingTravelTimeCheckInTeleportation(false);
 		this.trans = new TransitQSimEngine(qsim);
 		this.teleport = new TeleportationEngine(scenario, eventsManager);
-
-
 	}
 	
 	@Override
 	public void onPrepareSim() {
-		
 		trans.onPrepareSim();
 		teleport.onPrepareSim();
 		BikeSharingBikes bSharingVehicles = (BikeSharingBikes) scenario.getScenarioElement( BikeSharingBikes.ELEMENT_NAME);

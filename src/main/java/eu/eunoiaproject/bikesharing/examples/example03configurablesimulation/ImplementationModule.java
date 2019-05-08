@@ -23,6 +23,8 @@
 package eu.eunoiaproject.bikesharing.examples.example03configurablesimulation;
 
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import eu.eunoiaproject.bikesharing.framework.planStrategy.ChangeLegModeCD;
+import eu.eunoiaproject.bikesharing.framework.planStrategy.ChangeTripModeCD;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.EBikeSharingQsimFactory;
 import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.EBikeSharingRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.scoring.TUG_LegScoringFunctionBikeAndWalkFactory;
@@ -34,10 +36,12 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_WalkTravelTime;
 import eu.eunoiaproject.freeFloatingBS.FFBikeSharingRoutingModule;
 
+import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.AbstractModule;
+import org.matsim.core.replanning.PlanStrategy;
 import org.matsim.core.router.LeastCostPathCalculatorModule;
 import org.matsim.core.router.MainModeIdentifier;
 import org.matsim.core.router.MainModeIdentifierImpl;
@@ -45,13 +49,17 @@ import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.router.SingleModeNetworksCache;
 import org.matsim.pt.router.TransitRouterModule;
 
+import com.google.inject.name.Names;
+
 class ImplementationModule extends AbstractModule {
 	
 	private final Config config;
+	private final Scenario scenario;
 
-		ImplementationModule( Config config )
+		ImplementationModule( Config config, Scenario sc )
 		{
 			this.config= config;
+			this.scenario = sc;
 		}
 
 		//@Override
@@ -69,6 +77,7 @@ class ImplementationModule extends AbstractModule {
 			    default:
 			    	throw new RuntimeException( "not implemented" ) ;
 		    }
+			 String[] stringArr = {"bike","walking","pt","car"};
 		    this.bind(SingleModeNetworksCache.class).asEagerSingleton();
 		
 			this.addRoutingModuleBinding(EBConstants.MODE ).to(EBikeSharingRoutingModule.class);
@@ -112,7 +121,9 @@ class ImplementationModule extends AbstractModule {
 			this.addTravelTimeBinding(EBConstants.BS_BIKE_FF).to(TUG_WalkTravelTime.class); 
 			this.addRoutingModuleBinding(EBConstants.BS_BIKE_FF).toProvider(new NetworkRouting(TransportMode.bike));
 
-			this.bindMobsim().toProvider(EBikeSharingQsimFactory.class);
+			this.addPlanStrategyBinding("ChangeTripModeDistance").toProvider(ChangeTripModeCD.class);
+			
+			//this.addPlanStrategyBinding("ChangeTripModeDistance").to((Class<? extends PlanStrategy>) ChangeTripModeCD.class);
 		 } 
 }
 

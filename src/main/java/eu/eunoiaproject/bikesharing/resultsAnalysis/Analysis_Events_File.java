@@ -184,10 +184,10 @@ public class Analysis_Events_File
 	/***************************************************************************/
 	{
 		boolean isInitialAnalysis = true;
-	
+		//TODO
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/v4_April2019_noBS(all3)_A_walking/";
-		String fileName = "output_plans.xml";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/v2_Mai2019_noBS(all3)zehntel_x2/ITERS/it.15/";
+		String fileName = "15.plans.xml";
 		
 		//String fileLocation2 = "H:/otherValues/";
 		//String fileName = "output_plans.xml";
@@ -234,7 +234,9 @@ public class Analysis_Events_File
 			writerActPlansOnly.close();
 			
 			livingPopulation(actPlans,vienna);
-			analysePlansAndTripModeChoice (actPlans, vienna);
+			PrintWriter modalSplit = new PrintWriter(fileLocation2 + "modalSplitPerDistricts.txt");
+			analysePlansAndTripModeChoice (actPlans, vienna, modalSplit);
+			modalSplit.close();
 			
 			PrintWriter actSequence = new PrintWriter(fileLocation2 + "activityLegSequence.txt");
 			actLegSequence(actSequence, actPlans);
@@ -535,7 +537,7 @@ public class Analysis_Events_File
 		
 	}
 
-	public static void analysePlansAndTripModeChoice (List<String> zeilen, List<Geometry> geoList)
+	public static void analysePlansAndTripModeChoice (List<String> zeilen, List<Geometry> geoList, PrintWriter pw)
 	{
 		String planMode = "";
 		for (int i = 0; i < zeilen.size(); i++)
@@ -639,106 +641,106 @@ public class Analysis_Events_File
 		double totalTrips_V21 = counterCar_V21 + counterBike_V21 + counterPtBs_V21 + counterBs_V21 + counterWalk_V21 + counterPt_V21;
 		double totalTrips_V22 = counterCar_V22 + counterBike_V22 + counterPtBs_V22 + counterBs_V22 + counterWalk_V22 + counterPt_V22;
 		
-		System.out.println("District/Area;WALK;BIKE;CAR;PT;PT_BS;BS");
-		System.out.println("Vienna Trips (n=" + totalTrips_V + ");" + counterWalk_V/totalTrips_V + ";" + counterBike_V/totalTrips_V +
+		pw.println("District/Area;WALK;BIKE;CAR;PT;PT_BS;BS");
+		pw.println("Vienna Trips (n=" + totalTrips_V + ");" + counterWalk_V/totalTrips_V + ";" + counterBike_V/totalTrips_V +
                 ";"  + counterCar_V/totalTrips_V  + ";" + counterPt_V/totalTrips_V
                 + ";" + counterPtBs_V/totalTrips_V + ";" + counterBs_V/totalTrips_V);
 		
-		System.out.println("Not Vienna Trips (n=" + totalTrips_nV + ") ;" + counterWalk_nV/totalTrips_nV + ";" + counterBike_nV/totalTrips_nV +
+		pw.println("Not Vienna Trips (n=" + totalTrips_nV + ") ;" + counterWalk_nV/totalTrips_nV + ";" + counterBike_nV/totalTrips_nV +
                 ";"  + counterCar_nV/totalTrips_nV  + ";" + counterPt_nV/totalTrips_nV
                 + ";" + counterPtBs_nV/totalTrips_nV + ";" + counterBs_nV/totalTrips_nV);
 		
 
-		System.out.println("7.Neubau (n=" + totalTrips_V0 + ") ;" + counterWalk_V0/totalTrips_V0 + ";" + counterBike_V0/totalTrips_V0 +
+		pw.println("7.Neubau (n=" + totalTrips_V0 + ") ;" + counterWalk_V0/totalTrips_V0 + ";" + counterBike_V0/totalTrips_V0 +
                 ";"  + counterCar_V0/totalTrips_V0  + ";" + counterPt_V0/totalTrips_V0 
                 + ";" + counterPtBs_V0/totalTrips_V0 + ";" + counterBs_V0/totalTrips_V0);
 		
-		System.out.println("3. Landstraße (n=" + totalTrips_V1 + ") ;" + counterWalk_V1/totalTrips_V1 + ";" + counterBike_V1/totalTrips_V1 +
+		pw.println("3. Landstraße (n=" + totalTrips_V1 + ") ;" + counterWalk_V1/totalTrips_V1 + ";" + counterBike_V1/totalTrips_V1 +
                 ";"  + counterCar_V1/totalTrips_V1  + ";" + counterPt_V1/totalTrips_V1
                 + ";" + counterPtBs_V1/totalTrips_V1 + ";" + counterBs_V1/totalTrips_V1);
 		
-		System.out.println("8. Josefstadt (n=" + totalTrips_V2 + ") ;" + counterWalk_V2/totalTrips_V2 + ";" + counterBike_V2/totalTrips_V2 +
+		pw.println("8. Josefstadt (n=" + totalTrips_V2 + ") ;" + counterWalk_V2/totalTrips_V2 + ";" + counterBike_V2/totalTrips_V2 +
                 ";"  + counterCar_V2/totalTrips_V2  + ";" + counterPt_V2/totalTrips_V2
                 + ";" + counterPtBs_V2/totalTrips_V2 + ";" + counterBs_V2/totalTrips_V2);
 		
-		System.out.println("1. Innere Stadt (n=" + totalTrips_V3 + ") ;" + counterWalk_V3/totalTrips_V3 + ";" + counterBike_V3/totalTrips_V3 +
+		pw.println("1. Innere Stadt (n=" + totalTrips_V3 + ") ;" + counterWalk_V3/totalTrips_V3 + ";" + counterBike_V3/totalTrips_V3 +
                 ";"  + counterCar_V3/totalTrips_V3  + ";" + counterPt_V3/totalTrips_V3
                 + ";" + counterPtBs_V3/totalTrips_V3 + ";" + counterBs_V3/totalTrips_V3);
 		
-		System.out.println("16. Ottakring (n=" + totalTrips_V4 + ") ;" + counterWalk_V4/totalTrips_V4 + ";" + counterBike_V4/totalTrips_V4 +
+		pw.println("16. Ottakring (n=" + totalTrips_V4 + ") ;" + counterWalk_V4/totalTrips_V4 + ";" + counterBike_V4/totalTrips_V4 +
                 ";"  + counterCar_V4/totalTrips_V4  + ";" + counterPt_V4/totalTrips_V4
                 + ";" + counterPtBs_V4/totalTrips_V4 + ";" + counterBs_V4/totalTrips_V4);
 		
-		System.out.println("9. Alsergrund (n=" + totalTrips_V5 + ") ;" + counterWalk_V5/totalTrips_V5 + ";" + counterBike_V5/totalTrips_V5 +
+		pw.println("9. Alsergrund (n=" + totalTrips_V5 + ") ;" + counterWalk_V5/totalTrips_V5 + ";" + counterBike_V5/totalTrips_V5 +
                 ";"  + counterCar_V5/totalTrips_V5  + ";" + counterPt_V5/totalTrips_V5 +
                 ";" + counterPtBs_V5/totalTrips_V5 + ";" + counterBs_V5/totalTrips_V5);
 		
-		System.out.println("2. Leopoldstadt (n=" + totalTrips_V6 + ") ;" + counterWalk_V6/totalTrips_V6 + ";" + counterBike_V6/totalTrips_V6 +
+		pw.println("2. Leopoldstadt (n=" + totalTrips_V6 + ") ;" + counterWalk_V6/totalTrips_V6 + ";" + counterBike_V6/totalTrips_V6 +
                 ";"  + counterCar_V6/totalTrips_V6  + ";" + counterPt_V6/totalTrips_V6
                 + ";" + counterPtBs_V6/totalTrips_V6 + ";" + counterBs_V6/totalTrips_V6);
 		
-		System.out.println("18. Währing (n=" + totalTrips_V7 + ") ;" + counterWalk_V7/totalTrips_V7 + ";" + counterBike_V7/totalTrips_V7 +
+		pw.println("18. Währing (n=" + totalTrips_V7 + ") ;" + counterWalk_V7/totalTrips_V7 + ";" + counterBike_V7/totalTrips_V7 +
                 ";"  + counterCar_V7/totalTrips_V7  + ";" + counterPt_V7/totalTrips_V7
                 + ";" + counterPtBs_V7/totalTrips_V7 + ";" + counterBs_V7/totalTrips_V7);
 		
-		System.out.println("17. Hernals (n=" + totalTrips_V8 + ") ;" + counterWalk_V8/totalTrips_V8 + ";" + counterBike_V8/totalTrips_V8 +
+		pw.println("17. Hernals (n=" + totalTrips_V8 + ") ;" + counterWalk_V8/totalTrips_V8 + ";" + counterBike_V8/totalTrips_V8 +
                 ";"  + counterCar_V8/totalTrips_V8  + ";" + counterPt_V8/totalTrips_V8
                 + ";" + counterPtBs_V8/totalTrips_V8 + ";" + counterBs_V8/totalTrips_V8);
 		
-		System.out.println("20. Brigittenau (n=" + totalTrips_V9 + ") ;" + counterWalk_V9/totalTrips_V9 + ";" + counterBike_V9/totalTrips_V9 +
+		pw.println("20. Brigittenau (n=" + totalTrips_V9 + ") ;" + counterWalk_V9/totalTrips_V9 + ";" + counterBike_V9/totalTrips_V9 +
                 ";"  + counterCar_V9/totalTrips_V9  + ";" + counterPt_V9/totalTrips_V9
                 + ";" + counterPtBs_V9/totalTrips_V9 + ";" + counterBs_V9/totalTrips_V9);
 		
-		System.out.println("14. Penzing (n=" + totalTrips_V10 + ") ;" + counterWalk_V10/totalTrips_V10 + ";" + counterBike_V10/totalTrips_V10 +
+		pw.println("14. Penzing (n=" + totalTrips_V10 + ") ;" + counterWalk_V10/totalTrips_V10 + ";" + counterBike_V10/totalTrips_V10 +
                 ";"  + counterCar_V10/totalTrips_V10  + ";" + counterPt_V10/totalTrips_V10
                 + ";" + counterPtBs_V10/totalTrips_V10 + ";" + counterBs_V10/totalTrips_V10);
 		
-		System.out.println("19. Döbling (n=" + totalTrips_V11 + ") ;" + counterWalk_V11/totalTrips_V11 + ";" + counterBike_V11/totalTrips_V11 +
+		pw.println("19. Döbling (n=" + totalTrips_V11 + ") ;" + counterWalk_V11/totalTrips_V11 + ";" + counterBike_V11/totalTrips_V11 +
                 ";"  + counterCar_V11/totalTrips_V11  + ";" + counterPt_V11/totalTrips_V11
                 + ";" + counterPtBs_V11/totalTrips_V11 + ";" + counterBs_V11/totalTrips_V11);
 		
-		System.out.println("22. Donaustadt (n=" + totalTrips_V12 + ") ;" + counterWalk_V12/totalTrips_V12 + ";" + counterBike_V12/totalTrips_V12 +
+		pw.println("22. Donaustadt (n=" + totalTrips_V12 + ") ;" + counterWalk_V12/totalTrips_V12 + ";" + counterBike_V12/totalTrips_V12 +
                 ";"  + counterCar_V12/totalTrips_V12  + ";" + counterPt_V12/totalTrips_V12
                 + ";" + counterPtBs_V12/totalTrips_V12 + ";" + counterBs_V12/totalTrips_V12);
 		
-		System.out.println("21. Floridsdorf (n=" + totalTrips_V13 + ") ;" + counterWalk_V13/totalTrips_V13 + ";" + counterBike_V13/totalTrips_V13 +
+		pw.println("21. Floridsdorf (n=" + totalTrips_V13 + ") ;" + counterWalk_V13/totalTrips_V13 + ";" + counterBike_V13/totalTrips_V13 +
                 ";"  + counterCar_V13/totalTrips_V13  + ";" + counterPt_V13/totalTrips_V13
                 + ";" + counterPtBs_V13/totalTrips_V13 + ";" + counterBs_V13/totalTrips_V13);
 		
-		System.out.println("23. Liesing (n=" + totalTrips_V14 + ") ;" + counterWalk_V14/totalTrips_V14 + ";" + counterBike_V14/totalTrips_V14 +
+		pw.println("23. Liesing (n=" + totalTrips_V14 + ") ;" + counterWalk_V14/totalTrips_V14 + ";" + counterBike_V14/totalTrips_V14 +
                 ";"  + counterCar_V14/totalTrips_V14  + ";" + counterPt_V14/totalTrips_V14
                 + ";" + counterPtBs_V14/totalTrips_V14 + ";" + counterBs_V14/totalTrips_V14);
 		
-		System.out.println("11. Simmering (n=" + totalTrips_V15 + ") ;" + counterWalk_V15/totalTrips_V15 + ";" + counterBike_V15/totalTrips_V15 +
+		pw.println("11. Simmering (n=" + totalTrips_V15 + ") ;" + counterWalk_V15/totalTrips_V15 + ";" + counterBike_V15/totalTrips_V15 +
                 ";"  + counterCar_V15/totalTrips_V15  + ";" + counterPt_V15/totalTrips_V15
                 + ";" + counterPtBs_V15/totalTrips_V15 + ";" + counterBs_V15/totalTrips_V15);
 		
-		System.out.println("10. Favoriten (n=" + totalTrips_V16 + ") ;" + counterWalk_V16/totalTrips_V16 + ";" + counterBike_V16/totalTrips_V16 +
+		pw.println("10. Favoriten (n=" + totalTrips_V16 + ") ;" + counterWalk_V16/totalTrips_V16 + ";" + counterBike_V16/totalTrips_V16 +
                 ";"  + counterCar_V16/totalTrips_V16  + ";" + counterPt_V16/totalTrips_V16
                 + ";" + counterPtBs_V16/totalTrips_V16 + ";" + counterBs_V16/totalTrips_V16);
 		
-		System.out.println("12. Meidling (n=" + totalTrips_V17 + ") ;" + counterWalk_V17/totalTrips_V17 + ";" + counterBike_V17/totalTrips_V17 +
+		pw.println("12. Meidling (n=" + totalTrips_V17 + ") ;" + counterWalk_V17/totalTrips_V17 + ";" + counterBike_V17/totalTrips_V17 +
                 ";"  + counterCar_V17/totalTrips_V17  + ";" + counterPt_V17/totalTrips_V17
                 + ";" + counterPtBs_V17/totalTrips_V17 + ";" + counterBs_V17/totalTrips_V17);
 		
 		
-		System.out.println("5. Margareten (n=" + totalTrips_V18 + ") ;" + counterWalk_V18/totalTrips_V18 + ";" + counterBike_V18/totalTrips_V18 +
+		pw.println("5. Margareten (n=" + totalTrips_V18 + ") ;" + counterWalk_V18/totalTrips_V18 + ";" + counterBike_V18/totalTrips_V18 +
                 ";"  + counterCar_V18/totalTrips_V18  + ";" + counterPt_V18/totalTrips_V18
                 + ";" + counterPtBs_V18/totalTrips_V18 + ";" + counterBs_V18/totalTrips_V18);
 		
-		System.out.println("4. Wieden (n=" + totalTrips_V19 + ") ;" + counterWalk_V19/totalTrips_V19 + ";" + counterBike_V19/totalTrips_V19 +
+		pw.println("4. Wieden (n=" + totalTrips_V19 + ") ;" + counterWalk_V19/totalTrips_V19 + ";" + counterBike_V19/totalTrips_V19 +
                 ";"  + counterCar_V19/totalTrips_V19  + ";" + counterPt_V19/totalTrips_V19
                 + ";" + counterPtBs_V19/totalTrips_V19 + ";" + counterBs_V19/totalTrips_V19);
 		
-		System.out.println("6. Mariahilf (n=" + totalTrips_V20 + ") ;" + counterWalk_V20/totalTrips_V20 + ";" + counterBike_V20/totalTrips_V20 +
+		pw.println("6. Mariahilf (n=" + totalTrips_V20 + ") ;" + counterWalk_V20/totalTrips_V20 + ";" + counterBike_V20/totalTrips_V20 +
                 ";"  + counterCar_V20/totalTrips_V20  + ";" + counterPt_V20/totalTrips_V20
                 + ";" + counterPtBs_V20/totalTrips_V20 + ";" + counterBs_V20/totalTrips_V20);
 		
-		System.out.println("13. Hietzing (n=" + totalTrips_V21 + ") ;" + counterWalk_V21/totalTrips_V21 + ";" + counterBike_V21/totalTrips_V21 +
+		pw.println("13. Hietzing (n=" + totalTrips_V21 + ") ;" + counterWalk_V21/totalTrips_V21 + ";" + counterBike_V21/totalTrips_V21 +
                 ";"  + counterCar_V21/totalTrips_V21  + ";" + counterPt_V21/totalTrips_V21
                 + ";" + counterPtBs_V21/totalTrips_V21 + ";" + counterBs_V21/totalTrips_V21);
 		
-		System.out.println("15. Rudolfsheim-F. (n=" + totalTrips_V22 + ") ;" + counterWalk_V22/totalTrips_V22 + ";" + counterBike_V22/totalTrips_V22 +
+		pw.println("15. Rudolfsheim-F. (n=" + totalTrips_V22 + ") ;" + counterWalk_V22/totalTrips_V22 + ";" + counterBike_V22/totalTrips_V22 +
                 ";"  + counterCar_V22/totalTrips_V22  + ";" + counterPt_V22/totalTrips_V22
                 + ";" + counterPtBs_V22/totalTrips_V22 + ";" + counterBs_V22/totalTrips_V22);
 		
