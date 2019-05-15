@@ -37,8 +37,8 @@ public class ChooseRandomLegModeCD implements PlanAlgorithm
 	{
 		final Random rng = MatsimRandom.getLocalInstance();
 		CheckReplannedPlans cpr = new CheckReplannedPlans();
-		boolean dontUseBike = cpr.planLegLongerThan(plan.getPlanElements(), 10000);
-		boolean dontUseWalk = cpr.planLegLongerThan(plan.getPlanElements(), 3000);
+		boolean dontUseBike = cpr.planLegLongerThan(plan.getPlanElements(), 12500);
+		boolean dontUseWalk = cpr.planLegLongerThan(plan.getPlanElements(), 5000);
 		String[] possibleModes = possibleModesOrig.clone();
 
 		for (int i = 0; i < possibleModes.length; i++)

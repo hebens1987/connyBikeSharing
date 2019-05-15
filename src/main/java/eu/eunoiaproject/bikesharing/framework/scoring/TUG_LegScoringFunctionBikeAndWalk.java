@@ -222,7 +222,10 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
     	else if (legX.getMode().contains(TransportMode.walk))
     	{   
+    		if (legX.getMode().contentEquals(TransportMode.walk));
     		tmpScore += getWalkScore(dist, travelTime);
+    		if (legX.getMode().contentEquals(TransportMode.walk));
+    		tmpScore += getWalkingScore(dist, travelTime);
     		//System.out.println("#####################################  WalkScore = " + tmpScore);
     		//System.out.println("Pause - press Key to continue!");
         	//new java.util.Scanner(System.in).nextLine();
@@ -297,6 +300,38 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	/***************************************************************************/
 	{
 		double score = 0.0D;
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.walk);
+		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
+		double utilDist = modeParams.getMonetaryDistanceRate();
+		double constant = modeParams.getConstant();
+		double factor = 0;
+		double weighting = ((travelTime/3600) *(travelTime/3600))*12.5; //Hebenstreit Parameter
+		if (distance < 0.001)
+		{
+			distance = travelTime /(0.9/1.41) ; //4 km/h
+		}
+		
+		score += (travelTime * utilTrav) * weighting + (distance * utilDist) + constant;
+		if (distance > 10000)
+		{
+			score = score * 1000000000;
+		}
+		else if (distance > 7000)
+		{
+			score = score * (distance-7000);
+		}
+		else if (distance > 3500)
+		{
+			factor = (distance - 3500)/3500*5;
+		}
+		
+		return score * (1+factor);
+	}
+	/***************************************************************************/
+	private double getWalkingScore(double distance, double travelTime)
+	/***************************************************************************/
+	{
+		double score = 0.0D;
 		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.walk+"ing");
 		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
 		double utilDist = modeParams.getMonetaryDistanceRate();
@@ -309,15 +344,19 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		}
 		
 		score += (travelTime * utilTrav) * weighting + (distance * utilDist) + constant;
-		
-		if (distance > 3500)
+		if (distance > 10000)
 		{
-			factor = (distance - 3500)/3500*5;
+			score = score * 10000;
 		}
-		if (distance > 7000)
+		else if (distance > 7000)
 		{
 			score = score * (distance-7000);
 		}
+		else if (distance > 3500)
+		{
+			factor = (distance - 3500)/3500*5;
+		}
+		
 		return score * (1+factor);
 	}
 	
@@ -329,10 +368,12 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.transit_walk);
 		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
 		double constant = modeParams.getConstant();
+		double utilDist = modeParams.getMonetaryDistanceRate();
+		double distance = travelTime /(0.9/1.41);
 		double factor = 0;
-		double weighting = ((travelTime/3600) *(travelTime/3600))*12.5; //Hebenstreit Parameter
+		double weighting = ((travelTime/3600) *(travelTime/3600))*12.5 ; //Hebenstreit Parameter
 		
-		score += (travelTime * utilTrav) * weighting + constant;
+		score += (travelTime * utilTrav) * weighting + constant + utilDist * distance;
 		
 		if (travelTime > 900)
 		{
@@ -426,17 +467,22 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		double weighting = (travelTime/3600) *(travelTime/3600)*2.5; //Hebenstreit: Parameter
 		
 		score += (travelTime * utilTrav)  + ((distance * utilDist)*weighting) + constant;
-		
-		if (distance > 7000)
+		if (distance > 20000)
 		{
-			factor = (distance - 7000)/1000/2;
+			score = score * 200000;
 		}
-		
-		if (distance > 12000)
+		if (distance > 15000)
 		{
-			score = score * (distance-12000);
+			score = score * 100000;
 		}
-		
+		else if (distance > 10000)
+		{
+			score = score * (distance-10000);
+		}
+		else if (distance > 5000)
+		{
+			factor = (distance - 5000)/1000/2;
+		}
 		score = score * (1+factor);
 		return score;
 	}
