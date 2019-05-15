@@ -159,7 +159,7 @@ public class BSRunner {
 				Facility fromFacF = ff.createActivityFacility( fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
 				Facility toFacF = ff.createActivityFacility( toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
 				sat = bsChoice.getStationsDuringSim(fromFacF,toFacF,
-						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext);
+						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext, att.maxBSTripLength);
 				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate , sat, bikeSharingContext );
 				List<PlanElement> actualPlanElem = planElementAndType.peList;
 				int bikeSharingType = planElementAndType.type;

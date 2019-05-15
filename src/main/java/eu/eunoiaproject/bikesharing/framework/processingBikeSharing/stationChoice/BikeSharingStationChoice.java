@@ -270,7 +270,8 @@ public class BikeSharingStationChoice
 			Person person,
 			double departureTime,
 			BasicPlanAgentImpl basicAgentDelegate,
-			BikeSharingContext bsc)
+			BikeSharingContext bsc,
+			double maxBsDistance)
 	/***************************************************************************/
 	{
 		BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
@@ -306,7 +307,7 @@ public class BikeSharingStationChoice
 		endEStation = chooseCloseEEndStation( toFac.getCoord() ,searchRadius,   maxSearchRadius, toFac.getId()   );
 		
 		startAndEndStation = calcBSStations(fromFac, toFac, startStation, endStation, 
-				startEStation, endEStation, departureTime, person, basicAgentDelegate, bsc);
+				startEStation, endEStation, departureTime, person, basicAgentDelegate, bsc, maxBsDistance);
 		if (startAndEndStation == null || startAndEndStation[0]== null || startAndEndStation[0].station == null 
 				|| startAndEndStation[1] == null || startAndEndStation[1].station == null)
 		{
@@ -697,7 +698,7 @@ public class BikeSharingStationChoice
 			StationAndType startStation, StationAndType endStation, 
 			StationAndType startEStation, StationAndType endEStation,
 			double departureTime, Person person, BasicPlanAgentImpl basicAgentDelegate,
-			BikeSharingContext bsc)
+			BikeSharingContext bsc, double maxBsDistance)
 	/***************************************************************************/
 	{
 		StationAndType [] access = new StationAndType[3];
@@ -733,12 +734,13 @@ public class BikeSharingStationChoice
 		//############################ full bs trip ###################################
 		if (startStation != null && endStation != null)
 		{
-			bsTravelTime = getFullBSTrip(fromFac, toFac, startStation.station, endStation.station, departureTime, person, bsc);
+			double distance = CoordUtils.calcEuclideanDistance(startStation.station.getCoord(), endStation.station.getCoord());
+			if (distance > maxBsDistance)
+			{
+				bsTravelTime = getFullBSTrip(fromFac, toFac, startStation.station, endStation.station, departureTime, person, bsc);
+			}
 		}
-		if (startEStation != null && endEStation != null)
-		{
-			bsETravelTime = getFullBSTrip (fromFac, toFac, startEStation.station, endEStation.station, departureTime, person, bsc);
-		}
+
 		double bsTime = Double.POSITIVE_INFINITY;
 		if (bsTravelTime < bsETravelTime)
 		{

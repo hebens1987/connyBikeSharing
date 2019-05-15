@@ -143,6 +143,7 @@ public class NoBikeAvailable
 		BSAtt att = BSAttribsAgent.getPersonAttributes( basicAgentDelegate.getPerson(), scenario);
 		double searchRadius =  att.searchRadius;
 		double maxSearchRadius =  att.maxSearchRadius;
+		double maxBsDistance = att.maxBSTripLength;
 		
 		StationAndType[] sat = new StationAndType[2];
 		if (nextAct.getCoord() == null)
@@ -154,7 +155,7 @@ public class NoBikeAvailable
 		ActivityFacilitiesFactory ff = scenario.getActivityFacilities().getFactory();
 		ActivityFacility actFac = ff.createActivityFacility( nextAct.getFacilityId(), nextAct.getCoord(), nextAct.getLinkId() ) ;
 		sat = bsChoice.getStationsDuringSim((Facility)station, actFac, searchRadius, 
-				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext);
+				maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext, maxBsDistance);
 		StationAndType newChoiceStart;
 		StationAndType newChoiceEnd;
 		

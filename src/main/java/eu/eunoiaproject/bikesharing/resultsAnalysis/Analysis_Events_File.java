@@ -127,9 +127,8 @@ public class Analysis_Events_File
 		for (int i = 0; i < zeilen.size(); i++)
 		{
 			
-			if (zeilen.get(i).contains("actend"))
-				if (zeilen.get(i).contains("person"))
-				{
+			if ((zeilen.get(i).contains("actend")) && (zeilen.get(i).contains("home")))
+			{
 					int indexStart = zeilen.get(i).indexOf("person=")+8;
 					int indexEnd = zeilen.get(i).indexOf("link=")-2;
 					String id = zeilen.get(i).substring(indexStart, indexEnd);
@@ -154,7 +153,7 @@ public class Analysis_Events_File
 						fullList.add(singlePersonList);
 						singlePersonList.clear();
 					}
-				}
+			}
 			
 		}
 		return fullList;
