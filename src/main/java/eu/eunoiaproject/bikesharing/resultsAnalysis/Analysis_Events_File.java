@@ -36,7 +36,7 @@ public class Analysis_Events_File
 		boolean isInitialAnalysis = true;
 		//TODO
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/v_13_Mai_2019_orig_5000_12500_fullBSPlans_TD(025_3600)/ITERS/it.0/";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/v_13_Mai_2019_fullBS_short/ITERS/it.0/";
 		String fileName = "0.events.xml";
 
 		List<String> zeilen = readFile(fileLocation2, fileName);
@@ -57,7 +57,7 @@ public class Analysis_Events_File
 				int reisezeitAB = 0;
 				int zeitDeparture = 0;
 				int zeitArrival = 0;
-				int zeitImFahrzeugAB = 0;
+				//int zeitImFahrzeugAB = 0;
 				String actTypeModiAndDuration = "";
 				String singleMode ="";
 				int zeitActend = 0;
@@ -126,7 +126,6 @@ public class Analysis_Events_File
 		HashMap<String, String> map = new HashMap<String,String>();
 		for (int i = 0; i < zeilen.size(); i++)
 		{
-			
 			if ((zeilen.get(i).contains("actend")) && (zeilen.get(i).contains("home")))
 			{
 					int indexStart = zeilen.get(i).indexOf("person=")+8;
@@ -151,7 +150,7 @@ public class Analysis_Events_File
 							}
 						}
 						fullList.add(singlePersonList);
-						singlePersonList.clear();
+						singlePersonList = new ArrayList<String>();
 					}
 			}
 			

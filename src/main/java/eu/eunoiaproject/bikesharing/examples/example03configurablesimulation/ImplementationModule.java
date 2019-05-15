@@ -77,7 +77,6 @@ class ImplementationModule extends AbstractModule {
 			    default:
 			    	throw new RuntimeException( "not implemented" ) ;
 		    }
-			 String[] stringArr = {"bike","walking","pt","car"};
 		    this.bind(SingleModeNetworksCache.class).asEagerSingleton();
 		
 			this.addRoutingModuleBinding(EBConstants.MODE ).to(EBikeSharingRoutingModule.class);
@@ -122,6 +121,7 @@ class ImplementationModule extends AbstractModule {
 			this.addRoutingModuleBinding(EBConstants.BS_BIKE_FF).toProvider(new NetworkRouting(TransportMode.bike));
 
 			this.addPlanStrategyBinding("ChangeTripModeDistance").toProvider(ChangeTripModeCD.class);
+			this.bindMobsim().toProvider(EBikeSharingQsimFactory.class);
 			
 			//this.addPlanStrategyBinding("ChangeTripModeDistance").to((Class<? extends PlanStrategy>) ChangeTripModeCD.class);
 		 } 
