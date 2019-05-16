@@ -186,8 +186,8 @@ public class Analysis_Plans_File
 		boolean isInitialAnalysis = true;
 		//TODO
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/v_13_Mai_2019_fullBS_searchRadius+200/ITERS/it.0/";
-		String fileName = "0.plans.xml";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/v_13_Mai_2019_base/";
+		String fileName = "output_plans.xml";
 		
 		//String fileLocation2 = "H:/otherValues/";
 		//String fileName = "output_plans.xml";

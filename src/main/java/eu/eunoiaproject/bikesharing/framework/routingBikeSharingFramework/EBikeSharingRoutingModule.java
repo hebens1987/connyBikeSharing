@@ -169,6 +169,7 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 	{
 		List<PlanElement> trip = new ArrayList<PlanElement>();
 
+		person.getSelectedPlan().setType("eBikeSharing");
 	
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();

@@ -102,7 +102,7 @@ public class TakingReturningMethodology {
 				{
 					log.info("Agent with ID:;" + personId + ";was waiting at Station;" + station.getId() + ";and got a bike");
 				}
-				log.info("Agent with ID:;" + personId + 
+				log.info("(" + now + "); Agent with ID:;" + personId + 
 						";took the C-Bike at Station:;" + station.getId() + ";(Bike = " + bike.getBikeId() + ")" );
 				BikeAgent newAgC = new BikeAgent();
 				newAgC.setBike(bike);
@@ -339,8 +339,8 @@ public class TakingReturningMethodology {
 					
 					if (returnCompletedC)
 					{
-						log.info("Agent with ID: ;" + personId + 
-								";returned a C-Bike  at Station:;" + station.getId() + ";" + now);
+						log.info("(" + now + "); Agent with ID: ;" + personId + 
+								";returned the C-Bike at Station:;" + station.getId() + ";");
 						List<WaitingData> statList = station.getWaitingToReturnBike();
 						if (statList != null)
 						for (int j = 0; j < statList.size(); j++)

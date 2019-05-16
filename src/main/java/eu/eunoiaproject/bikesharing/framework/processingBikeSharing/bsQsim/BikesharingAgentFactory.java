@@ -37,33 +37,12 @@ import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 public class BikesharingAgentFactory implements AgentFactory{
 	private final BikeSharingContext bikeSharingContext;
 
-	BikesharingAgentFactory( BikeSharingContext bikeSharingContext) 
+	public BikesharingAgentFactory( BikeSharingContext bikeSharingContext) 
 	{this.bikeSharingContext = bikeSharingContext;}
 
 	@Override
 	public MobsimDriverAgent createMobsimAgentFromPerson(final Person p) 
 	{	
-		boolean chosenBs = false;
-		for (int i = 0; i < p.getSelectedPlan().getPlanElements().size(); i++)
-		{
-			if (p.getSelectedPlan().getPlanElements().get(i) instanceof Leg)
-			{
-				Leg leg = (Leg)p.getSelectedPlan().getPlanElements().get(i);
-				if (leg.getMode().equals("bs"))
-				{
-					p.getSelectedPlan().setType("eBikeSharing");
-					chosenBs = true;
-					break;
-				}
-				else if (leg.getMode().equals("eBikeSharing"))
-				{
-					p.getSelectedPlan().setType("eBikeSharing");
-					chosenBs = true;
-					break;
-				}
-			}
-		}
-		if (!(chosenBs)) {p.getSelectedPlan().setType("other");}
 		return new BikesharingPersonDriverAgentImpl(p.getSelectedPlan(), null, bikeSharingContext );
 	}
 }

@@ -26,9 +26,11 @@ import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Scenario;
 
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability.Probability;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacilities;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.EBikeSharingConfigGroup;
+import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.StationAndType;
 
 /**
  * 
@@ -126,55 +128,62 @@ public class CalcProbability
 
 	/***************************************************************************/
 	public Probability getProbability (
-			final Coord facilityStart, 
-			final Coord facilityEnd, 
-			double maxSearchRadiusStart,
-			double maxSearchRadiusEnd,
+			StationAndType[] sat,
+			double searchRadius,
 			BikeSharingFacilities c_bs,
 			BikeSharingFacilities e_bs,
 			Scenario scenario)
 	/***************************************************************************/
 	{
-		final EBikeSharingConfigGroup ebConfig = (EBikeSharingConfigGroup)scenario.getConfig().getModule(EBikeSharingConfigGroup.GROUP_NAME);
-		String alphaS = ebConfig.getValue("probabilityTake");
-		String gammaS = ebConfig.getValue("probabilityReturn");
-		if (alphaS == null) 
-		{ 
-			System.out.println("No alphaS Value (probabilityTake) for probability Calculation - setting it to default 0.33");
-			alphaS = "0.33";
-		}
-		
-		if (gammaS == null) 
-		{ 
-			System.out.println("No gammaS Value (probabilityReturn)for Probability Calculation - setting it to default 0.33");
-			alphaS = "0.33";
-		}
-		
-		double alpha = Double.parseDouble(alphaS);
-		double gamma = Double.parseDouble(gammaS);
-		
-		//int test = 0;
 		Probability outcome = new Probability();
-		
-		ProbabilityChoice start = probabilityGetStationOrig(facilityStart,
-				maxSearchRadiusStart,
-				false,
-				c_bs,e_bs,
-				alpha,
-				gamma);
-		ProbabilityChoice end = probabilityGetStationOrig(facilityEnd,
-				maxSearchRadiusEnd,
-				false,
-				c_bs,e_bs,
-				alpha,
-				gamma);
-		
-		outcome.endStationC = end.stationC;
-		outcome.endStationE = end.stationE;
-		outcome.startStationC = start.stationC;
-		outcome.startStationE = start.stationE;
-		outcome.probabilityC = start.probabilityC * end.probabilityC; 
-		outcome.probabilityE = start.probabilityE * end.probabilityE;
+		if (sat != null && sat[0]!= null && sat[1]!= null)
+		{		
+			final EBikeSharingConfigGroup ebConfig = (EBikeSharingConfigGroup)scenario.getConfig().getModule(EBikeSharingConfigGroup.GROUP_NAME);
+			String alphaS = ebConfig.getValue("probabilityTake");
+			String gammaS = ebConfig.getValue("probabilityReturn");
+			if (alphaS == null) 
+			{ 
+				System.out.println("No alphaS Value (probabilityTake) for probability Calculation - setting it to default 0.33");
+				alphaS = "0.33";
+			}
+			
+			if (gammaS == null) 
+			{ 
+				System.out.println("No gammaS Value (probabilityReturn)for Probability Calculation - setting it to default 0.33");
+				alphaS = "0.33";
+			}
+			
+			double alpha = Double.parseDouble(alphaS);
+			double gamma = Double.parseDouble(gammaS);
+			
+			ProbabilityChoice start = probabilityGetStationOrig(sat[0].station.getCoord(),
+					searchRadius,
+					false,
+					c_bs,e_bs,
+					alpha,
+					gamma);
+			ProbabilityChoice end = probabilityGetStationOrig(sat[1].station.getCoord(),
+					searchRadius,
+					false,
+					c_bs,e_bs,
+					alpha,
+					gamma);
+			
+			outcome.endStationC = end.stationC;
+			outcome.endStationE = end.stationE;
+			outcome.startStationC = start.stationC;
+			outcome.startStationE = start.stationE;
+			outcome.probabilityC = start.probabilityC * end.probabilityC; 
+			outcome.probabilityE = start.probabilityE * end.probabilityE;
+		}
+		else{
+			outcome.probabilityC = 0;
+			outcome.endStationC = null;
+			outcome.endStationE = null;
+			outcome.probabilityE = 0;
+			outcome.startStationC = null;
+			outcome.startStationE = null;
+		}
 		return outcome;
 		
 		
@@ -193,7 +202,6 @@ public class CalcProbability
 			double gamma) 
 	/***************************************************************************/
 	{
-		
 		double boxesE = 0;
 		double boxesC = 0;
 		
@@ -221,13 +229,13 @@ public class CalcProbability
 						facility.getX(),
 						facility.getY(),
 						maxSearchRadius);
-		if (stationsInRadiusC != null)
+		if (stationsInRadiusC.size() > 0)
 		{
 			bsFacC = bs.getCurrentQuadTree().getClosest(
 				facility.getX(),
 				facility.getY());
 		}
-		if (stationsInRadiusE != null)
+		if (stationsInRadiusE.size() > 0)
 		{
 			bsFacE = e_bs.getCurrentQuadTree().getClosest(
 				facility.getX(),

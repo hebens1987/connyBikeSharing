@@ -154,7 +154,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		//		this.basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1);//Hebenstreit
 		String actPlanMode = this.basicAgentDelegate.getCurrentPlan().getType();
 
-
 		final PlanElement currentPlanElement = this.basicAgentDelegate.getCurrentPlanElement();
 		if ( ! ( currentPlanElement instanceof Activity ) ) {
 			log.warn("current plan element of agent=" + this.getId() + " is not instance of activity; following cast will fail.  Full plan =") ;
@@ -303,7 +302,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 		
 		else if (actPlanMode.equals(EBConstants.MODE))
 		{		
-			
 			//thisElement is an Activity
 			PlanElement thisElem = this.basicAgentDelegate.getCurrentPlanElement();
 	
@@ -336,8 +334,8 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					}
 				}
 			}
-	
-			if (now >= 900)
+		}
+		if (now >= 900)
 			{
 				TakingReturningMethodology tr = new TakingReturningMethodology();
 				
@@ -377,7 +375,6 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 				}
 			}
 			runner.planComparison(basicAgentDelegate);
-		}
 		
 		if (!this.getState().equals(State.ABORT))
 		{

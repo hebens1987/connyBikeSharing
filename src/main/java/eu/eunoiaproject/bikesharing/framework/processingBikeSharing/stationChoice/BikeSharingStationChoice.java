@@ -729,7 +729,7 @@ public class BikeSharingStationChoice
 		
 		//List<StationAndType[]> list = new ArrayList<StationAndType[]>();
 
-		double fullPtTravelTime = getFullPtTrip(fromFac, toFac, departureTime, person, basicAgentDelegate);
+		double fullPtTravelTimePlus = getFullPtTrip(fromFac, toFac, departureTime, person, basicAgentDelegate)*1.25;//TODO Hebenstreit
 		
 		//############################ full bs trip ###################################
 		if (startStation != null && endStation != null)
@@ -762,7 +762,7 @@ public class BikeSharingStationChoice
 		{
 			if (bsTime <= 60*60)
 			{
-				if (bsTime <= (fullPtTravelTime*1.75))
+				if (bsTime <= (fullPtTravelTimePlus*1.25))
 				{
 					duration = full[2].tripDur;
 					toReturn[0] = full[0];
@@ -772,7 +772,7 @@ public class BikeSharingStationChoice
 					return toReturn;
 				}
 			}
-			else if (bsTime <= fullPtTravelTime*1.25)
+			else if (bsTime <= fullPtTravelTimePlus)
 			{
 				duration = full[2].tripDur;
 				toReturn[0] = full[0];
@@ -802,7 +802,7 @@ public class BikeSharingStationChoice
 			access[2].tripDur= accC.tripDur;
 
 		}
-		else if (accE.tripDur != Double.POSITIVE_INFINITY)
+		else if (accE.tripDur < Double.POSITIVE_INFINITY)
 		{
 			accessTime = accE.tripDur;
 			access[0] = startEStation;
@@ -810,9 +810,9 @@ public class BikeSharingStationChoice
 			access[2] = new StationAndType();
 			access[2].tripDur= accC.tripDur;
 		}
-		if (accessTime != Double.POSITIVE_INFINITY)
+		if (accessTime < Double.POSITIVE_INFINITY)
 		{
-			if (accessTime <= (fullPtTravelTime*1.5))
+			if (accessTime <= (fullPtTravelTimePlus*1.25))
 			{
 				duration = access[2].tripDur;
 				toReturn[0] = access[0];
@@ -844,7 +844,7 @@ public class BikeSharingStationChoice
 				egress[2].tripDur = egrC.tripDur;
 			}
 		}
-		else if (egrE.tripDur != Double.POSITIVE_INFINITY)
+		else if (egrE.tripDur < Double.POSITIVE_INFINITY)
 		{
 			if (egrE.tripDur < toReturn[2].tripDur)
 			{
@@ -856,9 +856,9 @@ public class BikeSharingStationChoice
 			}
 		}
 		
-		if (egressTime != Double.POSITIVE_INFINITY)
+		if (egressTime < Double.POSITIVE_INFINITY)
 		{
-			if (egressTime <= (fullPtTravelTime))
+			if (egressTime <= (fullPtTravelTimePlus))
 			{
 				if (egress[2].tripDur < toReturn[2].tripDur)
 				{
@@ -867,6 +867,10 @@ public class BikeSharingStationChoice
 					toReturn[1] = egress[1];
 					toReturn[2] = new StationAndType();
 					toReturn[2].tripDur = duration;
+					return toReturn;
+				}
+				else
+				{
 					return toReturn;
 				}
 			}

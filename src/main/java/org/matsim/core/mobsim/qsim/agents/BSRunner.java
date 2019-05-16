@@ -3,14 +3,12 @@ package org.matsim.core.mobsim.qsim.agents;
 import eu.eunoiaproject.bikesharing.framework.EBConstants;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BSTypeAndPlanElements;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikeSharingContext;
-import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.EBikeSharingQsimFactory;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikesharingAgentFactory;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.TakingReturningMethodology;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.BikeSharingStationChoice;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CalcProbability.Probability;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.stationChoice.CreateSubtrips;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_BikeTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_WalkTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_WalkTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BSAtt;
@@ -22,6 +20,7 @@ import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacil
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BikeSharingFacility;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.EBikeSharingConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.StationAndType;
+import eu.eunoiaproject.freeFloatingBS.FFDummyFacilityImpl;
 
 import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.Coord;
@@ -29,6 +28,7 @@ import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
+import org.matsim.api.core.v01.network.Network;
 import org.matsim.api.core.v01.network.Node;
 import org.matsim.api.core.v01.population.*;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
@@ -41,6 +41,8 @@ import org.matsim.core.population.routes.GenericRouteImpl;
 import org.matsim.core.population.routes.LinkNetworkRouteImpl;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.population.routes.RouteFactoryImpl;
+import org.matsim.core.router.NetworkRouting;
+import org.matsim.core.router.NetworkRoutingModule;
 import org.matsim.core.router.RoutingModule;
 import org.matsim.core.router.util.LeastCostPathCalculator;
 import org.matsim.core.router.util.LeastCostPathCalculator.Path;
@@ -48,6 +50,7 @@ import org.matsim.core.router.util.TravelDisutility;
 import org.matsim.core.router.util.TravelTime;
 import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.facilities.ActivityFacilitiesFactory;
+import org.matsim.facilities.ActivityFacility;
 import org.matsim.facilities.Facility;
 import org.matsim.pt.router.TransitRouter;
 import org.matsim.pt.router.TransitRouterImpl;
@@ -104,8 +107,8 @@ public class BSRunner {
 		TakingReturningMethodology trMet = new TakingReturningMethodology();
 		planComparison(basicAgentDelegate);
 		
-		if (!(((Activity)thisElem).getType().contains("interaction") || 
-				(((Activity)thisElem).getType().equals(EBConstants.WAIT))))
+		if ((!(((Activity)thisElem).getType().contains("interaction")))&&
+				(!(((Activity)thisElem).getType().equals(EBConstants.WAIT))))
 			//if (!(pAct0.getType().contains(interaction))&&!wait) 
 			//the currentActivity has no "interaction" and not "wait" so check Athe initial plan
 		{
@@ -163,6 +166,7 @@ public class BSRunner {
 				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate , sat, bikeSharingContext );
 				List<PlanElement> actualPlanElem = planElementAndType.peList;
 				int bikeSharingType = planElementAndType.type;
+				planComparison(basicAgentDelegate);
 				basicAgentDelegate.getCurrentPlan().getPlanElements().addAll( currentPlanElementIndex +1,actualPlanElem );
 				//Hier soll der bs-plan von Act (ohne interaction) zu Act(ohne interaction) auf gültigkeit geprüft werden!
 	
@@ -193,31 +197,12 @@ public class BSRunner {
 				planComparison(basicAgentDelegate);		
 				CalcProbability cp = new CalcProbability(scenario);
 				//FULL BS-Trip
-				double searchLength1 = 0;
-				double searchLength2 = 0;
-				
-				if (bikeSharingType == 0)
-				{
-					searchLength1 = att.maxSearchRadius;
-					searchLength2 = att.maxSearchRadius;
-				}
-				if (bikeSharingType == 1)
-				{
-					searchLength1 = att.maxSearchRadius;
-					searchLength2 = att.ptSearchRadius;
-				}
-				
-				if (bikeSharingType == 2)
-				{
-					searchLength1 = att.ptSearchRadius;
-					searchLength2 = att.maxSearchRadius;
-					
-				}
-				
+	
 				boolean itIsAnEStation = false;
 				final EBikeSharingConfigGroup ebConfig = (EBikeSharingConfigGroup)scenario.getConfig().getModule(EBikeSharingConfigGroup.GROUP_NAME);
 
-				Probability toUse = cp.getProbability(fromFac.getCoord(), toFac.getCoord(), searchLength1, searchLength2, c, e, scenario);
+				Probability toUse = cp.getProbability(sat, att.maxSearchRadius, c, e, scenario);
+				
 				if (!(Boolean.parseBoolean(ebConfig.getValue("useProbability")))) //if false
 				{
 					if (toUse.startStationC != null && toUse.endStationC != null)
@@ -242,14 +227,12 @@ public class BSRunner {
 				planComparison(basicAgentDelegate);
 				if (itIsAnEStation)
 				{
-					handleProbabilityMeasures(toUse.probabilityE, actIndex, basicAgentDelegate.getCurrentPlan().getPlanElements(), fromFac, toFac, toUse.startStationE, toUse.endStationE, scenario, now,
-								basicAgentDelegate, bikeSharingType );
+					handleProbabilityMeasures(toUse.probabilityE, actIndex, fromFac, toFac, scenario, now, basicAgentDelegate, bikeSharingContext);
 				}
 					
 				else
 				{
-					handleProbabilityMeasures(toUse.probabilityC, actIndex, basicAgentDelegate.getCurrentPlan().getPlanElements(), fromFac, toFac, toUse.startStationC, toUse.endStationC, scenario, now,
-								basicAgentDelegate, bikeSharingType );
+					handleProbabilityMeasures(toUse.probabilityC, actIndex, fromFac, toFac, scenario, now, basicAgentDelegate, bikeSharingContext);
 				}
 				//TODO: Hebenstreit - hier wird nur nach typischen BS-Stationen gesucht - also Start- und End-Station --> nicht nach ptStations
 				planComparison(basicAgentDelegate);
@@ -288,13 +271,10 @@ public class BSRunner {
 				
 				nextAct =basicAgentDelegate.getNextActivity();
 				
-				if (thisAct.getType().contains(EBConstants.INTERACTION_TYPE_BS)) 
+				if (thisAct.getType().contains(EBConstants.INTERACTION_TYPE_BS+"_r")) 
 					//2nd BS-Walk, as the current activity is eb_interaction and the next Leg is bs_walk
 					//this means the bike should be returned
 					{
-		
-						if (leg.getMode().equals(EBConstants.BS_WALK))
-						{
 							boolean successful = trMet.returningABike( basicAgentDelegate, bsFac, thisAct, nextAct, now,
 								  agentsC, agentsE, bikeSharingContext );
 							if (successful)
@@ -315,7 +295,6 @@ public class BSRunner {
 								((Leg) nextElem).setDepartureTime(now);
 								basicAgentDelegate.getNextActivity().setStartTime(now + ((Leg) nextElem).getTravelTime() );
 							}
-						}
 					}
 				
 				if (leg.getMode().equals(TransportMode.bike))
@@ -821,7 +800,8 @@ public class BSRunner {
 		  double departureTime,
 		  Scenario scenario,
 		  BasicPlanAgentImpl basicAgentDelegate,
-		  StationAndType[] startAndEnd, BikeSharingContext bikeSharingContext )  //bikeSharingOptionSelection -1 --> full pt Trip
+		  StationAndType[] startAndEnd, 
+		  BikeSharingContext bikeSharingContext )  //bikeSharingOptionSelection -1 --> full pt Trip
 	/***************************************************************************/
 	{
 		BSTypeAndPlanElements bsReturn = new BSTypeAndPlanElements();
@@ -1057,205 +1037,41 @@ public class BSRunner {
 	private void handleProbabilityMeasures(
 		  double probabilityValue,
 		  int actIndex,
-		  List<PlanElement> pEList,
 		  Activity thisAct,
 		  Activity nextAct,
-		  BikeSharingFacility startStation,
-		  BikeSharingFacility endStation,
 		  Scenario scenario,
 		  double now,
 		  BasicPlanAgentImpl basicAgentDelegate,
-		  int routingType )
+		  BikeSharingContext bsCont)
 	/***************************************************************************/
 	{
 		double random = Math.random();
-
-		Activity act2 = null;
-		while (actIndex+1 < basicAgentDelegate.getCurrentPlan().getPlanElements().size())
+		if (random > probabilityValue)
 		{
-			PlanElement pe = pEList.get(actIndex+1);
-			if (pe instanceof Activity)
+			int i = actIndex + 1;
+			while (basicAgentDelegate.getCurrentPlan().getPlanElements().get(i) != nextAct)
 			{
-				Activity peAct = (Activity) pe;
-				if (!(peAct.getType().contains("interaction")))
-				{
-					act2 = peAct;
-					break;
-				}
+				basicAgentDelegate.getCurrentPlan().getPlanElements().remove(i);
 			}
-			pEList.remove(actIndex+1);
-		}
-		
-		if ((random > probabilityValue)|| (routingType == 3)) //E und C probability!!!
-		{
-			//TODO: NO BS --> ChangeMode to Full-PT-Trip
-						
-			List<PlanElement> ptInsertion = createPTLegs(thisAct.getCoord(), nextAct.getCoord(), 
+			
+			List<PlanElement> insertion = new ArrayList<PlanElement>();
+			insertion = createPTLegs(thisAct.getCoord(), nextAct.getCoord(), 
 					now, basicAgentDelegate.getPerson(), scenario, thisAct.getLinkId(), nextAct.getLinkId(), new TransitAgentImpl( basicAgentDelegate));
-			
-			Leg legInsteadOfPt = null;
-			Activity some = null;
-			if (ptInsertion == null)
+			if (insertion == null)
 			{
-				Link first = scenario.getNetwork().getLinks().get(thisAct.getLinkId());
-				Link second = scenario.getNetwork().getLinks().get(nextAct.getLinkId());
-				legInsteadOfPt = (Leg)createLeg(first, second, EBConstants.BS_WALK, now, basicAgentDelegate, bikeSharingContext );
-				pEList.add(actIndex+1, legInsteadOfPt);
-				nextAct.setStartTime(now + legInsteadOfPt.getTravelTime());
-				//if (nextAct.getEndTime() < nextAct.getStartTime() && (!nextAct.getType().equals("home")))
-				//{
-				//	nextAct.setEndTime(nextAct.getStartTime() + 60*5);
-				//}//Hebenstreit - Achtung
+				BikesharingAgentFactory pf = new BikesharingAgentFactory(bsCont);
+				RouteFactoryImpl rf= new RouteFactoryImpl();
+				
+				RoutingModule w = new NetworkRoutingModule(
+						"walking", scenario.getPopulation().getFactory(), 
+						scenario.getNetwork(), bsCont.getWalkPathCalculator(), rf);
+
+				Facility from = new FFDummyFacilityImpl(null, thisAct.getCoord(), thisAct.getLinkId());
+				Facility to= new FFDummyFacilityImpl(null, nextAct.getCoord(), thisAct.getLinkId());
+
+				insertion = (List<PlanElement>) w.calcRoute(from, to, now, basicAgentDelegate.getPerson());
 			}
-			
-			else
-			{
-				pEList.addAll(actIndex+1, ptInsertion);
-				some = (Activity)pEList.get(actIndex+1+ptInsertion.size());
-				Leg last = (Leg) pEList.get(actIndex+ptInsertion.size());
-				some.setStartTime(last.getDepartureTime()+last.getTravelTime());
-				//if (some.getEndTime() < some.getStartTime()&& (!nextAct.getType().equals("home"))) //Hebenstreit - Achtung
-				//{
-				//	some.setEndTime(nextAct.getStartTime() + 60*5);
-				//}
-			}
+			basicAgentDelegate.getCurrentPlan().getPlanElements().addAll(actIndex+1, insertion);
 		}
-		
-		else
-		{
-			//Activity act1 = (Activity)pEList.get(actIndex);
-			List<PlanElement> act1_int1 = null;
-			Activity interact1 = (Activity) CreateSubtrips.createInteractionBS(startStation,"_t", EBConstants.TIME_TAKE);
-			List<PlanElement> int1_int2 = null;
-			Activity interact2 = (Activity) CreateSubtrips.createInteractionBS(endStation,"_r", EBConstants.TIME_RETURN);
-			List<PlanElement>  int2_act2 = null;
-			
-			Link int1 = scenario.getNetwork().getLinks().get(interact1.getLinkId());
-			if (int1 == null)
-			{
-				System.out.println("Seems that the (Start)Link with id: " + interact1.getLinkId() + "  is not part of the network!");
-			}
-			Link int2 = scenario.getNetwork().getLinks().get(interact2.getLinkId());
-			if (int2 == null)
-			{
-				System.out.println("Seems that the (End)Link with id: " + interact2.getLinkId() + "  is not part of the network!");
-			}
-			
-			if (act2 == null)
-			{
-				System.out.println("Hebenstreit: Warum!?");
-			}
-			Link endLink = scenario.getNetwork().getLinks().get(act2.getLinkId());
-			Link startLink = scenario.getNetwork().getLinks().get(thisAct.getLinkId());
-
-			//-------- type 0 = Full BS-Trip
-			//walk from Act1 to Interact1
-			//bs from Interact1 to Interact2
-			//walk from Interact2 to Act2
-			if (routingType == 0)
-			{
-				act1_int1 = peToPeList(createLeg(startLink, int1, EBConstants.BS_WALK, now, basicAgentDelegate, bikeSharingContext ) );
-				((Leg)act1_int1.get(0)).setTravelTime(((Leg)act1_int1.get(0)).getTravelTime());
-				((Leg)act1_int1.get(0)).getRoute().setTravelTime(((Leg)act1_int1.get(0)).getTravelTime());
-				((Leg)act1_int1.get(0)).setDepartureTime(now);
-				interact1.setStartTime(now+((Leg)act1_int1.get(0)).getTravelTime());
-				interact1.setEndTime(interact1.getStartTime()+EBConstants.TIME_TAKE);
-				if (startStation.getStationType().equals("e"))
-				{
-					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				else
-				{
-					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				
-				((Leg)int1_int2.get(0)).setDepartureTime(interact1.getEndTime());
-				((Leg)int1_int2.get(0)).setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
-				((Leg)int1_int2.get(0)).getRoute().setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
-				interact2.setStartTime(((Leg)int1_int2.get(0)).getDepartureTime()+((Leg)int1_int2.get(0)).getTravelTime());
-				interact2.setEndTime(interact2.getStartTime()+EBConstants.TIME_RETURN);
-				int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				((Leg)int2_act2.get(0)).setDepartureTime(interact2.getEndTime());
-				((Leg)int2_act2.get(0)).setTravelTime(((Leg)int2_act2.get(0)).getTravelTime());
-				((Leg)int2_act2.get(0)).getRoute().setTravelTime(((Leg)int2_act2.get(0)).getTravelTime());
-			}
-			
-			//-------- type 1 = First BS - then PT
-			// walk from Act1 to Interact 1
-			// bs from Interact1 to Interact2
-			// pt from Interact2 to Act2
-			else if (routingType == 1)
-			{
-				act1_int1 = peToPeList(createLeg(startLink, int1, EBConstants.BS_WALK, now, basicAgentDelegate, bikeSharingContext ) );
-				((Leg)act1_int1.get(0)).setDepartureTime(now);
-				interact1.setStartTime(now+((Leg)act1_int1.get(0)).getTravelTime());
-				interact1.setEndTime(interact1.getStartTime()+EBConstants.TIME_TAKE);
-				if (startStation.getStationType().equals("e"))
-				{
-					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				else
-				{
-					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				((Leg)int1_int2.get(0)).setDepartureTime(interact1.getEndTime());
-				((Leg)int1_int2.get(0)).setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
-				((Leg)int1_int2.get(0)).getRoute().setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
-				interact2.setStartTime(((Leg)int1_int2.get(0)).getDepartureTime()+((Leg)int1_int2.get(0)).getTravelTime());
-				interact2.setEndTime(interact2.getStartTime()+EBConstants.TIME_RETURN);
-				int2_act2 = createPTLegs (int2.getCoord(), act2.getCoord(), now, basicAgentDelegate.getPerson(), 
-						scenario, int2.getId(), act2.getLinkId(), new TransitAgentImpl( basicAgentDelegate));
-				if (int2_act2 == null) 
-				{
-					int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				((Leg)int2_act2.get(0)).setDepartureTime(interact2.getEndTime());
-			}
-			
-			
-			//-------- type 2 = First PT - then BS
-			// pt from Act1 to Interact 1
-			// bs from Interact1 to Interact2
-			// walk from Interact2 to Act2
-			else if (routingType == 2)
-			{
-				act1_int1 = createPTLegs (startLink.getCoord(), int1.getCoord(), now, basicAgentDelegate.getPerson(), 
-						scenario, startLink.getId(), int1.getId(), new TransitAgentImpl( basicAgentDelegate));
-				if (act1_int1 == null) 
-				{
-					act1_int1 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				((Leg)act1_int1.get(0)).setDepartureTime(now);
-				interact1.setStartTime(now+((Leg)act1_int1.get(act1_int1.size()-1)).getDepartureTime() + ((Leg)act1_int1.get(act1_int1.size()-1)).getTravelTime());
-				interact1.setEndTime(interact1.getStartTime()+EBConstants.TIME_TAKE);
-				if (startStation.getStationType().equals("e"))
-				{
-					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_E_BIKE, interact1.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				else 
-				{
-					int1_int2 = peToPeList(createLeg(int1, int2, EBConstants.BS_BIKE, interact1.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-				}
-				
-				((Leg)int1_int2.get(0)).setDepartureTime(interact1.getEndTime());
-				((Leg)int1_int2.get(0)).setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
-				((Leg)int1_int2.get(0)).getRoute().setTravelTime(((Leg)int1_int2.get(0)).getTravelTime());
-				interact2.setStartTime(((Leg)int1_int2.get(0)).getDepartureTime()+((Leg)int1_int2.get(0)).getTravelTime());
-				interact2.setEndTime(interact2.getStartTime()+EBConstants.TIME_RETURN);
-				int2_act2 = peToPeList(createLeg(int2, endLink, EBConstants.BS_WALK, interact2.getEndTime(), basicAgentDelegate, bikeSharingContext ) );
-			}
-			
-			//add all Elements
-			List <PlanElement> trip = new ArrayList<PlanElement>();
-			trip.addAll(act1_int1);
-			trip.add(interact1);
-			trip.addAll(int1_int2);
-			trip.add(interact2);
-			trip.addAll(int2_act2);
-
-			pEList.addAll(actIndex+1, trip);
-			planComparison(basicAgentDelegate);
-			//System.out.println("Test");
-			}
 	}
 }
