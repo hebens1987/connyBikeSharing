@@ -35,6 +35,8 @@ public class StationAndType
 	public boolean type;
 	public boolean usedAsPtChange = false;
 	public double tripDur = 0;
+	public int bikeSharingType;
+	//bikeSharingType --> (0)bs, (1)bs-pt, (2)pt-bs, (3)no bs at all
 
 	public StationAndType()
 	{}

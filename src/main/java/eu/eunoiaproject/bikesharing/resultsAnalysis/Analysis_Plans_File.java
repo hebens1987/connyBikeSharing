@@ -186,8 +186,8 @@ public class Analysis_Plans_File
 		boolean isInitialAnalysis = true;
 		//TODO
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/v_13_Mai_2019_base/";
-		String fileName = "output_plans.xml";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/21_05_2019_initial(600_7000)/ITERS/it.0/";
+		String fileName = "0.plans.xml";
 		
 		//String fileLocation2 = "H:/otherValues/";
 		//String fileName = "output_plans.xml";
@@ -279,6 +279,9 @@ public class Analysis_Plans_File
 			}
 			writerLinkStats.close();
 			
+			PrintWriter pwFac = new PrintWriter (fileLocation2 + "/bs_stations.txt");
+			fromToBsAnalysis(actPlans,pwFac);
+			pwFac.close();
 			
 			Graphics.writeGraphic(arrDur, 
 					25, 10800, "duration", 
@@ -300,6 +303,27 @@ public class Analysis_Plans_File
 		}
 		
 		System.out.println("<-----finished------>");
+	}
+	
+	public static void fromToBsAnalysis (List<String> actPlans, PrintWriter pw)
+	{
+		for (int i = 0; i < actPlans.size(); i++)
+		{
+			if (actPlans.get(i).contains("eb_interaction_t"))
+			{
+				int indexA = actPlans.get(i).indexOf("facility=")+10;
+				int indexB = actPlans.get(i).indexOf("x=")-2;
+				String substring = actPlans.get(i).substring(indexA, indexB);
+				pw.print(substring + ";");
+			}
+			if (actPlans.get(i).contains("eb_interaction_r"))
+			{
+				int indexA = actPlans.get(i).indexOf("facility=")+10;
+				int indexB = actPlans.get(i).indexOf("x=")-2;
+				String substring = actPlans.get(i).substring(indexA, indexB);
+				pw.println(substring);
+			}
+		}
 	}
 	
 	public static void livingPopulation (List<String> zeilenOrig, List<Geometry> geoList)

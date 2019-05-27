@@ -316,7 +316,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 					{
 						Leg next = (Leg) nextElem;
 						next.setDepartureTime(now);
-
+						
 						runner.bsRunner(thisElem, nextElem, now, this.basicAgentDelegate,
 							  agentsC, agentsE, bsFac, bSharingVehicles, bikeSharingContext );
 						

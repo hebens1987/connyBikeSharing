@@ -33,10 +33,13 @@ import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.ControlerConfigGroup;
+import org.matsim.core.config.groups.ControlerConfigGroup.RoutingAlgorithmType;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.OutputDirectoryLogging;
 import org.matsim.core.gbl.MatsimRandom;
+import org.matsim.core.router.util.DijkstraFactory;
+import org.matsim.core.router.util.LeastCostPathCalculatorFactory;
 import org.matsim.core.utils.io.UncheckedIOException;
 import org.matsim.pt.transitSchedule.api.TransitScheduleReader;
 import org.matsim.utils.objectattributes.ObjectAttributesXmlReader;
@@ -64,6 +67,9 @@ public class RunConfigurableBikeSharingSimulation {
 		final Config config = prepareConfig( args, InputCase.connyInputDiss );
 		final Scenario sc = prepareScenario( config );
 		final Controler controler = prepareControler( sc );
+		RoutingAlgorithmType rat = config.controler().getRoutingAlgorithmType();
+        //if (config.controler().getRoutingAlgorithmType().equals(ControlerConfigGroup.RoutingAlgorithmType.Dijkstra)) {
+        //    bind(LeastCostPathCalculatorFactory.class).to(DijkstraFactory.class);
 		controler.run();
 	}
 

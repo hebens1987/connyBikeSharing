@@ -48,11 +48,11 @@ public class TUG_BikeTravelTime implements TravelTime
 	@Inject
 	@Singleton
 	public
-	TUG_BikeTravelTime(BicycleConfigGroup bikeConfigGroup)
+	TUG_BikeTravelTime(BicycleConfigGroup config)
 	/***************************************************************************/
 	{	 
 		//IKK_ObjectAttributesSingleton bts = new IKK_ObjectAttributesSingleton(bikeConfigGroup);
-		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(bikeConfigGroup, false);
+		IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(config, false);
 		bikeLinkAttributes = bts.getBikeLinkAttributes();
 		personAttributes = bts.getPersonAttributes();
 	}

@@ -160,6 +160,7 @@ public class BikeSharingStationChoice
 				distanceCEnd = CoordUtils.calcEuclideanDistance(endStation.station.getCoord(), fromFac);
 				distanceEStart = CoordUtils.calcEuclideanDistance(startEStation.station.getCoord(), fromFac);
 				distanceEEnd = CoordUtils.calcEuclideanDistance(endEStation.station.getCoord(), fromFac);
+				startAndEndStation[0].bikeSharingType = 0;
 				
 				if (isConvBikeUsed(distanceCStart, distanceCEnd, distanceEStart, distanceEEnd))
 				{
@@ -171,7 +172,7 @@ public class BikeSharingStationChoice
 					}
 					else 
 					{
-						startAndEndStation = calcPtTripStations(sStat, eStat, sStatE, eStatE, fromFac, toFac,
+						startAndEndStation = calcPtTripStationsInit(sStat, eStat, sStatE, eStatE, fromFac, toFac,
 								distanceCStart, distanceCEnd, distanceEStart, distanceEEnd,
 								startStation, endStation,
 								startEStation, endEStation, 
@@ -188,7 +189,7 @@ public class BikeSharingStationChoice
 					}
 					else 
 					{
-						startAndEndStation = calcPtTripStations(sStat, eStat, sStatE, eStatE, fromFac, toFac,
+						startAndEndStation = calcPtTripStationsInit(sStat, eStat, sStatE, eStatE, fromFac, toFac,
 								distanceCStart, distanceCEnd, distanceEStart, distanceEEnd,
 								startStation, endStation,
 								startEStation, endEStation, 
@@ -203,11 +204,12 @@ public class BikeSharingStationChoice
 				if (distance <= maxDistanceForBikeTrip)
 				{
 					startAndEndStation[0] = startStation;
+					startAndEndStation[0].bikeSharingType = 0;
 					startAndEndStation[1] = endStation;
 				}
 				else 
 				{
-					startAndEndStation = calcPtTripStations(sStat, eStat, sStatE, eStatE, fromFac, toFac,
+					startAndEndStation = calcPtTripStationsInit(sStat, eStat, sStatE, eStatE, fromFac, toFac,
 							distanceCStart, distanceCEnd, distanceEStart, distanceEEnd,
 							startStation, endStation,
 							startEStation, endEStation, 
@@ -230,7 +232,8 @@ public class BikeSharingStationChoice
 				}
 				else 
 				{
-					startAndEndStation = calcPtTripStations(sStat, eStat, sStatE, eStatE, fromFac, toFac,
+					//start And End found, but trip length too long
+					startAndEndStation = calcPtTripStationsInit(sStat, eStat, sStatE, eStatE, fromFac, toFac,
 							distanceCStart, distanceCEnd, distanceEStart, distanceEEnd,
 							startStation, endStation,
 							startEStation, endEStation, 
@@ -241,7 +244,7 @@ public class BikeSharingStationChoice
 			
 			else //public transport needs to be used --> combined
 			{
-				startAndEndStation = calcPtTripStations(sStat, eStat, sStatE, eStatE, fromFac, toFac,
+				startAndEndStation = calcPtTripStationsInit(sStat, eStat, sStatE, eStatE, fromFac, toFac,
 						distanceCStart, distanceCEnd, distanceEStart, distanceEEnd,
 						startStation, endStation,
 						startEStation, endEStation, 
@@ -252,6 +255,10 @@ public class BikeSharingStationChoice
 				return null;
 			}
 			if (startAndEndStation[0] == null || startAndEndStation[1] == null || startAndEndStation[0].station == null || startAndEndStation[1].station == null )
+			{
+				return null;
+			}
+			if (startAndEndStation[0].station.getId().toString().equals(startAndEndStation[1].station.getId().toString()))
 			{
 				return null;
 			}
@@ -333,32 +340,19 @@ public class BikeSharingStationChoice
 		List<PlanElement> ptLegs = bsR.createPTLegs(fromFacF.getCoord(), toFacF.getCoord(), departureTime, person, 
 				scenario, fromFacF.getLinkId(), toFacF.getLinkId(), new TransitAgentImpl(basicAgentDelegate));
 		
-		double travelTime = 0;
-		
-		if (ptLegs != null)
-		{
-			for (int i = 0; i < ptLegs.size(); i++)
-			{
-				if (ptLegs.get(i) instanceof Leg)
-				{
-					travelTime += ((Leg)ptLegs.get(i)).getTravelTime();
-					if (travelTime < 1)
-					{
-						travelTime += 0.1;
-					}
-				}
-				else if(ptLegs.get(i) instanceof Activity)
-				{
-					travelTime += (((Activity)ptLegs.get(i)).getStartTime() - ((Activity)ptLegs.get(i)).getEndTime());
-				}
-			}
-		}
-		
-		if (travelTime < 0.1)
+		if (ptLegs == null || ptLegs.size() < 1 )
 		{
 			return Double.POSITIVE_INFINITY;
 		}
-		return travelTime;
+		
+		else if (ptLegs.size() < 2)
+		{
+			return ((Leg)ptLegs.get(ptLegs.size()-1)).getTravelTime();
+		}
+		else
+		{
+			return ((Leg)ptLegs.get(ptLegs.size()-1)).getDepartureTime() + ((Leg)ptLegs.get(ptLegs.size()-1)).getTravelTime() - ((Leg)ptLegs.get(0)).getDepartureTime();
+		}
 	}
 
 	
@@ -416,22 +410,19 @@ public class BikeSharingStationChoice
 		List<BikeSharingFacility> bsList = new ArrayList<BikeSharingFacility>(bs);
 		for (int i = 0; i < bsList.size(); i++) //ensures that no stations is twice or more in list
 		{
-			for (int j = 0; j < bsList.size(); j++)
-			{
-				if (i != j)
-				{
-					if ((bsList.get(i).equals(bsList.get(j))|| bsList.get(j).getNumberOfAvailableBikes() < 1))
-					{
-						bsList.remove(j);
-						j--;
-					}
-				}
-				if (bsList.get(i).getNumberOfAvailableBikes() < 1)
+				if (bsList.get(i).getNumberOfAvailableBikes()< 1)
 				{
 					bsList.remove(i);
 					i--;
 				}
-			}
+				for (int j = i+1; j < bsList.size()-1; j++)
+				{
+					if (bsList.get(i).equals(bsList.get(j))) 
+						{
+							bsList.remove(j);
+							j--;
+						}
+				}
 		}
 		
 		if (bsList.size() < 1)
@@ -474,6 +465,7 @@ public class BikeSharingStationChoice
 			}
 			
 			Path p_bs = null;
+		
 			if (bsList.get(i).getStationType().equals("c"))
 			{
 				p_bs = bsc.getSharedBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(bsList.get(i).getLinkId()).getFromNode(),
@@ -485,7 +477,14 @@ public class BikeSharingStationChoice
 						scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
 				
 			}
+			Path direct = bsc.getDirectBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(bsList.get(i).getLinkId()).getFromNode(),
+					scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
 
+			if (p_bs.travelTime > direct.travelTime * 1.4)
+			{	
+				p_bs = direct;
+			}
+			
 			travelTimeBike = p_bs.travelTime;
 			
 			durationTemp = travelTimePt + travelTimeBike + travelTimeEgressWalk;
@@ -522,7 +521,7 @@ public class BikeSharingStationChoice
 		{
 			isEBikeStation = true;
 		}
-
+	
 		Path p_wa = bsc.getWalkPathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(fromFacF.getLinkId()).getFromNode(),
 				scenario.getNetwork().getLinks().get(startStation.getLinkId()).getFromNode(), departureTime, person, null);
 		Path p_bs = null;
@@ -539,6 +538,13 @@ public class BikeSharingStationChoice
 		
 		Path p_we = bsc.getWalkPathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(),
 				scenario.getNetwork().getLinks().get(toFacF.getLinkId()).getFromNode(), departureTime, person, null);
+		Path direct = bsc.getSharedBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(startStation.getLinkId()).getFromNode(),
+				scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
+
+		if (p_bs.travelTime > direct.travelTime*1.4)
+		{	
+			p_bs = direct;
+		}
 		
 		if (p_bs == null || p_bs.links.size() < 1)
 		{
@@ -610,23 +616,20 @@ public class BikeSharingStationChoice
 		}
 		
 		List<BikeSharingFacility> bsList = new ArrayList<BikeSharingFacility>(bs);
-		for (int i = 0; i < bsList.size()-1; i++) //ensures that no stations is twice or more in list
+		for (int i = 0; i < bsList.size(); i++) //ensures that no stations is twice or more in list
 		{
-			for (int j = 0; j < bsList.size()-1; j++)
+			if (bsList.get(i).getFreeParkingSlots() < 1)
 			{
-				if (i != j)
-				{
-					if ((bsList.get(i).equals(bsList.get(j))|| bsList.get(j).getFreeParkingSlots() < 1))
+				bsList.remove(i);
+				i--;
+			}
+			for (int j = i+1; j < bsList.size()-1; j++)
+			{
+				if (bsList.get(i).equals(bsList.get(j))) 
 					{
 						bsList.remove(j);
 						j--;
 					}
-				}
-				if (bsList.get(i).getFreeParkingSlots() < 1)
-				{
-					bsList.remove(i);
-					i--;
-				}
 			}
 		}
 		
@@ -659,6 +662,13 @@ public class BikeSharingStationChoice
 			{
 				p_bs = bsc.getSharedEBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(startStation.getLinkId()).getFromNode(),
 						scenario.getNetwork().getLinks().get(bsList.get(i).getLinkId()).getFromNode(), departureTime, person, null);
+			}
+			Path direct = bsc.getDirectBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(bsList.get(i).getLinkId()).getFromNode(),
+					scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
+
+			if (p_bs.travelTime > direct.travelTime * 1.4)
+			{	
+				p_bs = direct;
 			}
 
 			double travelTimeBike = p_bs.travelTime;
@@ -730,59 +740,47 @@ public class BikeSharingStationChoice
 		//List<StationAndType[]> list = new ArrayList<StationAndType[]>();
 
 		double fullPtTravelTimePlus = getFullPtTrip(fromFac, toFac, departureTime, person, basicAgentDelegate)*1.25;//TODO Hebenstreit
-		
+		double bsTime = Double.POSITIVE_INFINITY;
 		//############################ full bs trip ###################################
 		if (startStation != null && endStation != null)
 		{
 			double distance = CoordUtils.calcEuclideanDistance(startStation.station.getCoord(), endStation.station.getCoord());
-			if (distance > maxBsDistance)
+			if (distance <= maxBsDistance)
 			{
 				bsTravelTime = getFullBSTrip(fromFac, toFac, startStation.station, endStation.station, departureTime, person, bsc);
 			}
 		}
-
-		double bsTime = Double.POSITIVE_INFINITY;
-		if (bsTravelTime < bsETravelTime)
+		if (startEStation != null && endEStation != null)
 		{
-			bsTime = bsTravelTime;
-			full[0] = startStation;
-			full[1] = endStation;
-			full [2] = new StationAndType();
-			full[2].tripDur = bsTime;
-		}
-		else
-		{
-			bsTime = bsETravelTime;
-			full[0] = startEStation;
-			full[1] = endEStation;
-			full [2] = new StationAndType();
-			full[2].tripDur = bsTime;
-		}
-		if (bsTime != Double.POSITIVE_INFINITY)
-		{
-			if (bsTime <= 60*60)
+			double distance = CoordUtils.calcEuclideanDistance(startEStation.station.getCoord(), endEStation.station.getCoord());
+			if (distance <= maxBsDistance)
 			{
-				if (bsTime <= (fullPtTravelTimePlus*1.25))
-				{
-					duration = full[2].tripDur;
-					toReturn[0] = full[0];
-					toReturn[1] = full[1];
-					toReturn[2] = new StationAndType();
-					toReturn[2].tripDur = duration;
-					return toReturn;
-				}
-			}
-			else if (bsTime <= fullPtTravelTimePlus)
-			{
-				duration = full[2].tripDur;
-				toReturn[0] = full[0];
-				toReturn[1] = full[1];
-				toReturn[2] = new StationAndType();
-				toReturn[2].tripDur = duration;
-				return toReturn;
+				bsETravelTime = getFullBSTrip(fromFac, toFac, startEStation.station, endEStation.station, departureTime, person, bsc);
 			}
 		}
-		//############################ bs as access trip ###################################
+		if (Math.min(bsTravelTime,bsETravelTime) <= fullPtTravelTimePlus)
+		{
+			if (bsTravelTime < bsETravelTime)
+			{
+				bsTime = bsTravelTime;
+				full[0] = startStation;
+				full[1] = endStation;
+				full [2] = new StationAndType();
+				full[2].tripDur = bsTime;
+				full[0].bikeSharingType = 0; //fullBS
+				return full;
+			}
+			else if (bsETravelTime < Double.POSITIVE_INFINITY)
+			{
+				bsTime = bsETravelTime;
+				full[0] = startEStation;
+				full[1] = endEStation;
+				full [2] = new StationAndType();
+				full[0].bikeSharingType = 0; //fullBS
+				full[2].tripDur = bsTime;
+				return full;
+			}
+		}
 
 		if (startStation != null)
 		{
@@ -819,6 +817,7 @@ public class BikeSharingStationChoice
 				toReturn[1] = access[1];
 				toReturn[2] = new StationAndType();
 				toReturn[2].tripDur = duration;
+				toReturn[0].bikeSharingType = 1; //access trip (bs-pt)
 			}
 		}	
 		//############################ bs as egress trip ###################################
@@ -867,6 +866,7 @@ public class BikeSharingStationChoice
 					toReturn[1] = egress[1];
 					toReturn[2] = new StationAndType();
 					toReturn[2].tripDur = duration;
+					toReturn[0].bikeSharingType = 2; //egress trip (pt-bs)
 					return toReturn;
 				}
 				else
@@ -881,9 +881,10 @@ public class BikeSharingStationChoice
 		}	
 		return null;
 	}
+
 	
 	/***************************************************************************/
-	public StationAndType[] calcPtTripStations (int sStat, int eStat, int sStatE, int eStatE, 
+	public StationAndType[] calcPtTripStationsInit (int sStat, int eStat, int sStatE, int eStatE, 
 			Coord fromFac, Coord toFac,
 			double lenStart, double lenEnd, double lenStartE, double lenEndE,
 			StationAndType startStation, StationAndType endStation, 
@@ -905,16 +906,18 @@ public class BikeSharingStationChoice
 		StationAndType startEStationPt  = new StationAndType();
 		StationAndType endEStationPt  = new StationAndType();
 		
-		startStationPt = chooseClosePTStartStation(toFac , maxSearchRadiusPtStation, idFromFac );
-		endStationPt =  chooseClosePTEndStation(fromFac, maxSearchRadiusPtStation, idToFac );
-		startEStationPt = chooseClosePTEStartStation(toFac ,maxSearchRadiusPtStation, idFromFac  );
-		endEStationPt = chooseClosePTEEndStation( fromFac,maxSearchRadiusPtStation, idToFac  );
+		startStationPt = chooseClosePTStation(fromFac , maxSearchRadiusPtStation, idFromFac );
+		endStationPt =  chooseClosePTStation(toFac, maxSearchRadiusPtStation, idToFac );
+		startEStationPt = chooseClosePTEStation(fromFac ,maxSearchRadiusPtStation, idFromFac  );
+		endEStationPt = chooseClosePTEStation( toFac,maxSearchRadiusPtStation, idToFac  );
 		
 		if (sStat + sStatE + eStat + eStatE == 4) //pt trip because of trip length --> use E-Bike
 		{
 			if (lenStartE < lenEndE)
 			{
+				
 				startAndEndStation[0] = startEStation;
+				startAndEndStation[0].bikeSharingType= 1; //bs-pt (access)
 				endEStationPt.usedAsPtChange = true;
 				startAndEndStation[1] = endEStationPt;	
 			}
@@ -923,6 +926,7 @@ public class BikeSharingStationChoice
 			{
 				startEStationPt.usedAsPtChange = true;
 				startAndEndStation[0] = startEStationPt;
+				startAndEndStation[0].bikeSharingType= 2; //pt-bs (egress)
 				startAndEndStation[1] = endEStation;	
 			}
 		}
@@ -942,6 +946,7 @@ public class BikeSharingStationChoice
 			if (distancePTEEnd > -1)
 			{
 				startAndEndStation[0] = startEStation;
+				startAndEndStation[0].bikeSharingType = 1; //bs-pt (access)
 				endEStationPt.usedAsPtChange = true;
 				startAndEndStation[1] = endEStationPt;	
 			}
@@ -949,6 +954,7 @@ public class BikeSharingStationChoice
 			else if (distancePTEnd > -1)
 			{
 				startAndEndStation[0] = startStation;
+				startAndEndStation[0].bikeSharingType = 1; //bs-pt (access)
 				endStationPt.usedAsPtChange = true;
 				startAndEndStation[1] = endStationPt;
 				return startAndEndStation;
@@ -975,16 +981,16 @@ public class BikeSharingStationChoice
 			{
 				startEStationPt.usedAsPtChange = true;
 				startAndEndStation[0] = startStationPt;
+				startAndEndStation[0].bikeSharingType = 2;//(pt-bs (egress))
 				startAndEndStation[1] = endStation;
 				return startAndEndStation;
 			}
 			
 			else if (distancePTEStart > -1)
 			{
-				System.out.println("Test");
 				startEStationPt.usedAsPtChange = true;
 				startAndEndStation[0] = startEStationPt;
-				startAndEndStation[1] = endEStation;
+				startAndEndStation[0].bikeSharingType = 2;//(pt-bs (egress))[1] = endEStation;
 				return startAndEndStation;
 			}
 			
@@ -1002,6 +1008,7 @@ public class BikeSharingStationChoice
 				{
 					startAndEndStation[0] = startStation;
 					endStationPt.usedAsPtChange=true;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					startAndEndStation[1] = endStationPt;
 					return startAndEndStation;
 
@@ -1010,6 +1017,7 @@ public class BikeSharingStationChoice
 				else if (startEStationPt != null && startEStationPt.station != null)
 				{
 					startEStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					startAndEndStation[0] = startEStationPt;
 					startAndEndStation[1] = endEStation;
 					return startAndEndStation;
@@ -1026,6 +1034,7 @@ public class BikeSharingStationChoice
 				if (startEStationPt != null && startEStationPt.station != null)
 				{
 					startEStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 2;//(pt-bs (egress))
 					startAndEndStation[0] = startEStationPt;
 					startAndEndStation[1] = endEStation;
 					return startAndEndStation;
@@ -1034,6 +1043,7 @@ public class BikeSharingStationChoice
 				if (endStationPt != null && endStationPt.station != null)
 				{
 					startAndEndStation[0] = startStation;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					endStationPt.usedAsPtChange = true;
 					startAndEndStation[1] = endStationPt;
 					return startAndEndStation;
@@ -1054,6 +1064,7 @@ public class BikeSharingStationChoice
 				{
 					startAndEndStation[0] = startEStation;
 					endEStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					startAndEndStation[1] = endEStationPt;
 					return startAndEndStation;
 				}
@@ -1061,6 +1072,7 @@ public class BikeSharingStationChoice
 				else if (startEStationPt != null && startEStationPt.station != null)
 				{
 					startEStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					startAndEndStation[0] = startEStationPt;
 					startAndEndStation[1] = endEStation;
 					return startAndEndStation;
@@ -1077,6 +1089,7 @@ public class BikeSharingStationChoice
 				if (startEStationPt != null && startEStationPt.station != null)
 				{
 					startEStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 2;//(pt-bs(egress))
 					startAndEndStation[0] = startEStationPt;
 					startAndEndStation[1] = endEStation;
 					return startAndEndStation;
@@ -1085,6 +1098,7 @@ public class BikeSharingStationChoice
 				if (endStationPt != null && endStationPt.station != null)
 				{
 					startAndEndStation[0] = startStation;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					endStationPt.usedAsPtChange=true;
 					startAndEndStation[1] = endStationPt;
 					return startAndEndStation;
@@ -1119,6 +1133,7 @@ public class BikeSharingStationChoice
 				{
 					startAndEndStation[0] = startStation;
 					endStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					startAndEndStation[1] = endStationPt;
 					if (!(endStationPt == startStation))
 					{
@@ -1135,6 +1150,7 @@ public class BikeSharingStationChoice
 				{
 					startAndEndStation[0] = startEStation;
 					endEStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 1;//(bs-pt (access))
 					startAndEndStation[1] = endEStationPt;
 					return startAndEndStation;
 				}
@@ -1146,6 +1162,7 @@ public class BikeSharingStationChoice
 				if (startEStationPt != null && startEStationPt.station != null)
 				{
 					startEStationPt.usedAsPtChange = true;
+					startAndEndStation[0].bikeSharingType = 2;//(pt-bs (egress))
 					startAndEndStation[0] = startEStationPt;
 					startAndEndStation[1] = endEStation;
 					return startAndEndStation;
@@ -1610,6 +1627,73 @@ public class BikeSharingStationChoice
 		}
 		return null;
 }
+	
+	/***************************************************************************/
+	public StationAndType  chooseClosePTStation(
+			final Coord facility,
+			final double searchRadiusPtStation,
+			final Id facilityId) 
+	/***************************************************************************/
+	{	
+		if (bikeSharingFacilitiesPt2 == null) return null;
+		Collection<BikeSharingFacility> stationsInRadius = 
+				b_pt_qt.getDisk(
+					facility.getX(),
+					facility.getY(),
+					searchRadiusPtStation);
+		
+		stationsInRadius = 
+							b_pt_qt.getDisk(
+							facility.getX(),
+							facility.getY(),
+							searchRadiusPtStation+200);
+
+		StationAndType toReturn = new StationAndType();
+
+		if (stationsInRadius.size() > 0)
+		{
+			toReturn.station = b_pt_qt.getClosest(
+					facility.getX(),
+					facility.getY());
+
+			toReturn.type = false;
+			return toReturn;
+		}
+		return null;
+}
+	/***************************************************************************/
+	public StationAndType  chooseClosePTEStation(
+			final Coord facility,
+			final double searchRadiusPtStation,
+			final Id facilityId) 
+	/***************************************************************************/
+	{	
+		if (bikeSharingFacilitiesPt2 == null) return null;
+		Collection<BikeSharingFacility> stationsInRadius = 
+				e_pt_qt.getDisk(
+					facility.getX(),
+					facility.getY(),
+					searchRadiusPtStation);
+		
+		stationsInRadius = 
+							e_pt_qt.getDisk(
+							facility.getX(),
+							facility.getY(),
+							searchRadiusPtStation+200);
+
+		StationAndType toReturn = new StationAndType();
+
+		if (stationsInRadius.size() > 0)
+		{
+			toReturn.station = e_pt_qt.getClosest(
+					facility.getX(),
+					facility.getY());
+
+			toReturn.type = false;
+			return toReturn;
+		}
+		return null;
+}
 
 
 	/***************************************************************************/
@@ -1839,74 +1923,6 @@ public class BikeSharingStationChoice
 			return toReturn;
 		}
 		return null;
-	}
-
-	
-	/***************************************************************************/
-	/** returns the most sensible bike-sharing-option, 
-	 * (0)bs, (1)bs-pt, (2)pt-bs, (3)changeMode
-	    because of long trip length                                           **/
-	public static int bikeSharingOptions (StationAndType [] stations)
-	/***************************************************************************/
-	{
-		//stations are the two stations, according to a typ
-		// if usedAsPTChange is set to true --> type 1 or 2 are used,
-		// according to which station has the true
-		// if both stations are set to true --> mode change shall be performed
-		
-		if (stations == null)
-		{
-			return 3;
-		}
-		
-		//if only one station was found --> change Mode
-		else if ((stations[0] == null) || (stations[1]== null))
-		{
-			return 3;
-		}
-		
-		//if the same station was found
-		else if (stations[0].station == stations[1].station)
-		{
-			return 3;
-		}
-		
-		
-		else if (stations[0].usedAsPtChange == false)
-		{
-			// if start and end station are a bs station --> bs
-			if (stations[1].usedAsPtChange == false)
-			{
-				return 0; //full bs trip
-			}
-			
-			//if start station is a bs-station but end station is a pt station
-			else
-			{
-				return 1; //first bs, then pt
-			}
-		}
-		
-		else if (stations[0].usedAsPtChange == true)
-		{
-			//if start station is a pt-station but end station is a bs station
-			if (stations[1].usedAsPtChange == false)
-			{
-				return 2; //first pt, then bs
-			}
-		}
-		
-		else if (stations[0].station == stations[1].station)
-		{
-			//if start station equals end station
-			return 3; //change mode
-		}
-		
-		else
-		{
-			return 3;
-		}
-		return 3;
 	}
 }
 

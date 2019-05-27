@@ -106,6 +106,7 @@ public class BSRunner {
 		//------------------------------------------
 		TakingReturningMethodology trMet = new TakingReturningMethodology();
 		planComparison(basicAgentDelegate);
+		boolean planPartContainsBS = false;
 		
 		if ((!(((Activity)thisElem).getType().contains("interaction")))&&
 				(!(((Activity)thisElem).getType().equals(EBConstants.WAIT))))
@@ -113,12 +114,39 @@ public class BSRunner {
 			//the currentActivity has no "interaction" and not "wait" so check Athe initial plan
 		{
 			Activity nextAct = null;
+			
 
 			final int currentPlanElementIndex = basicAgentDelegate.getCurrentPlanElementIndex();
 //			final int currentPlanElementIndex = WithinDayAgentUtils.getCurrentPlanElementIndex( basicAgentDelegate ) ;
 			if (basicAgentDelegate.getCurrentPlan().getPlanElements().size()-1 - currentPlanElementIndex != 0)//Hebenstreit: changed from != 1
 			{
 				final int s = currentPlanElementIndex;
+				for (int i = s+1; i <= basicAgentDelegate.getCurrentPlan().getPlanElements().size(); i++)
+				{
+					if (basicAgentDelegate.getCurrentPlan().getPlanElements().get(i) instanceof Leg)
+					{
+						String mode = ((Leg)basicAgentDelegate.getCurrentPlan().getPlanElements().get(i)).getMode();
+						if ((mode.equals(EBConstants.BS_BIKE)) || (mode.equals(EBConstants.BS_E_BIKE)))
+						{
+							planPartContainsBS = true;
+							break;
+						}
+				
+					}
+					else if (basicAgentDelegate.getCurrentPlan().getPlanElements().get(i) instanceof Activity)
+					{
+						String actType = ((Activity)basicAgentDelegate.getCurrentPlan().getPlanElements().get(i)).getType();
+						if (actType.contains("interaction")||actType.contains("wait"))
+						{
+							//do nothing
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+				if (planPartContainsBS)
 				for (int i = s+1; i <= basicAgentDelegate.getCurrentPlan().getPlanElements().size(); i++)
 				{
 					if (basicAgentDelegate.getCurrentPlan().getPlanElements().get(i) instanceof Leg)
@@ -146,132 +174,144 @@ public class BSRunner {
 			}
 			//this step deletes the legs and not "plan activities" in between two plan activities
 			
-			
-			Activity fromFac = (Activity)thisElem;
-			//System.out.println(fromFac.getType());
-			Activity toFac = nextAct;
-
-			//System.out.println(toFac.getType());
-			StationAndType[] sat = new StationAndType[2];
-			BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
-			ActivityFacilitiesFactory ff =  scenario.getActivityFacilities().getFactory();
-			if (toFac.getCoord() != null)
+			if (planPartContainsBS)
 			{
-				BSAtt att = BSAttribsAgent.getPersonAttributes(basicAgentDelegate.getPerson(), scenario);
-//				Facility fromFacF = new ActivityFacilityImpl(fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
-				Facility fromFacF = ff.createActivityFacility( fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
-				Facility toFacF = ff.createActivityFacility( toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
-				sat = bsChoice.getStationsDuringSim(fromFacF,toFacF,
-						att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext, att.maxBSTripLength);
-				BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate , sat, bikeSharingContext );
-				List<PlanElement> actualPlanElem = planElementAndType.peList;
-				int bikeSharingType = planElementAndType.type;
-				planComparison(basicAgentDelegate);
-				basicAgentDelegate.getCurrentPlan().getPlanElements().addAll( currentPlanElementIndex +1,actualPlanElem );
-				//Hier soll der bs-plan von Act (ohne interaction) zu Act(ohne interaction) auf gültigkeit geprüft werden!
+				Activity fromFac = (Activity)thisElem;
+				//System.out.println(fromFac.getType());
+				Activity toFac = nextAct;
 	
-				int actIndex = currentPlanElementIndex;
-				planComparison(basicAgentDelegate);
-	
-						
-				//TODO: Hebenstreit revise this - as we do it more than once
-				//-----get - C -- and - E - BS-Stations--------------------------
-				final BikeSharingFacilities bsFacilities = (BikeSharingFacilities)
-						scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
-				BikeSharingFacilities c = new BikeSharingFacilities();
-				BikeSharingFacilities e = new BikeSharingFacilities();
-				for(Entry<Id<BikeSharingFacility>, BikeSharingFacility> tmp : bsFacilities.getFacilities().entrySet())
+				//System.out.println(toFac.getType());
+				StationAndType[] sat = new StationAndType[2];
+				BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
+				ActivityFacilitiesFactory ff =  scenario.getActivityFacilities().getFactory();
+				if (toFac.getCoord() != null)
 				{
-					if(tmp.getValue().getId().toString() != null && tmp.getValue().getStationType().equals("c"))
+					BSAtt att = BSAttribsAgent.getPersonAttributes(basicAgentDelegate.getPerson(), scenario);
+	//				Facility fromFacF = new ActivityFacilityImpl(fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
+					Facility fromFacF = ff.createActivityFacility( fromFac.getFacilityId(), fromFac.getCoord(), fromFac.getLinkId());
+					Facility toFacF = ff.createActivityFacility( toFac.getFacilityId(), toFac.getCoord(), toFac.getLinkId());
+					sat = bsChoice.getStationsDuringSim(fromFacF,toFacF,
+							att.searchRadius, att.maxSearchRadius, basicAgentDelegate.getPerson(), now, basicAgentDelegate, bikeSharingContext, att.maxBSTripLength);
+					if (sat != null)
 					{
-						c.addFacility(tmp.getValue(),scenario);
+						System.out.println(basicAgentDelegate.getPerson().getId().toString());
+					}
+					BSTypeAndPlanElements planElementAndType = calcBSRoute(fromFac, toFac, now, scenario, basicAgentDelegate , sat, bikeSharingContext);
+					List<PlanElement> actualPlanElem = planElementAndType.peList;
+					int bikeSharingType = planElementAndType.type;
+					planComparison(basicAgentDelegate);
+					basicAgentDelegate.getCurrentPlan().getPlanElements().addAll( currentPlanElementIndex +1,actualPlanElem );
+					//Hier soll der bs-plan von Act (ohne interaction) zu Act(ohne interaction) auf gültigkeit geprüft werden!
+		
+					int actIndex = currentPlanElementIndex;
+					planComparison(basicAgentDelegate);
+		
+							
+					//TODO: Hebenstreit revise this - as we do it more than once
+					//-----get - C -- and - E - BS-Stations--------------------------
+					final BikeSharingFacilities bsFacilities = (BikeSharingFacilities)
+							scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME );
+					BikeSharingFacilities c = new BikeSharingFacilities();
+					BikeSharingFacilities e = new BikeSharingFacilities();
+					for(Entry<Id<BikeSharingFacility>, BikeSharingFacility> tmp : bsFacilities.getFacilities().entrySet())
+					{
+						if(tmp.getValue().getId().toString() != null && tmp.getValue().getStationType().equals("c"))
+						{
+							c.addFacility(tmp.getValue(),scenario);
+						}
+						
+						if(tmp.getValue().getId().toString() != null && tmp.getValue().getStationType().equals("e"))
+						{
+							e.addFacility(tmp.getValue(),scenario);
+						}
+					}
+					//------------------------------------------------------------
+		
+					planComparison(basicAgentDelegate);		
+					CalcProbability cp = new CalcProbability(scenario);
+					//FULL BS-Trip
+		
+					boolean itIsAnEStation = false;
+					final EBikeSharingConfigGroup ebConfig = (EBikeSharingConfigGroup)scenario.getConfig().getModule(EBikeSharingConfigGroup.GROUP_NAME);
+	
+					Probability toUse = cp.getProbability(sat, att.maxSearchRadius, c, e, scenario);
+					
+					if (!(Boolean.parseBoolean(ebConfig.getValue("useProbability")))) //if false
+					{
+						if (toUse.startStationC != null && toUse.endStationC != null)
+							if ((toUse.startStationC.getNumberOfAvailableBikes() > 0)
+								&& (toUse.endStationC.getNumberOfAvailableBikes() > 0))//if at least one bicycle is in the station
+							{
+								toUse.probabilityC = 1;
+								itIsAnEStation = false;
+							}
+						if (toUse.startStationE != null && toUse.endStationE != null)
+							if ((toUse.startStationE.getNumberOfAvailableBikes() > 0) 
+									&& (toUse.startStationE.getFreeParkingSlots() > 0))
+							{
+								toUse.probabilityE = 1;
+							}
+					}
+					if(toUse.probabilityE >= toUse.probabilityC)
+					{
+						itIsAnEStation = true;
+					}
+							
+					planComparison(basicAgentDelegate);
+					if (itIsAnEStation)
+					{
+						handleProbabilityMeasures(toUse.probabilityE, actIndex, fromFac, toFac, scenario, now, basicAgentDelegate, bikeSharingContext);
+					}
+						
+					else
+					{
+						handleProbabilityMeasures(toUse.probabilityC, actIndex, fromFac, toFac, scenario, now, basicAgentDelegate, bikeSharingContext);
+					}
+					//TODO: Hebenstreit - hier wird nur nach typischen BS-Stationen gesucht - also Start- und End-Station --> nicht nach ptStations
+					planComparison(basicAgentDelegate);
+					List<PlanElement> trip = basicAgentDelegate.getCurrentPlan().getPlanElements();
+					int index = currentPlanElementIndex;
+					
+					for (int i = index; i < trip.size(); i++)
+					{
+						if (trip.get(i) instanceof Leg)
+						{
+							Leg leg = ((Leg)trip.get(i));
+				
+							if ((leg.getMode().equals(TransportMode.transit_walk) && leg.getRoute() == null)
+								|| (leg.getMode().equals(TransportMode.transit_walk) && leg.getTravelTime() < 0.1))
+							{
+									PlanElement pe = genericRouteWithStartAndEndLink(leg, trip, scenario, i, fromFac.getLinkId(), toFac.getLinkId());
+									trip.remove(i);
+									trip.add(i, pe);
+									//String mode = leg.getMode();
+									Route route = leg.getRoute();
+									route.setTravelTime(leg.getTravelTime());
+									route.setDistance(leg.getTravelTime()/1.5);
+									//System.out.println("Hebenstreit: Mode = " + mode);
+							}
+						}
 					}
 					
-					if(tmp.getValue().getId().toString() != null && tmp.getValue().getStationType().equals("e"))
-					{
-						e.addFacility(tmp.getValue(),scenario);
-					}
 				}
-				//------------------------------------------------------------
-	
-				planComparison(basicAgentDelegate);		
-				CalcProbability cp = new CalcProbability(scenario);
-				//FULL BS-Trip
-	
-				boolean itIsAnEStation = false;
-				final EBikeSharingConfigGroup ebConfig = (EBikeSharingConfigGroup)scenario.getConfig().getModule(EBikeSharingConfigGroup.GROUP_NAME);
-
-				Probability toUse = cp.getProbability(sat, att.maxSearchRadius, c, e, scenario);
-				
-				if (!(Boolean.parseBoolean(ebConfig.getValue("useProbability")))) //if false
-				{
-					if (toUse.startStationC != null && toUse.endStationC != null)
-						if ((toUse.startStationC.getNumberOfAvailableBikes() > 0)
-							&& (toUse.endStationC.getNumberOfAvailableBikes() > 0))//if at least one bicycle is in the station
-						{
-							toUse.probabilityC = 1;
-							itIsAnEStation = false;
-						}
-					if (toUse.startStationE != null && toUse.endStationE != null)
-						if ((toUse.startStationE.getNumberOfAvailableBikes() > 0) 
-								&& (toUse.startStationE.getFreeParkingSlots() > 0))
-						{
-							toUse.probabilityE = 1;
-						}
-				}
-				if(toUse.probabilityE >= toUse.probabilityC)
-				{
-					itIsAnEStation = true;
-				}
-						
-				planComparison(basicAgentDelegate);
-				if (itIsAnEStation)
-				{
-					handleProbabilityMeasures(toUse.probabilityE, actIndex, fromFac, toFac, scenario, now, basicAgentDelegate, bikeSharingContext);
-				}
-					
-				else
-				{
-					handleProbabilityMeasures(toUse.probabilityC, actIndex, fromFac, toFac, scenario, now, basicAgentDelegate, bikeSharingContext);
-				}
-				//TODO: Hebenstreit - hier wird nur nach typischen BS-Stationen gesucht - also Start- und End-Station --> nicht nach ptStations
-				planComparison(basicAgentDelegate);
-				List<PlanElement> trip = basicAgentDelegate.getCurrentPlan().getPlanElements();
-				int index = currentPlanElementIndex;
-				
-				for (int i = index; i < trip.size(); i++)
-				{
-					if (trip.get(i) instanceof Leg)
-					{
-						Leg leg = ((Leg)trip.get(i));
-			
-						if ((leg.getMode().equals(TransportMode.transit_walk) && leg.getRoute() == null)
-							|| (leg.getMode().equals(TransportMode.transit_walk) && leg.getTravelTime() < 0.1))
-						{
-								PlanElement pe = genericRouteWithStartAndEndLink(leg, trip, scenario, i, fromFac.getLinkId(), toFac.getLinkId());
-								trip.remove(i);
-								trip.add(i, pe);
-								//String mode = leg.getMode();
-								Route route = leg.getRoute();
-								route.setTravelTime(leg.getTravelTime());
-								route.setDistance(leg.getTravelTime()/1.5);
-								//System.out.println("Hebenstreit: Mode = " + mode);
-						}
-					}
-				}
-				
 			}
 		}
 		planComparison(basicAgentDelegate);
 		if (nextElem instanceof Leg) 
 		{
 				Leg leg = (Leg)nextElem;
+				String prevLeg = "";
+				if (basicAgentDelegate.getPreviousPlanElement() instanceof Leg)
+				{
+					prevLeg = ((Leg)basicAgentDelegate.getPreviousPlanElement()).getMode();
+				}
 				Activity nextAct = null;
 				Activity thisAct = (Activity) thisElem;  
 				
 				nextAct =basicAgentDelegate.getNextActivity();
 				
-				if (thisAct.getType().contains(EBConstants.INTERACTION_TYPE_BS+"_r")) 
+				if ((thisAct.getType().contains(EBConstants.INTERACTION_TYPE_BS+"_r") && (prevLeg.equals(EBConstants.BS_BIKE) || prevLeg.equals(EBConstants.BS_E_BIKE)))
+						|| (thisAct.getType().equals("bs interaction") && leg.getMode().equals(TransportMode.egress_walk)))
 					//2nd BS-Walk, as the current activity is eb_interaction and the next Leg is bs_walk
 					//this means the bike should be returned
 					{
@@ -573,10 +613,13 @@ public class BSRunner {
 		BicycleConfigGroup confBC = (BicycleConfigGroup) scenario.getConfig().getModule("bicycleAttributes" );
 
 		LeastCostPathCalculator routeAlgo;
+		boolean isBike = false;
+		LeastCostPathCalculator routeAlgoDirect = bikeSharingContext.getDirectBikePathCalculator();
 		if ((mode.equals(EBConstants.BS_BIKE ))||(mode.equals(EBConstants.BS_E_BIKE ))||(mode.equals(TransportMode.bike )))
 		{
 			routeAlgo = bikeSharingContext.getSharedBikePathCalculator() ;
 			btt = new TUG_BSTravelTime(confBC);
+			isBike = true;
 		}
 		
 		else //walking or bs_walk etc.
@@ -584,11 +627,20 @@ public class BSRunner {
 			routeAlgo = bikeSharingContext.getWalkPathCalculator() ;
 			btt = new TUG_WalkTravelTime( confBC );
 		}
-
+		
 		Path path = routeAlgo.calcLeastCostPath(scenario.getNetwork().getLinks().get(startLink.getId() ).getToNode(),
 				scenario.getNetwork().getLinks().get(destinationLink.getId()).getFromNode(), departureTime, basicAgentDelegate.getPerson(), null );
 		
-		double distance = 0.0;
+		if (isBike)
+		{
+			Path pathDir = routeAlgoDirect.calcLeastCostPath(scenario.getNetwork().getLinks().get(startLink.getId() ).getToNode(),
+					scenario.getNetwork().getLinks().get(destinationLink.getId()).getFromNode(), departureTime, basicAgentDelegate.getPerson(), null );
+			if (pathDir.travelTime * 1.4 < path.travelTime)
+			{
+				path = pathDir;
+			}
+		}
+			double distance = 0.0;
 		Id <Link> startLinkId = startLink.getId();
 		Id <Link> endLinkId = destinationLink.getId();
 		if (path.links.size()>0)
@@ -812,7 +864,7 @@ public class BSRunner {
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();
 
-		int bikeSharingOptionSelection;
+		int bikeSharingOptionSelection = 3;
 		// Chain of trip: walk - bike - walk (==0)
 		List<PlanElement> firstLeg = null;
 		BikeSharingFacility startBSFac = null;
@@ -822,6 +874,7 @@ public class BSRunner {
 			start = startAndEnd[0];	
 			end = startAndEnd[1];
 			if (start != null )	{
+				bikeSharingOptionSelection = startAndEnd[0].bikeSharingType;
 				startBSFac = start.station;
 				if (startBSFac != null)
 				if (start.station.getStationType().equals("e"))
@@ -845,13 +898,7 @@ public class BSRunner {
 			{
 				log.warn("Start- and End-Station do not belong to same BS-Type!!!");
 			}
-			
-			bikeSharingOptionSelection = BikeSharingStationChoice.bikeSharingOptions(startAndEnd);
 		}
-		
-		else 
-			bikeSharingOptionSelection = 3;
-
 		
 		Link fromLink = scenario.getNetwork().getLinks().get(fromFacility.getLinkId());
 		Link toLink = scenario.getNetwork().getLinks().get(toFacility.getLinkId());
@@ -868,10 +915,6 @@ public class BSRunner {
 			{
 				trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK, departureTime, basicAgentDelegate, bikeSharingContext ) );
 			}
-
-		
-
-			//log.warn("Person#" + basicAgentDelegate.getPerson().getId() + "#cannot use BikeSharing");
 		}
 		
 		// Choice 0: bike sharing only
@@ -879,8 +922,6 @@ public class BSRunner {
 		{
 			if ((startBSFac == null) || (endBSFac== null)) //no start or end station found
 			{
-//				trip = createPTLegs(fromFacility.getCoord(), toFacility.getCoord(), departureTime, person, scenario, fromFacility.getLinkId(), toFacility.getLinkId());
-//				trip = firstLeg;
 				trip = peToPeList(createLeg(fromLink, toLink, EBConstants.BS_WALK,departureTime, basicAgentDelegate, bikeSharingContext ) );
 			}
 			else

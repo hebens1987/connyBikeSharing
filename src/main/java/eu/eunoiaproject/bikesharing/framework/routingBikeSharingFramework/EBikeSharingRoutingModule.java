@@ -196,8 +196,9 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 		StationAndType[] startAndEnd = bsChoice.getInitialStations(
 				fromFacility.getCoord(), toFacility.getCoord(), att.searchRadius,
 				att.maxSearchRadius, att.maxBSTripLength, fromFacility.getId(), toFacility.getId());
+		int bikeSharingOptionSelection = 3;
 		
-		int bikeSharingOptionSelection;
+		
 		// Chain of trip: walk - bike - walk (==0)
 		List<PlanElement> firstLeg = null;
 		List<PlanElement> thirdLeg = null;
@@ -208,14 +209,14 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 		{
 			start = startAndEnd[0];	
 			end = startAndEnd[1];
-			if (start != null )	startBSFac = start.station;
-			if (end != null )endBSFac = end.station;
-			bikeSharingOptionSelection = BikeSharingStationChoice.bikeSharingOptions (startAndEnd);
-		}
-		
-		else 
-			bikeSharingOptionSelection = 3;
 
+			if (start != null )	
+			{
+				startBSFac = start.station;
+				bikeSharingOptionSelection = startAndEnd[0].bikeSharingType;
+			}
+			if (end != null )endBSFac = end.station;
+		}
 		// Choice 3: Chain of trip: pt
 		if (bikeSharingOptionSelection == 3)
 		{

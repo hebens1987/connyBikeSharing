@@ -20,6 +20,7 @@ package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
@@ -34,15 +35,39 @@ import org.matsim.core.mobsim.qsim.agents.TransitAgent;
 import org.matsim.core.mobsim.qsim.agents.TransitAgentImpl;
 import org.matsim.core.mobsim.qsim.interfaces.Netsim;
 
+import eu.eunoiaproject.bikesharing.framework.EBConstants;
+import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.rental.TakingReturningMethodology;
+
 public class BikesharingAgentFactory implements AgentFactory{
 	private final BikeSharingContext bikeSharingContext;
+	private final static Logger log = Logger.getLogger(BikesharingAgentFactory.class);
 
 	public BikesharingAgentFactory( BikeSharingContext bikeSharingContext) 
 	{this.bikeSharingContext = bikeSharingContext;}
 
 	@Override
 	public MobsimDriverAgent createMobsimAgentFromPerson(final Person p) 
-	{	
+	{
+		p.getSelectedPlan().setType("other");
+		for (int i = 0; i < p.getSelectedPlan().getPlanElements().size(); i ++)
+		{
+			if (p.getSelectedPlan().getPlanElements().get(i) instanceof Leg)
+			{
+				Leg leg = (Leg)p.getSelectedPlan().getPlanElements().get(i);
+				if ((leg.getMode().equals(EBConstants.BS_BIKE))||(leg.getMode().equals(EBConstants.BS_E_BIKE)))
+				{
+					p.getSelectedPlan().setType(EBConstants.MODE);
+					log.warn("BS for Person: " + p.getId().toString());
+					break;
+				}
+				else if (leg.getMode().equals(EBConstants.BS_BIKE_FF))
+				{
+					p.getSelectedPlan().setType(EBConstants.BS_BIKE_FF);
+					log.warn("e-BS for Person: " + p.getId().toString());
+					break;
+				}
+			}
+		}
 		return new BikesharingPersonDriverAgentImpl(p.getSelectedPlan(), null, bikeSharingContext );
 	}
 }

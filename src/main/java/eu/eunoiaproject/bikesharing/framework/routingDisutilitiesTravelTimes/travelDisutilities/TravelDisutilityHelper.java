@@ -35,8 +35,16 @@ public class TravelDisutilityHelper {
 {
 		if (!(link.getAllowedModes().contains(TransportMode.bike)))
 		   {
-			   return Double.POSITIVE_INFINITY;
+			if (!(link.getAllowedModes().contains(TransportMode.walk)))
+			   {
+				   return Double.POSITIVE_INFINITY;
+			   }
+			else
+				{
+					return link.getLength()*1000000;
+				}
 		   }
+
 		  
 	 String [] amountShare = null;
 	 String [] slopeShare = null;

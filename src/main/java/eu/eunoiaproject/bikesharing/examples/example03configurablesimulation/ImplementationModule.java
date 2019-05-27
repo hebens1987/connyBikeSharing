@@ -28,6 +28,7 @@ import eu.eunoiaproject.bikesharing.framework.planStrategy.ChangeTripModeCD;
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.EBikeSharingQsimFactory;
 import eu.eunoiaproject.bikesharing.framework.routingBikeSharingFramework.EBikeSharingRoutingModule;
 import eu.eunoiaproject.bikesharing.framework.scoring.TUG_LegScoringFunctionBikeAndWalkFactory;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.NetworkRoutingModuleBicycle;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.IKK_BikeTravelDisutilityFactory;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
@@ -45,6 +46,8 @@ import org.matsim.core.router.LeastCostPathCalculatorModule;
 import org.matsim.core.router.MainModeIdentifier;
 import org.matsim.core.router.MainModeIdentifierImpl;
 import org.matsim.core.router.NetworkRouting;
+import org.matsim.core.router.NetworkRoutingModule;
+import org.matsim.core.router.RoutingModule;
 import org.matsim.core.router.SingleModeNetworksCache;
 import org.matsim.pt.router.TransitRouterModule;
 
@@ -87,21 +90,21 @@ class ImplementationModule extends AbstractModule {
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_BIKE).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_BIKE).to(TUG_BSTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_BIKE).toProvider(new NetworkRouting(EBConstants.BS_BIKE));
+			this.addRoutingModuleBinding(EBConstants.BS_BIKE).toProvider( new NetworkRouting(EBConstants.BS_BIKE));;
 						
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_E_BIKE).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_E_BIKE).to(TUG_EBSTravelTime.class); 
-			this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).toProvider(new NetworkRouting(EBConstants.BS_BIKE));
+			this.addRoutingModuleBinding(EBConstants.BS_E_BIKE).toProvider(new NetworkRouting(EBConstants.BS_E_BIKE));
 
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK).to(TUG_WalkTravelTime.class); 
 			this.addRoutingModuleBinding(EBConstants.BS_WALK).toProvider(new NetworkRouting(EBConstants.BS_WALK));
-			
+	
 			this.bindScoringFunctionFactory().to(TUG_LegScoringFunctionBikeAndWalkFactory.class);
 			
 			this.addTravelDisutilityFactoryBinding(TransportMode.bike).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.bike).to(TUG_BikeTravelTime.class); 
-			this.addRoutingModuleBinding(TransportMode.bike).toProvider(new NetworkRouting(TransportMode.bike));
+			this.addRoutingModuleBinding(TransportMode.bike).to(NetworkRoutingModuleBicycle.class);
 
 			//this.addTravelDisutilityFactoryBinding(TransportMode.walk).to(IKK_BikeTravelDisutilityFactory.class); 
 			//this.addTravelTimeBinding(TransportMode.walk).to(TUG_WalkTravelTime.class); 
@@ -110,6 +113,7 @@ class ImplementationModule extends AbstractModule {
 			this.addTravelDisutilityFactoryBinding(TransportMode.walk+"ing").to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(TransportMode.walk+"ing").to(TUG_WalkTravelTime.class); 
 			this.addRoutingModuleBinding(TransportMode.walk+"ing").toProvider(new NetworkRouting(TransportMode.walk+"ing"));
+			NetworkRoutingModule nr;
 						
 			this.addTravelDisutilityFactoryBinding(EBConstants.BS_WALK_FF).to(IKK_BikeTravelDisutilityFactory.class); 
 			this.addTravelTimeBinding(EBConstants.BS_WALK_FF).to(TUG_WalkTravelTime.class); 
