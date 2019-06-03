@@ -23,6 +23,7 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttributesSingleton;
 
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
@@ -64,19 +65,17 @@ public class TUG_BikeTravelDisutility implements TravelDisutility
 		   Link link, double time, Person person, Vehicle vehicle) 
    /***************************************************************************/
    {
-                               
-	   //Abfangen falls Input-File nicht existiert oder es keines gibt!
-
-	   	  double du_Type = TravelDisutilityHelper.getDisutilityForLinkAttributes(
-	   				bikeLinkAttributes, personAttributes,bikeConfigGroup,link,person);
+	   	double du_Type = TravelDisutilityHelper.getDisutilityForLinkAttributes(
+	   				bikeLinkAttributes, personAttributes,bikeConfigGroup,link,person,"bike");
+  
 		
-		   TUG_BikeTravelTime btt = new TUG_BikeTravelTime(bikeConfigGroup);
-		   double linkTravelTimeBikes = btt.getLinkTravelTime(link, time, person, vehicle);
+		 TUG_BikeTravelTime btt = new TUG_BikeTravelTime(bikeConfigGroup);
+		 double linkTravelTimeBikes = btt.getLinkTravelTime(link, time, person, vehicle);
 
-		   if (du_Type < 0.1) 
-		   {
-			   du_Type = 0.1;
-		   } //Falls ALLES NULL wird über die Länge geroutet!
+		 if (du_Type < 0.1) 
+		 {
+			 du_Type = 0.1;
+		 } //Falls ALLES NULL wird über die Länge geroutet!
 		   double disutilityBikesPerLink = linkTravelTimeBikes * du_Type;
    
 		   return disutilityBikesPerLink ;           

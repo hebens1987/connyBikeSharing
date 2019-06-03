@@ -31,21 +31,13 @@ public class TravelDisutilityHelper {
 		(ObjectAttributes bikeLinkAttributes, 
 		ObjectAttributes personAttributes,
 		BicycleConfigGroup bikeConfigGroup,
-		Link link, Person person)
+		Link link, Person person, String mode)
 {
-		if (!(link.getAllowedModes().contains(TransportMode.bike)))
-		   {
-			if (!(link.getAllowedModes().contains(TransportMode.walk)))
-			   {
-				   return Double.POSITIVE_INFINITY;
-			   }
-			else
-				{
-					return link.getLength()*1000000;
-				}
-		   }
 
-		  
+		if (!(link.getAllowedModes().contains(mode)))
+		{
+		return link.getLength()*100000000;
+		}
 	 String [] amountShare = null;
 	 String [] slopeShare = null;
 	 String [] surroundingShare = null;
@@ -89,7 +81,8 @@ public class TravelDisutilityHelper {
 		   double bikeSlopeOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "slope"))/10; 
 		   double bikeComfortOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "comfort"))/10;                      
 		   double bikeSurroundingOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "surrounding"))/10;  
-		   double bikeAmountOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "amount"))/10;  
+		   double bikeAmountOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "amount"))/10; 
+		   boolean fastCycleLane = ((boolean)bikeLinkAttributes.getAttribute(link.getId().toString(), "interaction"));
 
             
 		   // Einlesen aus Config (TravelDisutil): 
@@ -170,6 +163,11 @@ public class TravelDisutilityHelper {
 				   + (surr * bikeSurroundingOfInfrastructure) 
 				   + (saf * bikeSafetyOfInfrastructure) 
 				   + (comf * bikeComfortOfInfrastructure))/5;//*lenOfLink/v;
+		   
+		   if (fastCycleLane)
+		   {
+			   du_Type = du_Type * 0.85;
+		 	}
 		   return du_Type;
 	   	}
 	}

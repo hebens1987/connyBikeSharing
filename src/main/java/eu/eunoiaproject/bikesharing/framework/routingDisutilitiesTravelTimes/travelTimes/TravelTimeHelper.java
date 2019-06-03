@@ -52,40 +52,26 @@ public class TravelTimeHelper
 			else if (bikeSpeedOfPerson < lowestSpeed ) {bikeSpeedOfPerson = lowestSpeed;}
 		}
 		
-		double bikeSpeedOfInfrastructure = 0;
-		if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null)
+		double bikeSpeedOfInfrastructure = 0.00001;
+
+		if (!(link.getAllowedModes().contains(TransportMode.bike)))
 		{
-			if (!(link.getAllowedModes().contains(TransportMode.bike)))
+			if (link.getAllowedModes().contains(TransportMode.walk))
 			{
-				if (link.getAllowedModes().contains(TransportMode.walk))
-				{
-					bikeSpeedOfInfrastructure = 1.0; //TODO: Hebenstreit
+				bikeSpeedOfInfrastructure = 1.0; //TODO: Hebenstreit
 					//For Link with ID: " + link.getId() + " using a walk link with very slow speed
-				}
-				
-				else 
-				{ 
-					v = 0.0000000001;
-					//For Link with ID: " + link.getId() + " using any other link than mode bike or walk
-				}
 			}
-			else if (link.getAllowedModes().contains(TransportMode.bike))
-			{
-				bikeSpeedOfInfrastructure = 5.0; //18 km/h
-				log.warn("For Link with ID: " + link.getId() + " no specific input link was allocated, using a max value of 5 m/s");
-			}
+
 		}
-		
+		else if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null)
+		{
+			bikeSpeedOfInfrastructure = 5.0; //18 km/h
+			log.warn("For Link with ID: " + link.getId() + " no specific input link was allocated, using a max value of 5 m/s");
+		}
 		else
 		{
+			bikeSpeedOfInfrastructure =(double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed");
 			isFastCycleLane = (boolean) bikeLinkAttributes.getAttribute(link.getId().toString(), "interaction");
-			if (isFastCycleLane)
-			{
-				bikeSpeedOfInfrastructure = 500;
-				if (bikeSpeedOfPerson > 4) bikeSpeedOfPerson = bikeSpeedOfPerson + 0.3;
-				else {bikeSpeedOfPerson = 5;}
-			}
-			else bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")); // m/s
 		}
 
     	if(bikeSpeedOfInfrastructure <= bikeSpeedOfPerson)
@@ -98,6 +84,14 @@ public class TravelTimeHelper
     	}
     	
     	double traveltime = lenOfLink / v;
+    	if (isFastCycleLane)
+    	{
+    		traveltime = traveltime*0.85;
+    	}
+    	if (traveltime == Double.POSITIVE_INFINITY)
+    	{
+    		traveltime = 100000000;
+    	}
 		return traveltime;
 	}
 }

@@ -1,4 +1,4 @@
-package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities;
+package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,24 @@ public class RoutingQuadTreeNetwork {
 			}
 		}
 	}
+	
+	public QuadTreeRebuilder<Link> getCertainQuadTree (Network network)
+	{
+		QuadTreeRebuilder<Link> quadTreeBuilderTemp = new QuadTreeRebuilder<>();
+		List<Link> links = new ArrayList<Link>(network.getLinks().values());
+			for (int i = 0; i < links.size(); i++)
+			{
+				quadTreeBuilderTemp.put(links.get(i).getCoord(), links.get(i));
+			}
+		return quadTreeBuilderTemp;
+	}
+	
+	public Link getNearestBicycleLink(Coord coord,Network networkPart)
+	{
+		QuadTreeRebuilder<Link> quadTreeBuilderTemp= getCertainQuadTree(networkPart);
+		return quadTreeBuilderTemp.getQuadTree().getClosest(coord.getX(), coord.getY());
+
+	}
 	public Network getCatchmentAreaNetwork(
 			Network network, 
 			Coord origin,
@@ -42,14 +60,13 @@ public class RoutingQuadTreeNetwork {
 		
 		double distanceABhalf = CoordUtils.calcEuclideanDistance(origin, destination)/2;
 		
-		List<Link> links = new ArrayList<Link>(quadTreeBuilderL.getQuadTree().getDisk(newX, newY, distanceABhalf+1000));
+		List<Link> links = new ArrayList<Link>(quadTreeBuilderL.getQuadTree().getDisk(newX, newY, distanceABhalf+2000));
 		
 		//List<Link> links = new ArrayList<Link>(network.getLinks().values());
 
-		for (int i = 0; i <links.size(); i++) //adds all links within the definded disk + adds missing nodes
+		for (int i = 0; i <links.size(); i++) //adds all links within the defined disk + adds missing nodes
 		{
-			if ((links.get(i).getAllowedModes().contains(TransportMode.bike)) ||
-				(links.get(i).getAllowedModes().contains(TransportMode.walk)))
+			if ((links.get(i).getAllowedModes().contains(TransportMode.bike)))
 				{
 					if (newNet.getNodes().get(links.get(i).getFromNode().getId()) == null)
 					{

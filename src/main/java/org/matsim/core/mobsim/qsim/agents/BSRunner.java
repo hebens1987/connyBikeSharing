@@ -613,13 +613,10 @@ public class BSRunner {
 		BicycleConfigGroup confBC = (BicycleConfigGroup) scenario.getConfig().getModule("bicycleAttributes" );
 
 		LeastCostPathCalculator routeAlgo;
-		boolean isBike = false;
-		LeastCostPathCalculator routeAlgoDirect = bikeSharingContext.getDirectBikePathCalculator();
 		if ((mode.equals(EBConstants.BS_BIKE ))||(mode.equals(EBConstants.BS_E_BIKE ))||(mode.equals(TransportMode.bike )))
 		{
 			routeAlgo = bikeSharingContext.getSharedBikePathCalculator() ;
 			btt = new TUG_BSTravelTime(confBC);
-			isBike = true;
 		}
 		
 		else //walking or bs_walk etc.
@@ -631,15 +628,6 @@ public class BSRunner {
 		Path path = routeAlgo.calcLeastCostPath(scenario.getNetwork().getLinks().get(startLink.getId() ).getToNode(),
 				scenario.getNetwork().getLinks().get(destinationLink.getId()).getFromNode(), departureTime, basicAgentDelegate.getPerson(), null );
 		
-		if (isBike)
-		{
-			Path pathDir = routeAlgoDirect.calcLeastCostPath(scenario.getNetwork().getLinks().get(startLink.getId() ).getToNode(),
-					scenario.getNetwork().getLinks().get(destinationLink.getId()).getFromNode(), departureTime, basicAgentDelegate.getPerson(), null );
-			if (pathDir.travelTime * 1.4 < path.travelTime)
-			{
-				path = pathDir;
-			}
-		}
 			double distance = 0.0;
 		Id <Link> startLinkId = startLink.getId();
 		Id <Link> endLinkId = destinationLink.getId();

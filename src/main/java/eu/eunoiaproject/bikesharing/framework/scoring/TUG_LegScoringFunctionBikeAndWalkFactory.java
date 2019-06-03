@@ -68,11 +68,6 @@ public class TUG_LegScoringFunctionBikeAndWalkFactory implements ScoringFunction
 	    new TUG_LegScoringFunctionBikeAndWalk( params.getScoringParameters(person),
 	    								 this.scenario.getConfig(),
 	    								 (NetworkImpl)this.scenario.getNetwork(), person, bikeConfigGroup ) );
-		scoringFunctionSum.addScoringFunction(
-				new CharyparNagelLegScoring(
-						params.getScoringParameters( person ),
-						this.scenario.getNetwork())
-			    );
 		//the remaining scoring functions can be changed and adapted to the needs of the user
 		scoringFunctionSum.addScoringFunction(
 				new CharyparNagelActivityScoring(

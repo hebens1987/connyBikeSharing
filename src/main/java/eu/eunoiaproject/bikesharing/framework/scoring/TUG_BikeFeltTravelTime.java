@@ -67,6 +67,13 @@ class TUG_BikeFeltTravelTime implements TravelTime
 		  Link link, double time, Person person, Vehicle vehicle, String mode, double travelDistance)
 	/***************************************************************************/
 	{   
+		if(!( link.getAllowedModes().contains("bike")))
+		{
+			double[] percTavelTimeAndTravelLength = new double[2];
+			percTavelTimeAndTravelLength[0] =link.getLength()/1.111;//perceivedTravelTime;
+			percTavelTimeAndTravelLength[1] = link.getLength();
+			return percTavelTimeAndTravelLength;
+		}
 		boolean isFastCycleLane = false;	
 		int routingType = -1;
 		   		TravelTime tt = null;

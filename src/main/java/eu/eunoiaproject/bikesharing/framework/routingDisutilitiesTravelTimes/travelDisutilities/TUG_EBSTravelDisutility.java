@@ -23,6 +23,7 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttributesSingleton;
 
+import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.router.util.TravelDisutility;
@@ -64,8 +65,9 @@ public class TUG_EBSTravelDisutility implements TravelDisutility
 		   Link link, double time, Person person, Vehicle vehicle) 
    /***************************************************************************/
    {
+	
 	   	  double du_Type = TravelDisutilityHelper.getDisutilityForLinkAttributes(
- 				bikeLinkAttributes, personAttributes,bikeConfigGroup,link,person);  
+	   				bikeLinkAttributes, personAttributes,bikeConfigGroup,link,person,"bs");
 	   
 		   TUG_EBSTravelTime btt = new TUG_EBSTravelTime(bikeConfigGroup);
 		   double linkTravelTimeBikes = btt.getLinkTravelTime(link, time, person, vehicle);

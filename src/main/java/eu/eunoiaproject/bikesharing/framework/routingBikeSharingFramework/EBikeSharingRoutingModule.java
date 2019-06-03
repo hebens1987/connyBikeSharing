@@ -173,25 +173,9 @@ public class EBikeSharingRoutingModule implements RoutingModule {
 	
 		StationAndType start = new StationAndType();
 		StationAndType end = new StationAndType();
-		
-		boolean ptUsage = false; //TODO: define ptUsage - due to the different possible types:
-		// because of a very long trip length (intermodal)
-		// because no station near at departure or arrival facility
-		// there are the following options:
-		// * no public transport used = bike-sharing only
-		// * public transport used, because BS-Station too far from Facility
-		//	  - PT <-> BS         = no BS-Station near the Departure Facility
-		//	  - BS <-> PT         = no BS-Station near the Arrival Facility
-		//	  - PT <-> BS <-> PT  = no BS-Station near the Departure and Arrival Facility
-		// * public transport used, because Total-Trip Length too long for cycling
-		//    - Intermodal        = this should be used, if total trip length is too long
-		
-		//if no pt is used
-		
 
 		BSAtt att = BSAttribsAgent.getPersonAttributes( person, scenario);
 		
-
 		BikeSharingStationChoice bsChoice = new BikeSharingStationChoice(scenario);
 		StationAndType[] startAndEnd = bsChoice.getInitialStations(
 				fromFacility.getCoord(), toFacility.getCoord(), att.searchRadius,

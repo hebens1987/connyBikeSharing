@@ -44,27 +44,25 @@ public class BikeSharingContext{
 		private LeastCostPathCalculator sharedEBikePathCalculator;
 		private QSim qSim;
 		private LeastCostPathCalculator walkPathCalculator;
-		private LeastCostPathCalculator direktBikePathCalculator;
+
 		private IKK_ObjectAttributesSingleton instance;
 
 		Builder setStandardBikePathCalculator( LeastCostPathCalculator calc ) {
 			standardBikePathCalculator = calc ;
 			return this ;
 		}
-		Builder setDirektBikePathCalculator( LeastCostPathCalculator calc ) {
-			direktBikePathCalculator = calc ;
-			return this ;
-		}
+		
 		Builder setSharedBikePathCalculator( LeastCostPathCalculator calc ) {
 			sharedBikePathCalculator = calc ;
 			return this ;
 		}
+
 		Builder setSharedEBikePathCalculator( LeastCostPathCalculator calc ) {
 			sharedEBikePathCalculator = calc ;
 			return this ;
 		}
 		BikeSharingContext build() {
-			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, sharedEBikePathCalculator, directBikePathCalculator,
+			return new BikeSharingContext( standardBikePathCalculator, sharedBikePathCalculator, sharedEBikePathCalculator,
 					qSim, walkPathCalculator, instance) ;
 		}
 
@@ -78,10 +76,6 @@ public class BikeSharingContext{
 			return this ;
 		}
 
-		Builder setDirectBikePathCalculator( LeastCostPathCalculator routeAlgo ){
-			this.direktBikePathCalculator = routeAlgo;
-			return this ;
-		}
 		Builder setObjectAttributesSingleton( IKK_ObjectAttributesSingleton instance ){
 			this.instance = instance;
 			return this ;
@@ -91,17 +85,15 @@ public class BikeSharingContext{
 	private LeastCostPathCalculator standardBikePathCalculator ;
 	private LeastCostPathCalculator sharedBikePathCalculator ;
 	private LeastCostPathCalculator sharedEBikePathCalculator;
-	private static LeastCostPathCalculator directBikePathCalculator;
 	private final QSim qSim;
 	private final LeastCostPathCalculator walkPathCalculator;
 	private final IKK_ObjectAttributesSingleton instance;
 
 	private BikeSharingContext( LeastCostPathCalculator standardBikePathCalculator, LeastCostPathCalculator sharedBikePathCalculator,
-			LeastCostPathCalculator sharedEBikePathCalculator, LeastCostPathCalculator directBikePathCalculator, QSim qSim, LeastCostPathCalculator walkPathCalculator, IKK_ObjectAttributesSingleton instance){
+			LeastCostPathCalculator sharedEBikePathCalculator,  QSim qSim, LeastCostPathCalculator walkPathCalculator, IKK_ObjectAttributesSingleton instance){
 		this.standardBikePathCalculator = standardBikePathCalculator;
 		this.sharedBikePathCalculator = sharedBikePathCalculator;
 		this.sharedEBikePathCalculator = sharedEBikePathCalculator;
-		BikeSharingContext.directBikePathCalculator = directBikePathCalculator;
 		this.qSim = qSim;
 		this.walkPathCalculator = walkPathCalculator;
 		this.instance = instance;
@@ -109,9 +101,6 @@ public class BikeSharingContext{
 
 	public LeastCostPathCalculator getStandardBikePathCalculator(){
 		return standardBikePathCalculator;
-	}
-	public LeastCostPathCalculator getDirectBikePathCalculator(){
-		return directBikePathCalculator;
 	}
 	public LeastCostPathCalculator getSharedEBikePathCalculator(){
 		return sharedEBikePathCalculator;

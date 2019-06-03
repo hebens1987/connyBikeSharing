@@ -365,13 +365,11 @@ public class BikeSharingStationChoice
 			Person person, BikeSharingContext bsc)
 	/***************************************************************************/
 	{
-		if (endStation == null)
-		{
-			StationAndType stat = new StationAndType();
-			stat.station = null;
-			stat.tripDur = Double.POSITIVE_INFINITY;
-			return stat;
-		}
+		StationAndType statNull = new StationAndType();
+		statNull.station = null;
+		statNull.tripDur = Double.POSITIVE_INFINITY;
+
+
 		boolean isEBikeStation = false;
 
 		BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
@@ -406,38 +404,32 @@ public class BikeSharingStationChoice
 			bs.addAll(b_pt_qt.getDisk(fromFacF.getCoord().getX(), fromFacF.getCoord().getY(), radiusStartEnd));
 			bs.addAll(b_pt_qt.getDisk(toFacF.getCoord().getX(), toFacF.getCoord().getY(), radiusStartEnd));
 		}
-		
+		Map<Id, BikeSharingFacility> bsMap = new HashMap<Id,BikeSharingFacility>();
 		List<BikeSharingFacility> bsList = new ArrayList<BikeSharingFacility>(bs);
 		for (int i = 0; i < bsList.size(); i++) //ensures that no stations is twice or more in list
 		{
-				if (bsList.get(i).getNumberOfAvailableBikes()< 1)
+			if (bsList.get(i).getNumberOfAvailableBikes()< 1)
+			{
+				if (bsMap.get(bsList.get(i).getId()) == null)
+				{
+					bsMap.put(bsList.get(i).getId(), bsList.get(i));
+				}
+				else
 				{
 					bsList.remove(i);
-					i--;
-				}
-				for (int j = i+1; j < bsList.size()-1; j++)
-				{
-					if (bsList.get(i).equals(bsList.get(j))) 
-						{
-							bsList.remove(j);
-							j--;
-						}
-				}
+				}	
+			}
+			else
+			{
+				bsList.remove(i);
+			}
 		}
 		
 		if (bsList.size() < 1)
 		{
-			StationAndType stat = new StationAndType();
-			stat.station = null;
-			stat.tripDur = Double.POSITIVE_INFINITY;
-			return stat;
+			return statNull;
 		}
 		TransitRouterImpl pt = bSharingVehicles.trImpl;
-		
-		Path p_we = bsc.getWalkPathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(fromFacF.getLinkId()).getFromNode(),
-				scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
-	
-		double travelTimeEgressWalk = p_we.travelTime;
 		
 		double duration = Double.POSITIVE_INFINITY;
 		double travelTimeBike = Double.POSITIVE_INFINITY;
@@ -447,13 +439,13 @@ public class BikeSharingStationChoice
 		for (int i = 0; i < bsList.size()-1; i++)
 		{
 			double durationTemp = Double.POSITIVE_INFINITY;
-			List<Leg> egressPt = pt.calcRoute(fromFacF.getCoord(), bsList.get(i).getCoord(), departureTime, person);
+			List<Leg> tripPt = pt.calcRoute(fromFacF.getCoord(), bsList.get(i).getCoord(), departureTime, person);
 
-			if (egressPt != null)
+			if (tripPt != null)
 			{
-				for (int j = 0; j < egressPt.size(); j++)
+				for (int j = 0; j < tripPt.size(); j++)
 				{
-					travelTimePt += egressPt.get(j).getTravelTime();
+					travelTimePt += tripPt.get(j).getTravelTime();
 					if (travelTimePt < 0.1)
 					{travelTimePt = 0.1;}
 				}
@@ -462,6 +454,10 @@ public class BikeSharingStationChoice
 			if (travelTimePt < 0.1)
 			{
 				travelTimePt = Double.POSITIVE_INFINITY;
+			}
+			if (travelTimePt == Double.POSITIVE_INFINITY)
+			{
+				return statNull;
 			}
 			
 			Path p_bs = null;
@@ -477,17 +473,14 @@ public class BikeSharingStationChoice
 						scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
 				
 			}
-			Path direct = bsc.getDirectBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(bsList.get(i).getLinkId()).getFromNode(),
-					scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
-
-			if (p_bs.travelTime > direct.travelTime * 1.4)
-			{	
-				p_bs = direct;
-			}
 			
 			travelTimeBike = p_bs.travelTime;
+			if (travelTimeBike == Double.POSITIVE_INFINITY)
+			{
+				return statNull;
+			}
 			
-			durationTemp = travelTimePt + travelTimeBike + travelTimeEgressWalk;
+			durationTemp = travelTimePt + travelTimeBike;
 			if (durationTemp <= duration)
 			{
 				duration = durationTemp;
@@ -574,13 +567,10 @@ public class BikeSharingStationChoice
 			Person person, BikeSharingContext bsc)
 	/***************************************************************************/
 	{
-		if (startStation == null)
-		{
-			StationAndType stat = new StationAndType();
-			stat.station = null;
-			stat.tripDur = Double.POSITIVE_INFINITY;
-			return stat;
-		}
+		StationAndType statNull = new StationAndType();
+		statNull.station = null;
+		statNull.tripDur = Double.POSITIVE_INFINITY;
+
 		boolean isEBikeStation = false;
 		BikeSharingFacilities bikeSharingFacilitiesAll = (BikeSharingFacilities) 
 				scenario.getScenarioElement( BikeSharingFacilities.ELEMENT_NAME);
@@ -616,23 +606,25 @@ public class BikeSharingStationChoice
 		}
 		
 		List<BikeSharingFacility> bsList = new ArrayList<BikeSharingFacility>(bs);
+		Map <Id, BikeSharingFacility> bsMap = new HashMap<Id, BikeSharingFacility>();
 		for (int i = 0; i < bsList.size(); i++) //ensures that no stations is twice or more in list
 		{
-			if (bsList.get(i).getFreeParkingSlots() < 1)
+			if (bsList.get(i).getFreeParkingSlots()< 1)
+			{
+				if (bsMap.get(bsList.get(i).getId()) == null)
+				{
+					bsMap.put(bsList.get(i).getId(), bsList.get(i));
+				}
+				else
+				{
+					bsList.remove(i);
+				}	
+			}
+			else
 			{
 				bsList.remove(i);
-				i--;
-			}
-			for (int j = i+1; j < bsList.size()-1; j++)
-			{
-				if (bsList.get(i).equals(bsList.get(j))) 
-					{
-						bsList.remove(j);
-						j--;
-					}
 			}
 		}
-		
 		if (bsList.size() < 1)
 		{
 			StationAndType stat = new StationAndType();
@@ -663,22 +655,19 @@ public class BikeSharingStationChoice
 				p_bs = bsc.getSharedEBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(startStation.getLinkId()).getFromNode(),
 						scenario.getNetwork().getLinks().get(bsList.get(i).getLinkId()).getFromNode(), departureTime, person, null);
 			}
-			Path direct = bsc.getDirectBikePathCalculator().calcLeastCostPath(scenario.getNetwork().getLinks().get(bsList.get(i).getLinkId()).getFromNode(),
-					scenario.getNetwork().getLinks().get(endStation.getLinkId()).getFromNode(), departureTime, person, null);
-
-			if (p_bs.travelTime > direct.travelTime * 1.4)
-			{	
-				p_bs = direct;
-			}
 
 			double travelTimeBike = p_bs.travelTime;
-			double travelTimePt = 0;
-			List<Leg> egressPt = pt.calcRoute(bsList.get(i).getCoord(), toFacF.getCoord(), departureTime+travelTimeAccessWalk+travelTimeBike, person);
-			if (egressPt != null)
+			if (travelTimeBike == Double.POSITIVE_INFINITY)
 			{
-				for (int j = 0; j < egressPt.size(); j++)
+				return statNull;
+			}
+			double travelTimePt = 0;
+			List<Leg> tripPt = pt.calcRoute(bsList.get(i).getCoord(), toFacF.getCoord(), departureTime+travelTimeAccessWalk+travelTimeBike, person);
+			if (tripPt != null)
+			{
+				for (int j = 0; j < tripPt.size(); j++)
 				{
-					travelTimePt += egressPt.get(j).getTravelTime();
+					travelTimePt += tripPt.get(j).getTravelTime();
 					if (travelTimePt < 0.1)
 					{travelTimePt = 0.1;}
 				}

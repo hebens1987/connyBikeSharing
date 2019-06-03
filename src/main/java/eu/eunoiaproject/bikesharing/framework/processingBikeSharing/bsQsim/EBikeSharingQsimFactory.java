@@ -1,6 +1,7 @@
 package eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim;
 
 
+import java.util.Collection;
 import java.util.Map;
 
 import eu.eunoiaproject.bikesharing.examples.example03configurablesimulation.BikeSharingConfigGroup;
@@ -26,8 +27,10 @@ import org.matsim.core.mobsim.qsim.ActivityEngine;
 import org.matsim.core.mobsim.qsim.QSim;
 import org.matsim.core.mobsim.qsim.TeleportationEngine;
 import org.matsim.core.mobsim.qsim.agents.PopulationAgentSource;
+import org.matsim.core.mobsim.qsim.interfaces.DepartureHandler;
 import org.matsim.core.mobsim.qsim.pt.TransitQSimEngine;
 import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEngine;
+import org.matsim.core.mobsim.qsim.qnetsimengine.QNetsimEnginePlugin;
 import org.matsim.core.router.NetworkRouting;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.router.util.LeastCostPathCalculator;
@@ -68,7 +71,6 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		if (conf == null) {
 			throw new NullPointerException("There is no configuration set for the QSim. Please add the module 'qsim' to your config file.");
 		}
-		
 		QSim qSim = new QSim(sc, eventsManager);
 				
 		ActivityEngine activityEngine = new ActivityEngine(eventsManager, qSim.getAgentCounter());
@@ -93,9 +95,12 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		//qSim.addDepartureHandler(tpe); 
 		//adding this also as departure handler ends up having it added twice, so don't do that. kai, apr'19
 		
+		
 		QNetsimEngine qnet = new QNetsimEngine(qSim);
-		qSim.addMobsimEngine(qnet);
 		qSim.addDepartureHandler(qnet.getDepartureHandler());
+		qSim.addMobsimEngine(qnet);
+		DepartureHandler dep = qnet.getDepartureHandler();
+		//VehicularDepartureHandler veh = new VehicularDepartureHandler();
 		
 		BicycleConfigGroup confBC = (BicycleConfigGroup) qSim.getScenario().getConfig().getModule("bicycleAttributes");
 
@@ -107,10 +112,10 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 			builder.setStandardBikePathCalculator( standardBikePathCalculator ) ;
 		}
 		{
-			TravelTime btt = new TUG_BSTravelTime(confBC);
-			TravelDisutility btd = 	new TUG_BSTravelDisutility(confBC);
-			LeastCostPathCalculator calc = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), btd, btt ) ;
-			builder.setSharedBikePathCalculator( calc ) ;
+			TravelTime travelTime = new TUG_BSTravelTime(confBC);;
+			TravelDisutility travelDisutility = new TUG_BSTravelDisutility(confBC);
+			LeastCostPathCalculator sharedBikePathCalculator = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), travelDisutility, travelTime );
+			builder.setSharedBikePathCalculator( sharedBikePathCalculator ) ;
 		}
 		{
 			TravelTime btt = new TUG_EBSTravelTime(confBC);
@@ -128,6 +133,8 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 		builder.setQSim( qSim ) ;
 		builder.setObjectAttributesSingleton( IKK_ObjectAttributesSingleton.getInstance(confBC, false) ) ;
 		BikeSharingContext context = builder.build();
+
+
 		
 		BikesharingAgentFactory agentFactory = new BikesharingAgentFactory( context );
 		PopulationAgentSource agentSource = new PopulationAgentSource(sc.getPopulation(), agentFactory, qSim);

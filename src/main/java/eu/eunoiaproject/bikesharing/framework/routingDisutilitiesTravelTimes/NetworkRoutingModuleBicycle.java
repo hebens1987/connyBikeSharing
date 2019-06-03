@@ -38,10 +38,12 @@ import org.matsim.facilities.Facility;
 	import com.google.inject.Inject;
 
 import eu.eunoiaproject.bikesharing.framework.processingBikeSharing.bsQsim.BikesharingAgentFactory;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.RoutingQuadTreeNetwork;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_BSTravelDisutility;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_BikeTravelDisutility;
-import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_BikeTravelDisutilityDir;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities.TUG_EBSTravelDisutility;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BSTravelTime;
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
+import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_EBSTravelTime;
 
 
 
@@ -57,10 +59,20 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 		// ... since it makes sense be able to to route from facility.getLinkId() to facility.getLinkId(). kai, dec'15
 
 		@Inject Scenario scenario;
+		int type = 0;
 
 		@Inject
 		public NetworkRoutingModuleBicycle()
 		{
+		}
+
+		public void setType(int type)
+		{
+			this.type = type;
+		}
+		public void reSetType()
+		{
+			this.type = 0;
 		}
 
 		@Override
@@ -73,7 +85,7 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 			//BicycleConfigGroup config = (BicycleConfigGroup) scenario.getConfig().getModule("bicycleAttributes");
 			//TravelTime btt = new TUG_BikeTravelTime((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
 			//TravelDisutility btd = new TUG_BikeTravelDisutility((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
-			
+			int bsType = type;
 			Leg newLeg = new LegImpl(TransportMode.bike);
 			newLeg.setDepartureTime( departureTime );
 
@@ -93,7 +105,7 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 					newLeg,
 					fromLink,
 					toLink,
-					departureTime);
+					departureTime, bsType);
 
 			return Arrays.asList( newLeg );
 		}
@@ -108,27 +120,38 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 			return "[NetworkRoutingModule: mode="+"bike"+"]";
 		}
 		
-		private Path getFullNetworkPath(Person person, Leg leg, Link fromLink, Link toLink, double depTime) 
+		private Path getFullNetworkPath(Person person, Leg leg, Node startNode, Node endNode, double depTime) 
 		{
 			BicycleConfigGroup config = (BicycleConfigGroup) scenario.getConfig().getModule("bicycleAttributes");
 			TravelTime btt = new TUG_BikeTravelTime((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
 			TravelDisutility btd = new TUG_BikeTravelDisutility((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
-			RoutingQuadTreeNetwork rqtn = new RoutingQuadTreeNetwork(scenario.getNetwork());
 			Network net = scenario.getNetwork();
 			LeastCostPathCalculatorFactory routeAlgoFac = new FastDijkstraFactory();
 			LeastCostPathCalculator routeAlgo = routeAlgoFac.createPathCalculator(net, btd, btt);
 
-			Node startNode = fromLink.getToNode();	// start at the end of the "current" link
-			Node endNode = toLink.getFromNode(); // the target is the start of the link
-
 			return routeAlgo.calcLeastCostPath(startNode, endNode, depTime, person, null);
 		}
 
-		private Leg routeLeg(Person person, Leg leg, Link fromLink, Link toLink, double depTime) {
+		private Leg routeLeg(Person person, Leg leg, Link fromLink, Link toLink, double depTime, int bsType) {
 			
 			BicycleConfigGroup config = (BicycleConfigGroup) scenario.getConfig().getModule("bicycleAttributes");
-			TravelTime btt = new TUG_BikeTravelTime((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
-			TravelDisutility btd = new TUG_BikeTravelDisutility((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
+			TravelTime btt;
+			TravelDisutility btd;
+			if (bsType == 1)
+			{
+				btt = new TUG_BSTravelTime((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
+				btd = new TUG_BSTravelDisutility((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
+			}
+			if (bsType == 2)
+			{
+				btt = new TUG_EBSTravelTime((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
+				btd = new TUG_EBSTravelDisutility((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
+			}
+			else
+			{
+				btt = new TUG_BikeTravelTime((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
+				btd = new TUG_BikeTravelDisutility((eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup) config);
+			}
 			RoutingQuadTreeNetwork rqtn = new RoutingQuadTreeNetwork(scenario.getNetwork());
 			Network net = scenario.getNetwork();
 			Network newNet = rqtn.getCatchmentAreaNetwork(net, fromLink.getCoord(), toLink.getCoord());
@@ -136,8 +159,8 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 			LeastCostPathCalculator routeAlgo = routeAlgoFac.createPathCalculator(newNet, btd, btt);
 			double travTime = 0;
 
-			Node startNode = fromLink.getToNode();	// start at the end of the "current" link
-			Node endNode = toLink.getFromNode(); // the target is the start of the link
+			Node startNode = rqtn.getNearestBicycleLink(fromLink.getCoord(), newNet).getFromNode();	// start at the end of the "current" link
+			Node endNode = rqtn.getNearestBicycleLink(toLink.getCoord(), newNet).getFromNode(); // the target is the start of the link
 
 //			CarRoute route = null;
 //			Path path = null;
@@ -145,15 +168,22 @@ import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tra
 				Path path = routeAlgo.calcLeastCostPath(startNode, endNode, depTime, person, null);
 				if (path == null)
 				{
-					path = getFullNetworkPath(person, leg, fromLink, toLink, depTime);
+					path = getFullNetworkPath(person, leg, startNode, endNode, depTime);
 				}
-				NetworkRoute route = new LinkNetworkRouteImpl(fromLink.getId(), toLink.getId());
-				route.setLinkIds(fromLink.getId(), NetworkUtils.getLinkIds(path.links), toLink.getId());
-				route.setTravelTime((int) path.travelTime); // yyyy why int?  kai, dec'15
-				route.setTravelCost(path.travelCost);
-				route.setDistance(RouteUtils.calcDistanceExcludingStartEndLink(route, newNet));
-				leg.setRoute(route);
-				travTime = (int) path.travelTime; // yyyy why int?  kai, dec'15
+				if (path == null)
+				{
+					System.out.println("Warum nur - Hebenstreit");
+				}
+				else
+				{
+					NetworkRoute route = new LinkNetworkRouteImpl(fromLink.getId(), toLink.getId());
+					route.setLinkIds(fromLink.getId(), NetworkUtils.getLinkIds(path.links), toLink.getId());
+					route.setTravelTime((int) path.travelTime); // yyyy why int?  kai, dec'15
+					route.setTravelCost(path.travelCost);
+					route.setDistance(RouteUtils.calcDistanceExcludingStartEndLink(route, net));
+					leg.setRoute(route);
+					travTime = (int) path.travelTime; // yyyy why int?  kai, dec'15
+				}
 			} else {
 				// create an empty route == staying on place if toLink == endLink
 				// note that we still do a route: someone may drive from one location to another on the link. kai, dec'15
