@@ -28,10 +28,6 @@ public class Graphics
 	
 	static List<DataType> dataGlobal = null;
 	
-	 public static void printBoxplotValues (PrintWriter pw)
-	 {
-		 dataGlobal.
-	 }
 	 public static List<ModiArray> getModiArray(final List<String> arr, double categoryStep, double categoryMax, boolean notGlocke)
 	 {
 		 	double orig = categoryStep;
