@@ -26,7 +26,71 @@ import java.io.PrintWriter;
 public class Graphics
 {
 	
-	static List<DataType> dataGlobal = null;
+	publci static void boxplotValues(final List<String> arr, PrintWriter pw)
+	{
+		List<int> bike = new ArrayList<int>();
+		List<int> car = new ArrayList<int>();
+		List<int> walk = new ArrayList<int>();
+		List<int> pt; = new ArrayList<int>();
+		List<int> bs = new ArrayList<int>();
+		List<int> pt_bs = new ArrayList<int>();
+		for (int i = 0; i < dataGlobal.size(); i++)
+		{
+			String modi = arr.get(k);
+			String[] interim = arr.get(i).split(";");
+			double value = Double.parseDouble(interim[0]);
+			
+			if ((modi.contains("bs\""))&& (modi.contains("pt")))
+			{
+				pt_bs.add(value);
+			}
+				
+			else if (modi.contains("bs\""))
+			{
+				bs.add(value);
+			}
+				
+			else if (modi.contains("pt"))
+			{
+				pt.add(value);
+			}
+			else if (modi.contains("walki"))
+			{
+				walk.add(value);
+			}
+			else if (modi.contains("walk"))
+			{
+				walk.add(value);
+			}
+			else if (modi.contains("bsWal"))
+			{
+				walk.add(value);
+			}
+			}
+			else if (modi.contains("car"))
+			{
+				car.add(value);
+			}
+			else if (modi.contains("bike"))
+			{
+				bike.add(value);
+			}
+		}
+		printListOfMode("walk", walk, pw);
+		printListOfMode("bike", bike, pw);
+		printListOfMode("car", car, pw);
+		printListOfMode("pt", pt, pw);
+		printListOfMode("pt_bs", pt_bs, pw);
+		printListOfMode("bs", bs, pw);
+	}
+
+	public static void printListOfMode(String mode, List<int> modeList, PrintWriter pw)
+	{
+		for (int i = 0; i < modeList.size(); i++)
+		{
+			pw.println(mode + ";" + modeList.get(i));
+		}
+	}
 	
 	 public static List<ModiArray> getModiArray(final List<String> arr, double categoryStep, double categoryMax, boolean notGlocke)
 	 {
@@ -39,7 +103,7 @@ public class Graphics
 				{
 					DataType temp = new DataType();
 					String[] interim = arr.get(i).split(";");
-					temp.toAnalyze = Double.parseDouble(interim[0]);
+					temp.toAnalyze = Double.parseDouble(interim[0]); //duration or length already calculated by previous method!?
 					String modi = interim[1];
 					int k = 2;
 					if (modi.equals("trans") || modi.equals("bsWal") || modi.equals("walking"))
@@ -127,7 +191,6 @@ public class Graphics
 	 modeArr.walking = 0;
 	 modeArr.bs_pt = 0;
 	 cat.add(modeArr);
-	 dataGlobal = data;
 	 for (int i = 0; i < data.size(); i++)
 	 {
 		double tmp = data.get(i).toAnalyze/orig;
