@@ -384,12 +384,12 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		
 		if (time < -1800)
 		{
-			scorePercentage = 4; //Ãœber 1h30 Mietzeit
+			scorePercentage = 10; //Ãœber 1h30 Mietzeit
 		}
 		
 		else
 		{
-			scorePercentage = 8; //>1h und <1h30 Mietzeit
+			scorePercentage = 5; //>1h und <1h30 Mietzeit
 		}
     	
     	score += (travelTime * utilTrav + distance * utilDist)*scorePercentage + constant;

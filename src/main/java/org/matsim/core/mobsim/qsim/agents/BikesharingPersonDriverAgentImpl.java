@@ -300,7 +300,7 @@ implements MobsimDriverPassengerAgent,PlanAgent, HasPerson{
 			runner.planComparison(basicAgentDelegate);
 		}
 		
-		else if (actPlanMode.equals(EBConstants.MODE))
+		else if (actPlanMode.contains(EBConstants.MODE))
 		{		
 			//thisElement is an Activity
 			PlanElement thisElem = this.basicAgentDelegate.getCurrentPlanElement();

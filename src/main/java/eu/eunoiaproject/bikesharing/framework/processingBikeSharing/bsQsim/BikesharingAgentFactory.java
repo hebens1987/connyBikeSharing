@@ -54,10 +54,16 @@ public class BikesharingAgentFactory implements AgentFactory{
 			if (p.getSelectedPlan().getPlanElements().get(i) instanceof Leg)
 			{
 				Leg leg = (Leg)p.getSelectedPlan().getPlanElements().get(i);
-				if ((leg.getMode().equals(EBConstants.BS_BIKE))||(leg.getMode().equals(EBConstants.BS_E_BIKE)))
+				if ((leg.getMode().equals(EBConstants.BS_BIKE)))
 				{
-					p.getSelectedPlan().setType(EBConstants.MODE);
-					log.warn("BS for Person: " + p.getId().toString());
+					p.getSelectedPlan().setType(EBConstants.MODE + "_bs");
+					//log.warn("BS for Person: " + p.getId().toString());
+					break;
+				}
+				else if ((leg.getMode().equals(EBConstants.BS_E_BIKE)))
+				{
+					p.getSelectedPlan().setType(EBConstants.MODE + "_ebs");
+					//log.warn("BS for Person: " + p.getId().toString());
 					break;
 				}
 				else if (leg.getMode().equals(EBConstants.BS_BIKE_FF))

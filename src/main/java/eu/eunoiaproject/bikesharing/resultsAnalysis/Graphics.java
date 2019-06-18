@@ -20,10 +20,18 @@ import org.matsim.core.utils.io.UncheckedIOException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 
 public class Graphics
 {
+	
+	static List<DataType> dataGlobal = null;
+	
+	 public static void printBoxplotValues (PrintWriter pw)
+	 {
+		 dataGlobal.
+	 }
 	 public static List<ModiArray> getModiArray(final List<String> arr, double categoryStep, double categoryMax, boolean notGlocke)
 	 {
 		 	double orig = categoryStep;
@@ -123,7 +131,7 @@ public class Graphics
 	 modeArr.walking = 0;
 	 modeArr.bs_pt = 0;
 	 cat.add(modeArr);
-	 
+	 dataGlobal = data;
 	 for (int i = 0; i < data.size(); i++)
 	 {
 		double tmp = data.get(i).toAnalyze/orig;

@@ -186,8 +186,8 @@ public class Analysis_Plans_File
 		boolean isInitialAnalysis = true;
 		//TODO
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/no_BS_June-2019_bikeCar19_all3_walk10km_bike20km/";
-		String fileName = "output_plans.xml";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/bikeCar_19_ALL3/ITERS/it.65/";
+		String fileName = "65.plans.xml";
 		
 		//String fileLocation2 = "H:/otherValues/";
 		//String fileName = "output_plans.xml";
@@ -196,7 +196,7 @@ public class Analysis_Plans_File
 		String fileNetwork = "network_April2019(walking,capacity).xml"; 
 		
 		//--------------------------------------------------------------------------
-		String fileLocationNetworkToCompare = "C:/Users/hebens/Documents/Output//no_BS_June-2019_bikeCar19_all3_walk10km_bike20km/ITERS/it.0/"; 
+		String fileLocationNetworkToCompare = "C:/Users/hebens/Documents/Output/bikeCar_19_ORIG/ITERS/it.65/"; 
 		String fileNetworkToCompare = "networkCount_bike.xml";
 		
 		String fileLocationNetworkCompareWith = "C:/Users/hebens/Documents/Output//no_BS_June-2019_bikeCar19_orig_walk10km_bike20km/ITERS/it.0/"; //orig file (base case)
