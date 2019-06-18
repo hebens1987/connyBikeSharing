@@ -22,12 +22,14 @@ package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.tr
 import eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelTimes.TUG_BikeTravelTime;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.BicycleConfigGroup;
 import eu.eunoiaproject.bikesharing.framework.scenarioBsAndBike.IKK_ObjectAttributesSingleton;
-
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Person;
+import org.matsim.core.config.Config;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
+import org.matsim.core.config.groups.PlanCalcScoreConfigGroup.ModeParams;
 import org.matsim.core.router.util.TravelDisutility;
+import org.matsim.core.scoring.functions.CharyparNagelScoringParameters;
 import org.matsim.utils.objectattributes.ObjectAttributes;
 import org.matsim.vehicles.Vehicle;
 
@@ -46,16 +48,18 @@ public class TUG_BikeTravelDisutility implements TravelDisutility
 	private ObjectAttributes bikeLinkAttributes;
 	private ObjectAttributes personAttributes;
 	private BicycleConfigGroup bikeConfigGroup;
+	private Config config2;
     
 	/***************************************************************************/
 	public TUG_BikeTravelDisutility(
-		  BicycleConfigGroup config)
+		  BicycleConfigGroup config, Config config2)
 	/***************************************************************************/
 	{
 			IKK_ObjectAttributesSingleton bts = IKK_ObjectAttributesSingleton.getInstance(config, false);
 			bikeLinkAttributes = bts.getBikeLinkAttributes();
 			personAttributes = bts.getPersonAttributes();
 			this.bikeConfigGroup = config;
+			this.config2 = config2;
 	}
 
 
@@ -65,19 +69,22 @@ public class TUG_BikeTravelDisutility implements TravelDisutility
 		   Link link, double time, Person person, Vehicle vehicle) 
    /***************************************************************************/
    {
+	   
 	   	double du_Type = TravelDisutilityHelper.getDisutilityForLinkAttributes(
 	   				bikeLinkAttributes, personAttributes,bikeConfigGroup,link,person,"bike");
-  
-		
-		 TUG_BikeTravelTime btt = new TUG_BikeTravelTime(bikeConfigGroup);
-		 double linkTravelTimeBikes = btt.getLinkTravelTime(link, time, person, vehicle);
+		PlanCalcScoreConfigGroup cn = (PlanCalcScoreConfigGroup) config2.getModule("planCalcScore");
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.bike);
+		double utilDist = modeParams.getMarginalUtilityOfDistance();
+		double utilTime = modeParams.getMarginalUtilityOfTraveling()/3600;
+		TUG_BikeTravelTime btt = new TUG_BikeTravelTime(bikeConfigGroup);
+		double linkTravelTimeBikes = btt.getLinkTravelTime(link, time, person, vehicle);
 
 		 if (du_Type < 0.1) 
 		 {
-			 du_Type = 0.1;
+			 du_Type = 0.1 * link.getLength();;
 		 } //Falls ALLES NULL wird über die Länge geroutet!
 		   double disutilityBikesPerLink = linkTravelTimeBikes * du_Type;
-   
+				   
 		   return disutilityBikesPerLink ;           
    }
 

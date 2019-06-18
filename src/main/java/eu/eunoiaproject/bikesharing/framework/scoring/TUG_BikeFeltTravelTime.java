@@ -301,8 +301,8 @@ class TUG_BikeFeltTravelTime implements TravelTime
 			   
 			   if (isFastCycleLane)
 			   {
-				   percTavelTimeAndTravelLength[0] = perceivedTravelTime * 0.25;
-				   percTavelTimeAndTravelLength[1] = travelDistance * 0.25;
+				   percTavelTimeAndTravelLength[0] = perceivedTravelTime * 0.01;
+				   percTavelTimeAndTravelLength[1] = travelDistance * 0.01;
 			   }
 			   
 			   return percTavelTimeAndTravelLength; //does perceive length and duration differently

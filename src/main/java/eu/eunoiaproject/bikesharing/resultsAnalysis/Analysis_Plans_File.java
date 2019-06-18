@@ -186,26 +186,26 @@ public class Analysis_Plans_File
 		boolean isInitialAnalysis = true;
 		//TODO
 		List<Geometry> vienna = readShapeFile("C:/Users/hebens/Documents/Output/BEZIRKSGRENZEOGDPolygon.shp");
-		String fileLocation2 = "C:/Users/hebens/Documents/Output/NEW_demand_allCAR(2)_v28-05-2019(all3)_v2km/";
+		String fileLocation2 = "C:/Users/hebens/Documents/Output/no_BS_June-2019_bikeCar19_all3_walk10km_bike20km/";
 		String fileName = "output_plans.xml";
 		
 		//String fileLocation2 = "H:/otherValues/";
 		//String fileName = "output_plans.xml";
 		
-		//String fileLocationNetwork = "F:/BikeRouting/Wien_Gesamt/Material/";
-		//String fileNetwork = "network.xml"; 
+		String fileLocationNetwork = "D:/BikeRouting/Wien_Gesamt/";
+		String fileNetwork = "network_April2019(walking,capacity).xml"; 
 		
 		//--------------------------------------------------------------------------
-		String fileLocationNetworkToCompare = "G:/DIS_Hebenstreit/Output/v18Nov2018_SUED_135/"; 
+		String fileLocationNetworkToCompare = "C:/Users/hebens/Documents/Output//no_BS_June-2019_bikeCar19_all3_walk10km_bike20km/ITERS/it.0/"; 
 		String fileNetworkToCompare = "networkCount_bike.xml";
 		
-		String fileLocationNetworkCompareWith = "G:/DIS_Hebenstreit/Output/v18Nov2018_BC_135/"; //orig file (base case)
+		String fileLocationNetworkCompareWith = "C:/Users/hebens/Documents/Output//no_BS_June-2019_bikeCar19_orig_walk10km_bike20km/ITERS/it.0/"; //orig file (base case)
 		String fileNetworkCompareWith = "networkCount_bike.xml";
 
 		if (isInitialAnalysis)
 		{
 			List<String> zeilen = readFile(fileLocation2, fileName);
-			//List<String> zeilenNetwork = readFile (fileLocationNetwork, fileNetwork);
+			List<String> zeilenNetwork = readFile (fileLocationNetwork, fileNetwork);
 			List<String> actPlans = new ArrayList<String>();
 			Map<String,LinkId_Count_Mode> arr = new HashMap<String,LinkId_Count_Mode>();
 			
@@ -259,9 +259,9 @@ public class Analysis_Plans_File
 			homeCoord(coordWriter, actPlans);
 			coordWriter.close();
 			
-			//PrintWriter writerNetworkCountB = new PrintWriter (fileLocation2 + "/networkCount_"+"bike"+".xml");
-			//abc (arr, actPlans, zeilenNetwork, "bike", writerNetworkCountB);
-			//writerNetworkCountB.close();
+			PrintWriter writerNetworkCountB = new PrintWriter (fileLocation2 + "/networkCount_"+"bike"+".xml");
+			abc (arr, actPlans, zeilenNetwork, "bike", writerNetworkCountB);
+			writerNetworkCountB.close();
 			
 			//PrintWriter writerNetworkCountC = new PrintWriter (fileLocation2 + "/networkCount_"+"car"+".xml");
 			//abc (arr, actPlans, zeilenNetwork, "car", writerNetworkCountC);
@@ -284,12 +284,22 @@ public class Analysis_Plans_File
 			pwFac.close();
 			
 			Graphics.writeGraphic(arrDur, 
-					25, 10800, "duration", 
+					60, 7200, "duration", 
 					"seconds", fileLocation2 + "/duration.png");
+			//category step - defines the interval
+			//category max - defines the maximum value in Graph
+			
+			Graphics.writeGraphicGlocke(arrDur, 
+					150, 7200, "duration glocke", 
+					"seconds", fileLocation2 + "/durationGL.png");
 			
 			Graphics.writeGraphic(arrLen, 
-					25, 50000, "distance", 
+					100, 50000, "distance", 
 					 "meters", fileLocation2 + "/length.png");
+			
+			Graphics.writeGraphicGlocke(arrLen, 
+					750, 50000, "distance glocke", 
+					 "meters", fileLocation2 + "/lengthGL.png");
 				
 		}
 		else

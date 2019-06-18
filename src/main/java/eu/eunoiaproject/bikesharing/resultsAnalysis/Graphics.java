@@ -24,8 +24,7 @@ import java.io.IOException;
 
 public class Graphics
 {
-	
-	 public static List<ModiArray> getModiArray(final List<String> arr, double categoryStep, double categoryMax)
+	 public static List<ModiArray> getModiArray(final List<String> arr, double categoryStep, double categoryMax, boolean notGlocke)
 	 {
 		 	double orig = categoryStep;
 			List<DataType> data = new ArrayList<DataType>();
@@ -39,7 +38,7 @@ public class Graphics
 					temp.toAnalyze = Double.parseDouble(interim[0]);
 					String modi = interim[1];
 					int k = 2;
-					if (modi.equals("trans") || modi.equals("bsWal"))
+					if (modi.equals("trans") || modi.equals("bsWal") || modi.equals("walking"))
 					{
 						while (k < interim.length)
 						{
@@ -115,7 +114,7 @@ public class Graphics
 		 cat.add(modeArr);
 	 }
 	 ModiArray modeArr = new ModiArray();
-	 modeArr.category = categoryStep-1;
+	 modeArr.category = orig;
 	 modeArr.bike = 0;
 	 modeArr.bs = 0;
 	 modeArr.car = 0;
@@ -206,39 +205,80 @@ public class Graphics
 			}
 		}
 	 }
-	 
-	 
-	 for (int j = 1; j < cat.size(); j++)
-	 {
-		 cat.get(j).bike += cat.get(j-1).bike;
-		 cat.get(j).walk += cat.get(j-1).walk;
-		 cat.get(j).walking += cat.get(j-1).walking;
-		 cat.get(j).pt += cat.get(j-1).pt;
-		 cat.get(j).car += cat.get(j-1).car;
-		 cat.get(j).bs += cat.get(j-1).bs;
-		 cat.get(j).bs_pt += cat.get(j-1).bs_pt;
-	 }
-	 
-	 double totalBike = cat.get(cat.size()-1).bike;
-	 double totalWalk = cat.get(cat.size()-1).walk;
-	 double totalWalking = cat.get(cat.size()-1).walking;
-	 double totalPt = cat.get(cat.size()-1).pt;
-	 double totalCar = cat.get(cat.size()-1).car;
-	 double totalBs = cat.get(cat.size()-1).bs;
-	 double totalBs_pt = cat.get(cat.size()-1).bs_pt;
-	 
-	 for (int j = 0; j < cat.size(); j++)
-	 {
-		 cat.get(j).bike = cat.get(j).bike/totalBike;
-		 cat.get(j).walk = cat.get(j).walk/totalWalk;
-		 cat.get(j).pt = cat.get(j).pt/totalPt;
-		 cat.get(j).car = cat.get(j).car/totalCar;
-		 cat.get(j).walking = cat.get(j).walking/totalWalking;
-		 cat.get(j).bs = cat.get(j).bs/totalBs;
-		 cat.get(j).bs_pt = cat.get(j).bs_pt/totalBs_pt;
-	 }
+	 double totalBike;
+	 double totalWalk;
+	 double totalWalking;
+	 double totalPt;
+	 double totalCar;
+	 double totalBs;
+	 double totalBs_pt;
 
-	 return cat;
+	// List<ModiArray> cat2 = new ArrayList<ModiArray>(cat);
+	for (int j = 1; j < cat.size(); j++)
+	{
+	 cat.get(j).bike += cat.get(j-1).bike;
+	 cat.get(j).walk += cat.get(j-1).walk;
+	 cat.get(j).walking += cat.get(j-1).walking;
+	 cat.get(j).pt += cat.get(j-1).pt;
+	 cat.get(j).car += cat.get(j-1).car;
+	 cat.get(j).bs += cat.get(j-1).bs;
+	 cat.get(j).bs_pt += cat.get(j-1).bs_pt;
+	}
+	 
+	 totalBike = cat.get(cat.size()-1).bike;
+	 totalWalk = cat.get(cat.size()-1).walk;
+	 totalWalking = cat.get(cat.size()-1).walking;
+	 totalPt = cat.get(cat.size()-1).pt;
+	 totalCar = cat.get(cat.size()-1).car;
+	 totalBs = cat.get(cat.size()-1).bs;
+	 totalBs_pt = cat.get(cat.size()-1).bs_pt;
+
+		 for (int j = 0; j < cat.size(); j++)
+		 {
+			 cat.get(j).bike = cat.get(j).bike/totalBike;
+			 cat.get(j).walk = cat.get(j).walk/totalWalk;
+			 cat.get(j).pt = cat.get(j).pt/totalPt;
+			 cat.get(j).car = cat.get(j).car/totalCar;
+			 cat.get(j).walking = cat.get(j).walking/totalWalking;
+			 cat.get(j).bs = cat.get(j).bs/totalBs;
+			 cat.get(j).bs_pt = cat.get(j).bs_pt/totalBs_pt;
+		 }
+		 if (notGlocke)
+		 {
+		 return cat;
+		 }
+		List<ModiArray> cat2 = new ArrayList<ModiArray>(cat);
+		for (int j = 0; j < cat2.size()-2; j++)
+		{
+			if (j == 0)
+			{
+				cat2.get(j).bike = cat.get(j).bike*10;
+				cat2.get(j).car= cat.get(j).car*10;
+				cat2.get(j).pt = cat.get(j).pt*10;
+				cat2.get(j).walk =  cat.get(j).walk*10;
+				cat2.get(j).walking = cat.get(j).walking*10;
+				cat2.get(j).bs = cat.get(j).bs*10;
+				cat2.get(j).bs_pt =  cat.get(j).bs_pt*10;
+			}
+			else
+			{
+			cat2.get(j).bike = (cat.get(j+1).bike- cat.get(j).bike)*10;
+			cat2.get(j).car= (cat.get(j+1).car- cat.get(j).car) *10;
+			cat2.get(j).pt = (cat.get(j+1).pt - cat.get(j).pt) *10;
+			cat2.get(j).walk = (cat.get(j+1).walk - cat.get(j).walk) *10;
+			cat2.get(j).walking = (cat.get(j+1).walking - cat.get(j).walking)*10;
+			cat2.get(j).bs = (cat.get(j+1).bs - cat.get(j).bs)*10;
+			cat2.get(j).bs_pt = (cat.get(j+1).bs_pt- cat.get(j).bs_pt)*10;
+			}
+		}
+		cat2.get(cat2.size()-1).bike = 0;
+		cat2.get(cat2.size()-1).car= 0 ;
+		cat2.get(cat2.size()-1).pt = 0 ;
+		cat2.get(cat2.size()-1).walk = 0 ;
+		cat2.get(cat2.size()-1).walking = 0;
+		cat2.get(cat2.size()-1).bs = 0 ;
+		cat2.get(cat2.size()-1).bs_pt = 0 ;
+		return cat2;
 	 }
 	 
 	 static JFreeChart getGraphic(List<ModiArray> data, String dataType, String einheiten) 
@@ -315,7 +355,7 @@ public class Graphics
 				double categoryStep, double categoryMax, String dataType, 
 				String einheiten, String fileName) {
 			
-			List<ModiArray> data = getModiArray(arr, categoryStep, categoryMax);
+			List<ModiArray> data = getModiArray(arr, categoryStep, categoryMax, true);
 			
 			try {
 	            ChartUtilities.saveChartAsPNG(new File(fileName), getGraphic(data, dataType, einheiten), 1024, 768);
@@ -323,7 +363,19 @@ public class Graphics
 	            throw new UncheckedIOException(e);
 			}
 		}
-
+		
+		public static void writeGraphicGlocke(final List<String> arr, 
+				double categoryStep, double categoryMax, String dataType, 
+				String einheiten, String fileName) {
+			
+			List<ModiArray> data = getModiArray(arr, categoryStep, categoryMax, false);
+			
+			try {
+	            ChartUtilities.saveChartAsPNG(new File(fileName), getGraphic(data, dataType, einheiten), 1024, 768);
+			} catch (IOException e) {
+	            throw new UncheckedIOException(e);
+			}
+		}
 }
 
 	

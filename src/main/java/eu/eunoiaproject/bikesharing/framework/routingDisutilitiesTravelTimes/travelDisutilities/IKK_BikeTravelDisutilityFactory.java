@@ -18,6 +18,7 @@
  * *********************************************************************** */
 package eu.eunoiaproject.bikesharing.framework.routingDisutilitiesTravelTimes.travelDisutilities;
 
+import org.matsim.core.config.Config;
 import org.matsim.core.config.groups.PlanCalcScoreConfigGroup;
 import org.matsim.core.router.costcalculators.TravelDisutilityFactory;
 import org.matsim.core.router.util.TravelDisutility;
@@ -43,6 +44,8 @@ public class IKK_BikeTravelDisutilityFactory implements TravelDisutilityFactory 
 	@Inject
 	BicycleConfigGroup bikeConfigGroup;
 	@Inject
+	Config config;
+	@Inject
 	PlanCalcScoreConfigGroup cnScoringGroup;
 	
 	/***************************************************************************/
@@ -52,7 +55,7 @@ public class IKK_BikeTravelDisutilityFactory implements TravelDisutilityFactory 
 	{
 		if (timeCalculator instanceof TUG_BikeTravelTime)
 		{
-			return new TUG_BikeTravelDisutility(bikeConfigGroup);
+			return new TUG_BikeTravelDisutility(bikeConfigGroup, config);
 		}
 		else if (timeCalculator instanceof TUG_EBSTravelTime)
 		{

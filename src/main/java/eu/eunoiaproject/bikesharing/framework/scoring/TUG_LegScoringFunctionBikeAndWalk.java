@@ -159,7 +159,6 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	public void handleLeg(Leg leg) 
 	/***************************************************************************/
 	{
-    	this.score = 0;
     	double dist = 0;
     	double feltTravelTime = 0;
     	
@@ -221,6 +220,13 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
     	}
 		
     	else if (legX.getMode().contains(TransportMode.walk))
+    	{   
+    		tmpScore += getWalkScore(dist, travelTime);
+    		//System.out.println("#####################################  WalkScore = " + tmpScore);
+    		//System.out.println("Pause - press Key to continue!");
+        	//new java.util.Scanner(System.in).nextLine();
+    	}
+    	else if (legX.getMode().contains("Walk"))
     	{   
     		tmpScore += getWalkScore(dist, travelTime);
     		//System.out.println("#####################################  WalkScore = " + tmpScore);
@@ -308,12 +314,13 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		double constant = modeParams.getConstant();
 		double factor = 0;
 		double weighting = ((travelTime/3600) *(travelTime/3600))*12.5; //Hebenstreit Parameter
+		if (weighting <= 0) weighting = 1;
 		if (distance < 0.001)
 		{
 			distance = travelTime /(0.9/1.41) ; //4 km/h
 		}
 		
-		score += (travelTime * utilTrav) * weighting + (distance * utilDist) + constant;
+		score += ((travelTime * utilTrav) + (distance * utilDist))* weighting + constant;
 		if (distance > 10000)
 		{
 			score = score * 1000000000;
@@ -335,7 +342,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 	/***************************************************************************/
 	{
 		double score = 0.0D;
-		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.transit_walk);
+		ModeParams modeParams = cn.getOrCreateModeParams(TransportMode.walk);
 		double utilTrav = modeParams.getMarginalUtilityOfTraveling()/(3600);
 		double constant = modeParams.getConstant();
 		double utilDist = modeParams.getMarginalUtilityOfDistance();
@@ -343,7 +350,7 @@ class TUG_LegScoringFunctionBikeAndWalk extends CharyparNagelLegScoring
 		double factor = 0;
 		double weighting = ((travelTime/3600) *(travelTime/3600))*2.5 ; //Hebenstreit Parameter
 		if (weighting <= 0) weighting = 1;
-		score += (travelTime * utilTrav  + constant + utilDist * distance)* weighting;
+		score += (travelTime * utilTrav  + utilDist * distance)* weighting + constant;
 		
 		if (travelTime > 900)
 		{

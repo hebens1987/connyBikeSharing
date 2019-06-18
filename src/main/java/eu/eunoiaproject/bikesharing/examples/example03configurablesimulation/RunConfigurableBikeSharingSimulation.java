@@ -67,7 +67,7 @@ public class RunConfigurableBikeSharingSimulation {
 		final Config config = prepareConfig( args, InputCase.connyInputDiss );
 		final Scenario sc = prepareScenario( config );
 		final Controler controler = prepareControler( sc );
-		RoutingAlgorithmType rat = config.controler().getRoutingAlgorithmType();
+		//RoutingAlgorithmType rat = config.controler().getRoutingAlgorithmType();
         //if (config.controler().getRoutingAlgorithmType().equals(ControlerConfigGroup.RoutingAlgorithmType.Dijkstra)) {
         //    bind(LeastCostPathCalculatorFactory.class).to(DijkstraFactory.class);
 		controler.run();
@@ -128,8 +128,7 @@ public class RunConfigurableBikeSharingSimulation {
 
 		config.global().setNumberOfThreads( 8 );
 
-		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, TransportMode.walk+"ing",
-					EBConstants.BS_WALK, EBConstants.BS_BIKE, EBConstants.BS_BIKE_FF, EBConstants.BS_E_BIKE, EBConstants.BS_WALK_FF) ) ) ;
+		config.qsim().setMainModes( new HashSet<>( Arrays.asList( TransportMode.car, TransportMode.bike, "bs", "e_bs") ) ) ;
 		
 		config.travelTimeCalculator().setSeparateModes( true ); 
 		failIfExists( config.controler().getOutputDirectory() );

@@ -60,13 +60,13 @@ public class TUG_WalkTravelDisutility implements TravelDisutility {
 			Link link, double time, Person person, Vehicle vehicle) 
 	/***************************************************************************/
 	{                     
-		if (link.getAllowedModes().contains(TransportMode.walk))
+		if (link.getAllowedModes().contains(TransportMode.walk+"ing"))
 		{
 			double disutility = link.getLength();
 			return disutility;
 		}
 		else
-			return Double.POSITIVE_INFINITY;
+			return link.getLength()*100000000000.0;
 	}
 
 	/***************************************************************************/

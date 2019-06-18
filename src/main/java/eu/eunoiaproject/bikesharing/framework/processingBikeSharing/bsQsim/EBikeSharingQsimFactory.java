@@ -106,13 +106,13 @@ public class EBikeSharingQsimFactory implements Provider<Mobsim>{
 
 		BikeSharingContext.Builder builder = new BikeSharingContext.Builder() ;
 		{
-			TravelTime travelTime = new TUG_BikeTravelTime(confBC);;
-			TravelDisutility travelDisutility = new TUG_BikeTravelDisutility(confBC);
+			TravelTime travelTime = new TUG_BikeTravelTime(confBC);
+			TravelDisutility travelDisutility = new TUG_BikeTravelDisutility(confBC, qSim.getScenario().getConfig());
 			LeastCostPathCalculator standardBikePathCalculator = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), travelDisutility, travelTime );
 			builder.setStandardBikePathCalculator( standardBikePathCalculator ) ;
 		}
 		{
-			TravelTime travelTime = new TUG_BSTravelTime(confBC);;
+			TravelTime travelTime = new TUG_BSTravelTime(confBC);
 			TravelDisutility travelDisutility = new TUG_BSTravelDisutility(confBC);
 			LeastCostPathCalculator sharedBikePathCalculator = pathCalculatorFactory.createPathCalculator( sc.getNetwork(), travelDisutility, travelTime );
 			builder.setSharedBikePathCalculator( sharedBikePathCalculator ) ;

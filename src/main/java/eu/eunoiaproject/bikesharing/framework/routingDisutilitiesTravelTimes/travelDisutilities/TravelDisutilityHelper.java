@@ -36,7 +36,7 @@ public class TravelDisutilityHelper {
 
 		if (!(link.getAllowedModes().contains(mode)))
 		{
-		return link.getLength()*100000000;
+			return link.getLength()*100000000;
 		}
 	 String [] amountShare = null;
 	 String [] slopeShare = null;
@@ -58,22 +58,12 @@ public class TravelDisutilityHelper {
 		   // Einlesen aus Bike_Attributes  
 		   if (bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed") == null)
 		   {
-			   if (link.getAllowedModes().contains(TransportMode.bike))
-			   {
-				   return link.getLength();
-			   }
-			   else
-				   return Double.POSITIVE_INFINITY;
+			   return link.getLength();
 		   }
 		   if (personAttributes.getAttribute(person.getId().toString(), "routingType")==null)
-			{
-			   if (link.getAllowedModes().contains(TransportMode.bike))
-			   {
-				   return link.getLength();
-			   }
-			   else
-				   return Double.POSITIVE_INFINITY;
-			}
+		   {
+			   	return link.getLength();
+		   }
 		   int routingType = ((int) personAttributes.getAttribute(person.getId().toString(), "routingType")); 
 			  
 		  // double bikeSpeedOfInfrastructure = ((double) bikeLinkAttributes.getAttribute(link.getId().toString(), "maxSpeed")); 
@@ -162,11 +152,16 @@ public class TravelDisutilityHelper {
 				   + (sl * bikeSlopeOfInfrastructure) 
 				   + (surr * bikeSurroundingOfInfrastructure) 
 				   + (saf * bikeSafetyOfInfrastructure) 
-				   + (comf * bikeComfortOfInfrastructure))/5;//*lenOfLink/v;
+				   + (comf * bikeComfortOfInfrastructure));//*lenOfLink/v;
 		   
 		   if (fastCycleLane)
 		   {
-			   du_Type = du_Type * 0.85;
+			   if (du_Type > 0.36)
+			   {
+				   du_Type = 0.36;
+			   }
+			   else
+				   du_Type = du_Type - 0.05;
 		 	}
 		   return du_Type;
 	   	}

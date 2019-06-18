@@ -56,7 +56,7 @@ public class TravelTimeHelper
 
 		if (!(link.getAllowedModes().contains(TransportMode.bike)))
 		{
-			if (link.getAllowedModes().contains(TransportMode.walk))
+			if (link.getAllowedModes().contains(TransportMode.walk+"ing"))
 			{
 				bikeSpeedOfInfrastructure = 1.0; //TODO: Hebenstreit
 					//For Link with ID: " + link.getId() + " using a walk link with very slow speed

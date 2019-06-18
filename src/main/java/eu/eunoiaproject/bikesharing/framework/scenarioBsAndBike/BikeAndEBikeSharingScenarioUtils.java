@@ -52,7 +52,7 @@ public class BikeAndEBikeSharingScenarioUtils {
 				modules );
 
 		{
-			ActivityParams params = new ActivityParams( "bs_walk interaction" ) ;
+			ActivityParams params = new ActivityParams( "bsWalk interaction" ) ;
 			params.setScoringThisActivityAtAll( false );
 			config.planCalcScore().addActivityParams( params );
 		}
@@ -90,7 +90,7 @@ public class BikeAndEBikeSharingScenarioUtils {
 			config.planCalcScore().addActivityParams( params_t );
 			config.planCalcScore().addActivityParams( params_r );
 			
-			final ActivityParams bsWalkInteract = new ActivityParams("s_walk interaction");
+			final ActivityParams bsWalkInteract = new ActivityParams("bsWalk interaction");
 //			bsWalkInteract.setClosingTime(params.getClosingTime());
 //			bsWalkInteract.setEarliestEndTime(params.getEarliestEndTime());
 //			bsWalkInteract.setLatestStartTime(params.getLatestStartTime());
