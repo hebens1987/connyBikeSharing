@@ -29,3 +29,4 @@ public interface EBikeSharingManagerListener {
 	void handleChange (BikeSharingFacility f, boolean isTaking);
 	
 }
+//test eva
